@@ -15,3 +15,42 @@
 .short-paragraph {
 	width: 100%;
 }
+
+.newsletter-form-container {
+	display: flex;
+
+	.newsletter-input {
+		flex: 1;
+		margin-right: 5px;
+	}
+}
+
+.code-examples {
+	display: flex;
+	flex-direction: row;
+	align-items: end;
+	justify-content: space-evenly;
+}
+
+@media (max-width: 1024px) {
+
+	.newsletter-form-container {
+		flex-direction: column;
+	}
+}
+
+@media (max-width: 767px) {
+	.value-proposition-buttons {
+		width: 100%;
+	}
+	.code-examples {
+		flex-direction: column;
+		align-items: center;
+	}
+}
+
+@media (max-width: 512px) {
+	.wrapper {
+		padding: 0 10px;
+	}
+}

@@ -1,0 +1,17 @@
+---
+---
+.home-title {
+	color: #333;
+	text-decoration: none;
+	font-size: 40px;
+	font-weight: bold;
+}
+
+.footer-title {
+	@extend .home-title;
+	color: #fff;
+}
+
+.short-paragraph {
+	width: 100%;
+}

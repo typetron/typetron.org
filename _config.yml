@@ -1,0 +1,23 @@
+title: Typetron - Modern Framework for NodeJs
+email: ionel@typetron.org
+description: >- # this means to ignore newlines until "baseurl:"
+    Typetron is a modern NodeJs framework for building a fully-featured backend with Typescript.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "typetron.org" # the base hostname & protocol for your site, e.g. http://example.com
+twitter_username: ionelCLupu
+github_username:  ionellupu
+
+# Build settings
+markdown: kramdown
+kramdown:
+    input: GFM
+
+theme: minima
+plugins:
+    - jekyll-feed
+
+sass:
+    sass_dir: style/scss
+
+collections:
+    - docs

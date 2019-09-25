@@ -32,6 +32,32 @@
 	justify-content: space-evenly;
 }
 
+.nav-menu-2 {
+	overflow: auto;
+}
+
+
+.github-button {
+	display: none;
+}
+
+@media (max-width: 1200px) {
+	.code-examples {
+		flex-direction: column;
+		align-items: center;
+	}
+	.hide-example-on-small-screen {
+		display: none;
+	}
+
+}
+
+@media (max-width: 992px) {
+	.github-button {
+		display: inline-block;
+	}
+}
+
 @media (max-width: 1024px) {
 
 	.newsletter-form-container {
@@ -42,10 +68,6 @@
 @media (max-width: 767px) {
 	.value-proposition-buttons {
 		width: 100%;
-	}
-	.code-examples {
-		flex-direction: column;
-		align-items: center;
 	}
 }
 

@@ -630,7 +630,6 @@ a {
 }
 
 .button2:hover {
-	border           : 1px solid #096ad0;
 	background-color : hsla(230.22471910112358, 58.87%, 48.68%, 1.00);
 	color            : #fff;
 }

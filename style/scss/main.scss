@@ -52,6 +52,54 @@
 
 }
 
+.nav-bar {
+	position: relative;
+
+	.w-nav-link {
+		font-weight: bold;
+
+		&.active {
+			color: #415ef3;
+		}
+	}
+}
+
+.table-of-contents {
+	ul {
+		list-style: none;
+
+		li {
+			a {
+				font-size: 14px;
+				color: #333;
+				text-decoration: none;
+
+				&.active {
+					color: #415ef3;
+				}
+			}
+		}
+	}
+}
+
+.highlighter-rouge {
+	background: #282a36;
+	color: #ffffff;
+	padding: 2px 5px;
+	border-radius: 5px;
+	margin-bottom: 1px;
+}
+
+.docs-content {
+	h1:first-child, h2:first-child, h3:first-child, h4:first-child {
+		margin-top: 0;
+	}
+}
+
+.section.full-screen.background-image-side {
+	min-height: calc(100vh - 100px);
+}
+
 @media (max-width: 992px) {
 	.github-button {
 		display: inline-block;

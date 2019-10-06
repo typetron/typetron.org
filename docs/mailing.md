@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Authentication
+title: Mailing
 ---
 
 ## {{ page.title }}

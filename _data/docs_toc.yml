@@ -26,6 +26,8 @@
             url: error-handling
         -   title: Logging
             url: logging
+        -   title: Helpers
+            url: helpers
 
 -   title: Database
     url: query-builder
@@ -36,7 +38,7 @@
             url: orm
 
 -   title: Security
-    url: advanced
+    url: authentication
     subtitles:
         -   title: Authentication
             url: authentication
@@ -44,19 +46,27 @@
             url: authorization
 
 -   title: Advanced
-    url: advanced
+    url: container
     subtitles:
         -   title: IoC Container
+            url: container
         -   title: Providers
-        -   title: Helpers
+            url: providers
         -   title: Mailing
+            url: mailing
         -   title: Notifications
+            url: notifications
         -   title: Files
+            url: files
         -   title: Cache
+            url: cache
         -   title: Events
+            url: events
 
 -   title: Tests
-    url: tests
+    url: unit-tests
     subtitles:
         -   title: Unit Tests
-        -   title: Controller tets
+            url: unit-tests
+        -   title: Controller tests
+            url: controller-tests

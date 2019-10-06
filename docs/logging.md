@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Authentication
+title: Logging
 ---
 
 ## {{ page.title }}

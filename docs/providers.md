@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Authentication
+title: Providers
 ---
 
 ## {{ page.title }}

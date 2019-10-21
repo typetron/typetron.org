@@ -17,5 +17,20 @@ export default new AppConfig({
         '': ['public']
     }
 });
+```
 
+#### Getting the config
+If you need the use get some config in one of your classes or services, you can make use of dependency injection
+to get it:
+
+```ts
+import { Controller } from '@Typetron/Router';
+import { Inject } from '@Typetron/Container';
+import { AppConfig } from '@Typetron/Framework';
+
+@Controller()
+export class HomeController {
+    @Inject()
+    appConfig: AppConfig;
+}
 ```

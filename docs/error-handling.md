@@ -5,13 +5,13 @@ title: Error Handling
 
 ## {{ page.title }}
 
-You can modify the existing `ErrorHandler` inside the `Services` directory. The default handler looks like this:
+You can modify the existing `AppErrorHandler` inside the `Services` directory. The default handler looks like this:
 ```ts
-import { ErrorHandler as ErrorHandlerBase, Http, HttpError, Response } from '@Typetron/Http';
+import { ErrorHandler, Http, HttpError, Response } from '@Typetron/Http';
 import { Inject } from '@Typetron/Container';
 import { AppConfig } from '@Typetron/Framework';
 
-export class ErrorHandler extends ErrorHandlerBase {
+export class AppErrorHandler extends ErrorHandler {
 
     @Inject()
     appConfig: AppConfig;

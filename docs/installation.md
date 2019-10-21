@@ -32,5 +32,5 @@ This will create a development server on you machine that automatically reloads 
 You can open you app at [http://localhost:8000](http://localhost:8000).
 
 ### Next steps
-We recommend you go to the [**Tutorials**](/tutorials) section if you are just getting started with Typetron since they are 
-constructed so the newcomer will understand every feature better. 
+We recommend you go to the [**Tutorials**](/tutorials) section if you are just getting started with Typetron since 
+they are built so the newcomer will understand every feature better. 

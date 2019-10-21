@@ -32,6 +32,8 @@
 -   title: Database
     url: query-builder
     subtitles:
+        -   title: Configuration
+            url: database
         -   title: Query Builder
             url: query-builder
         -   title: ORM

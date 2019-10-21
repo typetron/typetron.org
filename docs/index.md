@@ -86,3 +86,11 @@ for spotting common errors as you type the code.
 
 Typetron was build in Typescript's **strict mode** which enforces you to write a more robust
 code base making your app free of bugs.
+
+<br />
+<br />
+
+---
+---
+**_If you are new to Typetron we recommend you check [tutorial](/tutorials) next where it will show up, step by step, how to
+build a simple app._**

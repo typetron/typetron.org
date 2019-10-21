@@ -11,7 +11,7 @@
 	<link href="/style/normalize.css" rel="stylesheet" type="text/css">
 	<link href="/style/detheme.css" rel="stylesheet" type="text/css">
 	<link href="/style/kergan.detheme.css" rel="stylesheet" type="text/css">
-	<link href="/style/scss/main.css" rel="stylesheet" type="text/css">
+	<link href="/style/scss/main.css?{{site.time}}" rel="stylesheet" type="text/css">
 	<script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js" type="text/javascript"></script>
 	<script type="text/javascript">WebFont.load( { google : { families : ["Vollkorn:400,400italic,700,700italic", "Montserrat:100,100italic,200,200italic,300,300italic,400,400italic,500,500italic,600,600italic,700,700italic,800,800italic,900,900italic", "Merriweather:300,300italic,400,400italic,700,700italic,900,900italic", "PT Sans:400,400italic,700,700italic", "Roboto:regular,900"] } } );</script>
 	<!-- [if lt IE 9]>
@@ -46,6 +46,7 @@
 			</div>
 			<nav class="nav-menu-2 w-nav-menu" role="navigation">
 				<a class="nav-link-2 w-nav-link {% if page.layout == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
+				<a class="nav-link-2 w-nav-link {% if page.layout == 'tutorials' %}active{% endif %}" href="/tutorials">Tutorials</a>
 				<!--				<a class="nav-link-2 w-nav-link" style="color: #ddd;">Features</a>-->
 				<div class="nav-cta-button-container">
 					<a class="nav-link-2 border w-nav-link" href="https://github.com/typetron/typetron" target="_blank">GITHUB</a>
@@ -73,9 +74,28 @@
 	</div>
 	<script src="/js/jquery.min.js" type="text/javascript"></script>
 	<script src="/js/detheme.js" type="text/javascript"></script>
-	<script src="/js/main.js" type="text/javascript"></script>
+	<script src="/js/main.js?{{site.time}}" type="text/javascript"></script>
 	<!-- [if lte IE 9]>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script>
 	<![endif] -->
+	<script type="text/javascript">
+		var $zoho = $zoho || {};
+		$zoho.salesiq = $zoho.salesiq ||
+			{
+				widgetcode : "f589f59481ce309ac19d5af4c8559db2a3462ec7558df0c6d73a7d0d0b51f4b3",
+				values : {},
+				ready : function () {
+				}
+			};
+		var d = document;
+		s = d.createElement( "script" );
+		s.type = "text/javascript";
+		s.id = "zsiqscript";
+		s.defer = true;
+		s.src = "https://salesiq.zoho.eu/widget";
+		t = d.getElementsByTagName( "script" )[0];
+		t.parentNode.insertBefore( s, t );
+		d.write( "<div id='zsiqwidget'></div>" );
+	</script>
 </body>
 </html>

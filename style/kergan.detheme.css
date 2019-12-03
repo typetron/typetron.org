@@ -518,6 +518,12 @@ a {
 	flex              : 0 auto;
 }
 
+.vertical-align {
+	-webkit-box-pack        : center;
+	-webkit-justify-content : center;
+	-ms-flex-pack           : center;
+	justify-content         : center;
+}
 .col.lg-6.sm-3.lg-vertical-align {
 	-webkit-box-pack        : center;
 	-webkit-justify-content : center;

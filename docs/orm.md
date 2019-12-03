@@ -216,3 +216,11 @@ export class Article extends Entity {
     updatedAt: Date;
 }
 ```
+
+#### Relationships
+##### One to Many
+_In progress_
+##### Many to One
+_In progress_
+##### Many to Many
+_In progress_

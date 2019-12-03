@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="229px" height="229px" viewBox="0 0 229 229" version="1.1"
+     xmlns="http://www.w3.org/2000/svg">
+    <!-- Generator: Sketch 57.1 (83088) - https://sketch.com -->
+    <title>icon</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <linearGradient x1="2.57029341%" y1="27.4086263%" x2="50%" y2="50%" id="linearGradient-1">
+            <stop stop-color="#3023AE" offset="0%"></stop>
+            <stop stop-color="#C86DD7" offset="100%"></stop>
+        </linearGradient>
+        <polygon id="path-2"
+                 points="62.2689687 40.4034839 62.2689687 100.225408 82.4726271 120 104.492478 100.225408 104.492478 40.4034839 147.681383 40.4034839 166 21.1386782 147.681383 0 18.280631 0 0 21.1386782 18.280631 40.4034839"></polygon>
+        <linearGradient x1="55.1274995%" y1="40.1195284%" x2="101.999998%" y2="63.4915421%" id="linearGradient-4">
+            <stop stop-color="#3023AE" offset="0%"></stop>
+            <stop stop-color="#C86DD7" offset="100%"></stop>
+        </linearGradient>
+        <linearGradient x1="35.6748563%" y1="0%" x2="64.8981489%" y2="100.999999%" id="linearGradient-5">
+            <stop stop-color="#3023AE" offset="0%"></stop>
+            <stop stop-color="#C86DD7" offset="100%"></stop>
+        </linearGradient>
+    </defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01" transform="translate(-427.000000, -1431.000000)">
+            <g id="icon" transform="translate(427.000000, 1431.000000)">
+                <g id="Path-6-Copy-2" transform="translate(31.000000, 61.000000)">
+                    <mask id="mask-3" fill="white">
+                        <use xlink:href="#path-2"></use>
+                    </mask>
+                    <use id="Mask" fill="url(#linearGradient-1)" xlink:href="#path-2"></use>
+                    <path d="M83.4170854,0 L165.705047,0 C168.322773,28.8888889 168.322773,43.3333333 165.705047,43.3333333 C163.087321,43.3333333 135.658,43.3333333 83.4170854,43.3333333 L83.4170854,0 Z"
+                          id="Path-7" fill="url(#linearGradient-4)" mask="url(#mask-3)"></path>
+                    <polygon id="Path-6" fill="url(#linearGradient-5)" mask="url(#mask-3)"
+                             points="82.5829146 120 82.5829146 0 146.81407 39.8256929 146.81407 120"></polygon>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

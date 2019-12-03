@@ -30,7 +30,7 @@
             url: helpers
 
 -   title: Database
-    url: query-builder
+    url: database
     subtitles:
         -   title: Configuration
             url: database

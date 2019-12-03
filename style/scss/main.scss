@@ -41,6 +41,14 @@
 	display: none;
 }
 
+.onlight {
+	color: #333;
+}
+
+.code-preview {
+	//width: 45%;
+	filter: brightness(1.1);
+}
 @media (max-width: 1200px) {
 	.code-examples {
 		flex-direction: column;
@@ -98,6 +106,10 @@
 
 .section.full-screen.background-image-side {
 	min-height: calc(100vh - 100px);
+}
+
+.text-center {
+	text-align: center;
 }
 
 @media (max-width: 992px) {

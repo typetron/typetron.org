@@ -5,8 +5,8 @@
 	<title>Typetron - {{page.title}}</title>
 	<meta content="Typetron - {{page.title}}" property="og:title">
 	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<meta content="Typetron - modern fully-featured framework for nodejs development written in Typescript" name="description">
-	<meta content="typetron modern framework for nodejs development node typescript clean beautiful fully-featured features" name="keywords">
+	<meta content="Typetron - Modern Fully-featured Typescript Framework for Node.js development for building enterprise level web apps" name="description">
+	<meta content="typetron modern framework for nodejs development node typescript clean beautiful fully-featured features enterprise" name="keywords">
 	<meta content="Ionel Lupu" name="author">
 	<link href="/style/normalize.css" rel="stylesheet" type="text/css">
 	<link href="/style/detheme.css" rel="stylesheet" type="text/css">
@@ -21,10 +21,10 @@
 		var n = c.documentElement, t = " w-mod-";
 		n.className += t + "js", ("ontouchstart" in o || o.DocumentTouch && c instanceof DocumentTouch) && (n.className += t + "touch")
 	}( window, document );</script>
-	<!--	<link href="https://daks2k3a4ib2z.cloudfront.net/img/favicon.ico" rel="shortcut icon" type="image/x-icon">-->
-	<!--	<link href="https://daks2k3a4ib2z.cloudfront.net/img/webclip.png" rel="apple-touch-icon">-->
+	<link href="/images/icon.png" rel="shortcut icon" type="image/x-icon">
 
-	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<link href="/style/prism-light-material.css?{{site.time}}" rel="stylesheet">
+	<!--	 Global site tag (gtag.js) - Google Analytics -->
 	<script async src="https://www.googletagmanager.com/gtag/js?id=UA-148111031-1"></script>
 	<script>
 		window.dataLayer = window.dataLayer || [];
@@ -42,7 +42,10 @@
 <body class="body">
 	<div class="nav-bar w-nav" data-animation="default" data-collapse="medium" data-duration="400">
 		<div class="wrapper navbar-2 w-container">
-			<div class="div-block-8"><a class="nav-logo-2 w-inline-block home-title" href="/">Typetron</a>
+			<div class="div-block-8"><a class="nav-logo-2 w-inline-block home-title" href="/">
+				<img alt="logo" src="/images/icon.svg" width="100">
+				Typetron
+			</a>
 			</div>
 			<nav class="nav-menu-2 w-nav-menu" role="navigation">
 				<a class="nav-link-2 w-nav-link {% if page.layout == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
@@ -65,7 +68,7 @@
 			<div class="flex-horizontal-space-between footer">
 				<a class="w-inline-block footer-title" href="https://typetron.org">Typetron</a>
 				<div class="footer-social-links-container">
-					<a class="footer-link-2 no-padding w-inline-block" href="https://www.youtube.com/channel/UCC2aMw0UzoiiepoJlLogvsg?view_as=subscriber" target="_blank"><img alt="" class="social-media-icon" src="/images/iconmonstr-youtube-6.png" width="30"></a>
+					<a class="footer-link-2 no-padding w-inline-block" href="https://www.youtube.com/channel/UCC2aMw0UzoiiepoJlLogvsg" target="_blank"><img alt="" class="social-media-icon" src="/images/iconmonstr-youtube-6.png" width="30"></a>
 					<a class="footer-link-2 no-padding w-inline-block" href="https://twitter.com/TypetronWeb" target="_blank"><img alt="" class="social-media-icon" src="/images/iconmonstr-twitter-1.png" width="30"></a>
 					<a class="footer-link-2 no-padding w-inline-block" href="https://www.facebook.com/Typetron-662589810876633/" target="_blank"><img alt="" class="social-media-icon" src="/images/iconmonstr-facebook-1.png" width="24"></a>
 				</div>
@@ -79,7 +82,7 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/placeholders/3.0.2/placeholders.min.js"></script>
 	<![endif] -->
 	<script type="text/javascript">
-		var $zoho = $zoho || {};
+		var $zoho     = $zoho || {};
 		$zoho.salesiq = $zoho.salesiq ||
 			{
 				widgetcode : "f589f59481ce309ac19d5af4c8559db2a3462ec7558df0c6d73a7d0d0b51f4b3",
@@ -87,15 +90,18 @@
 				ready : function () {
 				}
 			};
-		var d = document;
-		s = d.createElement( "script" );
-		s.type = "text/javascript";
-		s.id = "zsiqscript";
-		s.defer = true;
-		s.src = "https://salesiq.zoho.eu/widget";
-		t = d.getElementsByTagName( "script" )[0];
+		var d         = document;
+		s             = d.createElement( "script" );
+		s.type        = "text/javascript";
+		s.id          = "zsiqscript";
+		s.defer       = true;
+		s.src         = "https://salesiq.zoho.eu/widget";
+		t             = d.getElementsByTagName( "script" )[0];
 		t.parentNode.insertBefore( s, t );
 		d.write( "<div id='zsiqwidget'></div>" );
 	</script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-typescript.min.js"></script>
 </body>
 </html>

@@ -1,2 +1,19 @@
--   title: Introduction
+-   title: Tutorial Introduction
     url:
+-   title: Adding routes to our app
+    url: routing
+-   title: Handling user input with forms
+    url: forms
+-   title: Setting the database
+    url: database
+-   title: Creating, updating and deleting
+    url: crud
+-   title: Searching articles
+    url: search
+-   title: Adding tags to articles
+    #    also, eager loading tags and user
+    url: tags
+-   title: Only the owner can edit
+    url: permissions
+-   title: Next steps
+    url: next

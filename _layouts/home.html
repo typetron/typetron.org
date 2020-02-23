@@ -3,22 +3,27 @@
 <head>
 	<meta charset="utf-8">
 
+	{% capture title %}
+
+	{% if page.title %}
+	{{page.title}} -
+	{% endif %}
+	{% if layout.title %}
+	{{layout.title}} -
+	{% endif %}
+	Typetron
+	{% unless page.hide_title_suffix or layout.hide_title_suffix %}
+	- Fully-featured Node.js framework
+	{% endunless %}
+
+	{% endcapture %}
 	<title>
-		{% if page.title %}
-		{{page.title}} -
-		{% endif %}
-		{% if layout.title %}
-		{{layout.title}} -
-		{% endif %}
-		Typetron
-		{% unless page.hide_title_suffix or layout.hide_title_suffix %}
-		- Fully-featured Node.js framework
-		{% endunless %}
+		{{ title }}
 	</title>
-	<meta content="Typetron - {{page.title}}" property="og:title">
+	<meta content="{{title}}" property="og:title">
 	<meta content="width=device-width, initial-scale=1" name="viewport">
 	<meta content="{{site.url}}" property="og:url"/>
-	<meta content="{{site.url}}/images/icon.svg" property="og:image"/>
+	<meta content="{{site.url}}/images/icon.png" property="og:image"/>
 	<meta content="{{site.description}}" name="description">
 	<meta content="{{site.description}}" property="og:description">
 	<meta content="website" property="og:type"/>

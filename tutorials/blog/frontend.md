@@ -5,13 +5,14 @@ title: Frontend setup
 
 ## {{ page.title }}
 
-Select the frontend option you would like to use:
+<p align="center">Select the frontend option you would like to use:</p>   
 <div class="box-wrapper">
 	<a class="box in-progress" href="/tutorials/blog">
 		<h5>Angular</h5>
 		<div class="box-content">
 			<img src="https://angular.io/assets/images/logos/angular/angular.svg" alt="angular">
 		</div>
+		<p><i>In progress</i></p>
 	</a>
 
 	<a class="box in-progress" href="">
@@ -30,11 +31,3 @@ Select the frontend option you would like to use:
 		<p><i>In progress</i></p>
 	</a>
 </div>
-
-
-## Angular
-- install global @angular/cli
-- cd public
-- ng new frontend
-- ng serve
-- add static assets to point to 'public/frontend/dist'

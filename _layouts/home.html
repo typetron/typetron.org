@@ -2,10 +2,23 @@
 <html data-wf-page="5cd61efa8463a508d5af72ae" data-wf-site="5cd2467915a5c14bc27b77af" lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Typetron - {{page.title}}</title>
+
+	<title>
+		{% if page.title %}
+		{{page.title}} -
+		{% endif %}
+		{% if layout.title %}
+		{{layout.title}} -
+		{% endif %}
+		Typetron
+		{% unless page.hide_title_suffix or layout.hide_title_suffix %}
+		Fully-featured Node.js framework
+		{% endunless %}
+	</title>
 	<meta content="Typetron - {{page.title}}" property="og:title">
 	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<meta content="Typetron - Modern Fully-featured Typescript Framework for Node.js development for building enterprise level web apps" name="description">
+	<meta content="/images/icon.svg" property="og:image"/>
+	<meta content="Typetron - Modern Fully-featured Typescript Framework for Node.js for building enterprise level web apps" name="description">
 	<meta content="typetron modern framework for nodejs development node typescript clean beautiful fully-featured features enterprise" name="keywords">
 	<meta content="Ionel Lupu" name="author">
 	<link href="/style/normalize.css" rel="stylesheet" type="text/css">

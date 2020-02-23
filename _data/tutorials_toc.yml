@@ -1,5 +1,6 @@
 -   title: Tutorial Introduction
-    url:
+    slug: personal-blog-introduction
+    url: .
 -   title: Adding routes to our app
     url: routing
 -   title: Handling user input with forms
@@ -8,12 +9,20 @@
     url: database
 -   title: Creating, updating and deleting
     url: crud
--   title: Searching articles
-    url: search
--   title: Adding tags to articles
+-   title: Building the frontend
+    url: frontend
+    #-   title: Searching articles
+    #    url: search
+    #-   title: Adding authors
+    #    url: authors
+    #-   title: Authentication
+    #    url: authentication
+    #-   title: Only the owner can edit
+    #    url: permissions
+    #-   title: Adding tags
+    #    url: tags
+    #-   title: Deploying
+    #    url: deploying
+    #-   title: Next steps
+    #    url: next
     #    also, eager loading tags and user
-    url: tags
--   title: Only the owner can edit
-    url: permissions
--   title: Next steps
-    url: next

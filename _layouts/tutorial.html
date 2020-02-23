@@ -1,11 +1,7 @@
 ---
 layout: home
+title: Building a personal blog
 ---
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-typescript.min.js"></script>
-<link href="/style/code-theme.css?{{site.time}}" rel="stylesheet">
-
 <div class="section" style="padding-top: 0;">
 	<div class="wrapper">
 		<div class="row">
@@ -16,18 +12,16 @@ layout: home
 						{% for item in site.data.tutorials_toc %}
 						{% assign itemPage = item.url | append: '.md' %}
 						<li>
-							<b>
-								<a class="{% if item.title == page.title or itemPage == currentPage %}active{% endif %}" href="/tutorials/{{ item.url }}">
-									{{ item.title }}
-								</a>
-							</b>
+							<a class="{% if item.title == page.title or itemPage == currentPage or item.slug and item.slug == page.slug %}active{% endif %}" href="{{ item.url }}">
+								{{ forloop.index }}. {{ item.title }}
+							</a>
 						</li>
 						{% if item.subtitles[0] %}
 						<ul>
 							{% for entry in item.subtitles %}
 							{% assign entryPage = entry.url | append: '.md' %}
 							<li>
-								<a class="{% if entryPage == currentPage %}active{% endif %}" href="/tutorials/{{ entry.url }}">
+								<a class="{% if entryPage == currentPage %}active{% endif %}" href="{{ entry.url }}">
 									{{ entry.title }}
 								</a>
 							</li>
@@ -45,3 +39,8 @@ layout: home
 		</div>
 	</div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.16.0/components/prism-typescript.min.js"></script>
+<link href="/style/code-theme.css?{{site.time}}" rel="stylesheet">
+<link href="/style/scss/tutorials.css?{{site.time}}" rel="stylesheet">

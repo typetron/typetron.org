@@ -1,14 +1,15 @@
 ---
 layout: docs
-title: Introduction
+title: Documentation
+slug: introduction
 ---
 
-## {{ page.title }}
+## Introduction
 
-**Typetron** is a **modern Node.js framework**, written in [**Typescript**](http://www.typescriptlang.org/), that allows you to build 
-fully-featured applications. Typetron is best suited for small sized to enterprise level apps.
-Most of the core packages it uses were built from scratch, in [Typescript](http://www.typescriptlang.org/),
-in order to preserve the performance of the framework. 
+**Typetron** is a modern Node.js framework, written in [**Typescript**](http://www.typescriptlang.org/), that allows
+you to build fully-featured applications. Typetron is best suited for small sized to enterprise level apps.
+Most of the core packages it uses were built from scratch, in Typescript, in order to preserve the performance of the
+framework. 
  
 
 ### Features

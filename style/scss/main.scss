@@ -12,6 +12,10 @@
 	color: #fff;
 }
 
+p:not([align=center]) {
+	text-align: justify;
+}
+
 .short-paragraph {
 	width: 100%;
 }
@@ -49,6 +53,7 @@
 	//width: 45%;
 	filter: brightness(1.1);
 }
+
 @media (max-width: 1200px) {
 	.code-examples {
 		flex-direction: column;

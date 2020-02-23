@@ -12,13 +12,16 @@
 		{% endif %}
 		Typetron
 		{% unless page.hide_title_suffix or layout.hide_title_suffix %}
-		Fully-featured Node.js framework
+		- Fully-featured Node.js framework
 		{% endunless %}
 	</title>
 	<meta content="Typetron - {{page.title}}" property="og:title">
 	<meta content="width=device-width, initial-scale=1" name="viewport">
-	<meta content="/images/icon.svg" property="og:image"/>
-	<meta content="Typetron - Modern Fully-featured Typescript Framework for Node.js for building enterprise level web apps" name="description">
+	<meta content="{{site.url}}" property="og:url"/>
+	<meta content="{{site.url}}/images/icon.svg" property="og:image"/>
+	<meta content="{{site.description}}" name="description">
+	<meta content="{{site.description}}" name="og:description">
+	<meta content="website" property="og:type"/>
 	<meta content="typetron modern framework for nodejs development node typescript clean beautiful fully-featured features enterprise" name="keywords">
 	<meta content="Ionel Lupu" name="author">
 	<link href="/style/normalize.css" rel="stylesheet" type="text/css">

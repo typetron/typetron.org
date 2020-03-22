@@ -42,7 +42,7 @@ the `@Rules` decorator where you can add a list of rules that will check the for
 
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms';
-import { Required, Min } from '@Typetron/Validation/Rules';
+import { Required, MinLength } from '@Typetron/Validation/Rules';
 
 export class LoginForm extends Form {
 
@@ -55,7 +55,7 @@ export class LoginForm extends Form {
     @Field()
     @Rules(
         Required,
-        Min(6),
+        MinLength(6),
     )
     password: string;
 }

@@ -5,10 +5,14 @@
     url: routing
 -   title: Handling user input with forms
     url: forms
--   title: Setting the database
+-   title: Setting up the database
     url: database
 -   title: Creating, updating and deleting
     url: crud
+-   title: Image upload
+    url: images
+-   title: Authentication
+    url: auth
 -   title: Building the frontend
     url: frontend
     #-   title: Searching articles

@@ -5,30 +5,28 @@ slug: personal-blog-introduction
 
 ## Introduction
     
-In this tutorials we will build a small personal blog where you can post articles and your users can read, add,
- comment and vote them.
+In this tutorial we will build a small personal blog for a chef where he will be able to add, edit and delete articles
+of different recipes.
 
 Before diving into Typetron, let's lay down the idea on paper. Will will have:
- - a home page that will display a list of the latest articles. An article has a title and  content.
- - an about page with personal information 
- - a blog page that will display all the articles available. Also, users can search articles here.
+ - a home page that will display a list of the latest articles. An article has a title, date, content and an image.
+ - an about page with personal information
+ - a contact page
+ - a page that displays one article 
+ - a page for adding and editing an article
  
-And that's it. A very simple web app.
+And that's it. A very simple web page.
  
 ##### Preparing the environment
 
-Typetron is a framework that runs on top of Node.js. This means we should have [Node.js](https://nodejs.org/)
-installed on our computer. Also, make sure you have [Git](https://git-scm.com/) installed as well. For this 
-tutorial you will need a tool from where you can make complex requests to a server, like 
-[Postman](https://getpostman.com/). It is only needed in the development phase.
+Typetron is a framework that runs on top of Node.js. This means you should have [Node.js](https://nodejs.org/)
+installed on our computer. Also, make sure you have [Git](https://git-scm.com/) installed as well since it will be 
+used to create the project. 
 
-> _**NOTE**_ Would you like us to make tutorial on how to use and master Postman? Leave a message using the 
-> chat box in the right bottom corner or email us at **contact@typetron.org**. 
-    
 ##### Creating a project
 
 Now we are ready to start our first Typetron project. Let's call it "TypetronBlog". Open your terminal and run
-the following command that will create a directory called **TypetronBlog** on the current directory:
+the following command that will create a directory called _TypetronBlog_ in the current directory:
 
 ```bash
 $ git clone https://github.com/typetron/typetron TypetronBlog
@@ -49,7 +47,7 @@ $ npm start
 This will create a local development server on port 8000.
 Let's visit [http://localhost:8000](http://localhost:8000) and voila, our blank Typetron project is ready.
 
-<p align="center">
+<p align="center" class="window">
   <img src="/images/tutorials/blog/new.jpg" />
 </p>
 

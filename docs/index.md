@@ -6,22 +6,21 @@ slug: introduction
 
 ## Introduction
 
-**Typetron** is a modern Node.js framework, written in [**Typescript**](http://www.typescriptlang.org/), that allows
-you to build fully-featured applications. Typetron is best suited for small sized to enterprise level apps.
+Typetron is a modern Node.js framework, written in [Typescript](http://www.typescriptlang.org/), that allows
+you to build fully-featured applications. Typetron can be used to build any app at any size.
 Most of the core packages it uses were built from scratch, in Typescript, in order to preserve the performance of the
 framework. 
  
 
 ### Features
-Typetron aims to have all the features necessary for building any web app possible without the need for you
+Typetron aims to have all the features necessary for building any web app possible so you don't need to
 to search for a package to use. Almost all the packages it has were built from scratch and are available
 in the framework out of the box. 
-This was done to ensure that all the features you are using benefit from the latest language features. 
-Also, every package can be tuned for performance or updated in no time if needed.
+This was done to ensure that all the features you are using benefit from the latest language and platform features. 
+Also, every package can be tuned for performance or updated in no time if needed, by the community.
 
-Some of the big features **Typetron** offers are:
+Some of the features _Typetron_ aims offers are:
 
-###### _(checked boxes = started implementation)_
 * [x] Routing
 * [x] Controllers
 * [x] Middleware
@@ -30,29 +29,30 @@ Some of the big features **Typetron** offers are:
 * [x] IoC container
 * [x] Services
 * [x] ServiceProviders
-* [x] Persistence (SQL, NoSQL)
+* [x] Persistence
 * [x] Intuitive directory structure
-* [x] Views
+* [x] Models (aka smart DTOs)
 * [x] Forms
 * [x] Validations
 * [x] Utilities/helper functions
 * [x] Easy debugging
 * [x] Tests(and code coverage)
+* [x] Authentication
+* [x] Error handling
 {: style='list-style-type: none'}
-_If you think a feature is missing, please create a Github issue so  we can take care of it._
+_If you think a feature is missing, please create a Github issue so we can take care of it._
 
 ### Roadmap
-Typetron is still an in-progress project and for the next months it aims to have the following features:
+Typetron is still in development and for the next months it aims to have the following features:
 * [ ] CLI
 * [ ] Websocket
 * [ ] Migrations
 * [ ] Database seeding
-* [ ] Authentication
+* [ ] Persistence (SQL, NoSQL)
 * [ ] Authorization
 * [ ] Sessions
 * [ ] Mailing
 * [ ] Worker threads
-* [ ] Error handling
 * [ ] GraphQL
 * [ ] Cache
 * [ ] HTTP2
@@ -77,16 +77,15 @@ Also, the tools Typetron is providing are everything a developer needs to build 
 A few years ago we wrote websites. Nowadays we write web applications. The web evolved along with the tools
 we are using. A typical web application is composed from at least two parts: a backend app and a frontend app.
 This separation led to two different camps that have a very distinct line between them. Typetron aims to 
-bring tools that lets the developer bring these two camps together.    
+give developer tools so they can make backend and frontend apps communicate seamlessly.    
 
 ### Typescript
 Javascript is the language of the web, but Javascript alone is not very powerful. When working on enterprise
 level apps, it will slow down the development making the project feel tedious to work with. Typescript
-provides static typing, classes and interfaces giving you and IDEs to richer environment
-for spotting common errors as you type the code. 
+provides static typing giving you and IDEs a richer environment and spotting common errors without running the code. 
 
-Typetron was build in Typescript's **strict mode** which enforces you to write a more robust
-code base making your app free of bugs.
+Typetron was build in Typescript's _strict mode_ which enforces you to write a more robust code base making your
+app free of bugs.
 
 <br />
 <br />

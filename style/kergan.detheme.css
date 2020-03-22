@@ -268,13 +268,15 @@ a {
 
 .nav-link-2:hover {
 	opacity : 1;
-	color   : hsla(230.22471910112358, 88.12%, 60.39%, 1.00);
+	/*color   : hsla(230.22471910112358, 88.12%, 60.39%, 1.00);*/
+	color   : #8442ec;
 }
 
 .nav-link-2.w--current {
 	-webkit-transition-property : none;
 	transition-property         : none;
-	color                       : #096ad0;
+	/*color                       : #096ad0;*/
+	color                       : #8442ec;
 	font-weight                 : 700;
 }
 
@@ -283,7 +285,7 @@ a {
 	padding-bottom     : 6px;
 	border-style       : solid;
 	border-width       : 1px;
-	border-color       : hsla(230.22471910112358, 88.12%, 60.39%, 1.00);
+	border-color       : #8442ec;
 	border-radius      : 50px;
 	opacity            : 1;
 	-webkit-transition : background-color 200ms ease;
@@ -291,7 +293,7 @@ a {
 }
 
 .nav-link-2.border:hover {
-	background-color : hsla(230.22471910112358, 88.12%, 60.39%, 1.00);
+	background-color : #8442ec;
 	color            : #fff;
 }
 
@@ -524,6 +526,7 @@ a {
 	-ms-flex-pack           : center;
 	justify-content         : center;
 }
+
 .col.lg-6.sm-3.lg-vertical-align {
 	-webkit-box-pack        : center;
 	-webkit-justify-content : center;
@@ -623,9 +626,9 @@ a {
 
 .button2 {
 	padding            : 10px 25px;
-	border             : 1px solid #096ad0;
+	border             : 1px solid #8442ec;
 	border-radius      : 40px;
-	background-color   : hsla(230.22471910112358, 88.12%, 60.39%, 1.00);
+	background-color   : #8442ec;
 	-webkit-transition : all 400ms ease;
 	transition         : all 400ms ease;
 	font-family        : Montserrat, sans-serif;
@@ -636,7 +639,8 @@ a {
 }
 
 .button2:hover {
-	background-color : hsla(230.22471910112358, 58.87%, 48.68%, 1.00);
+	background-color : #8442ec;
+	opacity          : 0.8;
 	color            : #fff;
 }
 

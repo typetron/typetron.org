@@ -6,7 +6,11 @@ title: Database
 ## {{ page.title }}
 
 The next thing we have to do is to show our visitors a list of articles. But we need to store that data somewhere.
-Open **database.slite** file in your favorite SQL editor and create the  **articles** tables to store our data:
+Right now, since Typetron is not event in version 1, it offers support only for SQLite databases (file based database).
+But don't worry. Typetron will support most of the popular SQL and NoSQL (MySQL, PostgreSQL, Mongodb, DynamoDB etc) 
+databases before version 1 release. For now, let's just work with SQLite and get some features up and running.
+ 
+Open the _database.slite_ file in your favorite SQL editor and create the _articles_ table to store our data:
 ```sql
 create table articles
 (
@@ -17,24 +21,22 @@ create table articles
 	updatedAt datetime not null,
 );
 ```
-> **_NOTE_** For the time being, Typetron supports only SQLite databases but in the future it will support most
-> of the SQL and NoSQL database like: MySQL, PostgreSQL, Mongodb, DynamoDB etc.
 
 Also, fill the tables with some data:
 ```sql
 INSERT INTO articles (id, title, content, createdAt) VALUES 
-    (1, 'Making a blog with Typetron', 'Content here', '1571521593000'),
-    (2, 'Making a healthy breakfast', 'Content here too', '1571518725000'),
-    (3, 'Why going to gym is good', 'Content here more', '1571518724000'),
+    (1, 'Ultimate Crispy "Chicken" Sandwich', 'Content here', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (2, 'Chunky Monkey Smoothie Bowls', 'Content here too', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    (3, 'Chicken chunks with green chunks', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ```
-> **_NOTE_** Typetron will have a auto-seeding tool that you can use to populate your database with random data. 
+> **_NOTE_** Typetron will have an auto-seeding tool that you can use to populate your database with random data. 
 
 #### Creating the `Article` entity
 
 Now, since we have our database ready, we can go back to our TypetronBlog app and write some code. First of all,
 we need to create the entities that we will work with. An Entity is a special class that resembles an entry in
-our database. In this case we have the **articles** table, so we need to create the **Articles** entity by creating an
-**Article.ts** file inside Entities folder and write this:  
+our database. In this case we have the _articles_ table, so we need to create the _Article_ entity by creating an
+_Article.ts_ file inside Entities folder and write this:  
 ```ts
 import { Column, Entity, ID, Meta } from '@Typetron/Database';
 
@@ -58,7 +60,7 @@ export class Article extends Entity {
 > when working on a development environment.
 
 >  **_NOTE_** By default, Typetron will use the entity's name to connect to the table. Without the table value
-> added, the Article entity will select from the **article** table. You can use singular names for tables if you 
+> added, the Article entity will select from the _article_ table. You can use singular names for tables if you 
 > don't want to use the @Meta decorator. In the future Typetron will have a pluralization feature and you won't
 > need to write the table at plural manually.
 
@@ -88,7 +90,7 @@ export class Article extends Entity {
 }
 ```
 
-The **createdAt** and **updatedAt** fields will be automatically populated with their respective values when an Entity
-is created or updated because they were annotated with the @CreatedAt and the @UpdatedAt decorators. 
+The _createdAt_ and _updatedAt_ fields will be automatically populated with their respective values when an Entity
+is created or updated because they were annotated with the _@CreatedAt()_ and the _@UpdatedAt()_ decorators. 
 
 In the next part we will add the basic actions to create, update and delete articles. >>>>>> [Managing articles](crud).

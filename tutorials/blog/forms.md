@@ -5,11 +5,12 @@ title: Forms
 
 ## {{ page.title }}
 
-In the previous part we created a route that responded to a Post request at [localhost:8000](http://localhost:8000). 
-Let's make use of forms and accept user input so we can save it when we will be adding a database to our app.
+In the previous part we created a route that responded to a HTTP Post request at [localhost:8000](http://localhost:8000). 
+Let's make use of [Forms](http://localhost:4000/docs/forms) and validate user input so we can save it when we will be 
+adding a database to our app.
 
-Forms are simple classes with fields that show what input is accepted by the app. Create an **ArticleForm.ts** file
-inside a **Forms** directory in the app's root folder with this content:
+Forms are simple classes with fields that show what input is accepted by the app. Create an _ArticleForm.ts_ file
+inside a _Forms_ directory in the app's root folder with this content:
 
 ```ts
 import { Field, Form } from '@Typetron/Forms';
@@ -23,8 +24,12 @@ export class ArticleForm extends Form {
     content: string;
 }
 ``` 
+Here we have a simple class that extends the base _Form_ class from Typetron. The base _Form_ class contains special
+methods that are used to validate the user input. When creating a form you should always extend the _Form_ class. Inside
+the class we have two properties annotated with the _@Field()_ decorator telling Typetron what are the form inputs.
 
-We can now use this form in our **add** from **HomeController**. Let's just return the data back to the user:
+We can now use this form in our _add_ from _HomeController_. Let's just return the data back to the user to see 
+everything works:
 
 ```ts
 // ...
@@ -46,14 +51,14 @@ Let's make the title and content required fields with the title needing at least
 
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms';
-import { Min, Required } from '@Typetron/Validation';
+import { MinLength, Required } from '@Typetron/Validation';
 
 export class ArticleForm extends Form {
 
     @Field()
     @Rules(
         Required,
-        Min(5)
+        MinLength(5)
     )
     title: string;
 
@@ -68,11 +73,10 @@ export class ArticleForm extends Form {
 Now, whenever the client inputs invalid data, he will get an error. Try adding a title with less than 5 
 characters and you should see an error like this one:
 
-
-<p align="center">
+<p align="center" class="window">
   <img src="/images/tutorials/blog/invalid-form.jpg" />
 </p> 
 
-
-In the next part we will setup a SQLite database to store our data >>>>>> [Database](database).
+How that we know how to validate our data we can save it in a database. In the next part we will setup a SQLite 
+database to store our validated data >>>>>> [Database](database).
 

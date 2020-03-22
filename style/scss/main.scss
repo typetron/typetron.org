@@ -65,6 +65,15 @@ p:not([align=center]) {
 
 }
 
+.docs-content a {
+	text-decoration: none;
+	color: #8442ec;
+
+	&:hover {
+		text-decoration: underline;
+	}
+}
+
 .nav-bar {
 	position: relative;
 
@@ -72,8 +81,29 @@ p:not([align=center]) {
 		font-weight: bold;
 
 		&.active {
-			color: #415ef3;
+			color: #8442ec;
 		}
+	}
+}
+
+.window {
+	position: relative;
+	border: 1px solid #1e1e1e;
+	border-top-width: 25px;
+	border-radius: 5px;
+
+	&::before {
+		content: '';
+		position: absolute;
+		height: 0.8em;
+		width: 0.8em;
+		top: -18px;
+		left: 6px;
+		opacity: 0.8;
+		border-radius: 100%;
+		background: rgba(255, 0, 0, 0.8);
+		box-shadow: 1.4em 0 rgba(255, 255, 0, 0.8), 2.8em 0em rgba(0, 255, 0, 0.8);
+		transition: all 0.3s ease-in-out;
 	}
 }
 
@@ -88,7 +118,7 @@ p:not([align=center]) {
 				text-decoration: none;
 
 				&.active {
-					color: #415ef3;
+					color: #8442ec;
 				}
 			}
 		}

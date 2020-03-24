@@ -18,16 +18,16 @@ create table articles
 	title varchar(128) not null,
 	content text,
 	createdAt datetime not null,
-	updatedAt datetime not null,
+	updatedAt datetime not null
 );
 ```
 
 Also, fill the tables with some data:
 ```sql
-INSERT INTO articles (id, title, content, createdAt) VALUES 
-    (1, 'Ultimate Crispy "Chicken" Sandwich', 'Content here', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (2, 'Chunky Monkey Smoothie Bowls', 'Content here too', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    (3, 'Chicken chunks with green chunks', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+INSERT INTO articles (title, content, createdAt, updatedAt) VALUES 
+    ('Ultimate Crispy "Chicken" Sandwich', 'Content here', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('Chunky Monkey Smoothie Bowls', 'Content here too', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+    ('Chicken chunks with green chunks', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
 ```
 > **_NOTE_** Typetron will have an auto-seeding tool that you can use to populate your database with random data. 
 

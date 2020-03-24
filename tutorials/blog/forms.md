@@ -28,8 +28,8 @@ Here we have a simple class that extends the base _Form_ class from Typetron. Th
 methods that are used to validate the user input. When creating a form you should always extend the _Form_ class. Inside
 the class we have two properties annotated with the _@Field()_ decorator telling Typetron what are the form inputs.
 
-We can now use this form in our _add_ from _HomeController_. Let's just return the data back to the user to see 
-everything works:
+We can now use this form in our _add_ from _HomeController_ to capture the user's input.
+Let's just return the data back to the user to see everything works:
 
 ```ts
 // ...
@@ -44,6 +44,7 @@ export class HomeController {
     add(form: ArticleForm) {
         return form;
     }
+}
 ``` 
 
 Nothing special here. We can also validate the fields in the form by adding rules to the using the **@Rules** decorator.
@@ -71,7 +72,8 @@ export class ArticleForm extends Form {
 ```
 
 Now, whenever the client inputs invalid data, he will get an error. Try adding a title with less than 5 
-characters and you should see an error like this one:
+characters inside the _body_ of the request as a _raw_ JSON like in the image below input 
+and you should see an error like this one:
 
 <p align="center" class="window">
   <img src="/images/tutorials/blog/invalid-form.jpg" />

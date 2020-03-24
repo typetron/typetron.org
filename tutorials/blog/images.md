@@ -41,9 +41,10 @@ case, just to save it on disk like so:
 
 ```ts
 
-@Controller(')
+@Controller()
 export class HomeController {
     // ...
+    @Post()
     async add(form: ArticleForm, storage: Storage) {
         await storage.put(form.image, 'public/articles');
         const article = new Article(form);
@@ -109,15 +110,23 @@ export class Article extends Entity {
     updatedAt: Date;
 }
 ```
-
-Now, if we make a HTTP GET request to [localhost:8000](http://localhost:8000) we can see our
-_image_ key with the weird name we've seen in the _public/articles_ directory.
+Let's make a new article so the field image will get populated. Now, if we make a HTTP GET 
+request to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird
+name we've seen in the _public/articles_ directory. All the other article don't have an image
+yet. You can use the _edit_ route to update their image.
 
 To actually see our image we will have to set up static file serving feature. All we have to
 do is to tell Typetron where these static files are by changing the config from _config/app.js_
 file. Luckily, we can easily do this by uncommenting the _staticAssets_ key in that file. 
 This will give Typetron access to show the files from the _public_ directory when you access 
-them. To test this, make a HTTP GET request to `localhost:8000/articles/<the weird image name>`, eg:
+them:
+```ts
+    staticAssets: {
+        '*': ['public']
+    }
+``` 
+
+To test this, make a HTTP GET request to `localhost:8000/articles/<the weird image name>`, eg:
 `localhost:8000/articles/upload_73830303b8e292a87942bfb6f46e0663.jpg` to see your image.  
  
 In the next part we will add an authentication layer to our app so only we can edit the

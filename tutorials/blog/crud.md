@@ -44,7 +44,7 @@ export class HomeController {
     // ...
 
     @Get('{id}')
-    async read(id: number) {
+    read(id: number) {
         return Article.find(id);
     }
 }
@@ -68,7 +68,7 @@ export class HomeController {
     // ...
 
     @Get('{article}')
-    async read(article: Article) {
+    read(article: Article) {
         return article;
     }
 }

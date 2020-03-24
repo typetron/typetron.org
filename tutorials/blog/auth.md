@@ -18,7 +18,7 @@ import { Article } from 'App/Entities/Article';
 import { AuthMiddleware } from '@Typetron/Framework/Middleware';
 import { Storage } from '@Typetron/Storage';
 
-@Controller('api')
+@Controller()
 export class HomeController {
 
     // ...
@@ -67,7 +67,7 @@ Let's create a table in our database:
 ```sql
 create table users
 (
-	id integer constraint users_pk rimary key autoincrement,
+	id integer constraint users_pk primary key autoincrement,
 	email varchar not null,
 	name varchar,
 	password varchar not null
@@ -104,5 +104,7 @@ done using postman:
   <img src="/images/tutorials/blog/article-with-auth.jpg" />
 </p>
 
+The server will allow us to access the protected routes while we have this token set in our
+requests. You can check it out by creating a new article, update or delete.
 
 In the next part we will implement a simple frontend that will show our personal blog >>>>>> [Frontend](frontend).

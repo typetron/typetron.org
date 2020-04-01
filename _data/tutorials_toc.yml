@@ -13,6 +13,10 @@
     url: images
 -   title: Authentication
     url: auth
+-   title: Final touches
+    url: final-touches
+-   title: Deploying
+    url: deploying
 -   title: Building the frontend
     url: frontend
     #-   title: Searching articles

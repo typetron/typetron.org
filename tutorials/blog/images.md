@@ -9,6 +9,7 @@ Adding images to our recipes is very easy. Change the _ArticleForm_ to accept an
 image field and make it required so all of our recipes will have one. Like this:
 
 ```ts
+//Forms/ArticleForm.ts
 import { MinLength, Required } from '@Typetron/Validation';
 import { Field, Form, Rules } from '@Typetron/Forms';
 import { Image } from '@Typetron/Storage';
@@ -40,6 +41,7 @@ Now, change the  _add_ method from _HomeController_ to deal with this image: in 
 case, just to save it on disk like so:
 
 ```ts
+//Controllers/Http/HomeController.ts
 
 @Controller()
 export class HomeController {
@@ -85,6 +87,7 @@ ALTER TABLE articles ADD image VARCHAR;
 Then we have to update our _Article_ entity to have this property:
 
 ```ts
+//Entity/Article.ts
 import { Column, CreatedAt, Entity, ID, Meta, UpdatedAt } from '@Typetron/Database';
 
 @Meta({
@@ -110,13 +113,15 @@ export class Article extends Entity {
     updatedAt: Date;
 }
 ```
-Let's make a new article so the field image will get populated. Now, if we make a HTTP GET 
-request to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird
-name we've seen in the _public/articles_ directory. All the other article don't have an image
-yet. You can use the _edit_ route to update their image.
+
+Let's make a new article by making again a HTTP Post request so the field image will get 
+populated. Now, if we make a HTTP GET request to [localhost:8000](http://localhost:8000) we
+can see our _image_ key with the weird name we've seen in the _public/articles_ directory. 
+All the other articles don't have an image yet. You can use the _edit_ route to update their
+image.
 
 To actually see our image we will have to set up static file serving feature. All we have to
-do is to tell Typetron where these static files are by changing the config from _config/app.js_
+do is to tell Typetron where these static files are by changing the config from _config/app.ts_
 file. Luckily, we can easily do this by uncommenting the _staticAssets_ key in that file. 
 This will give Typetron access to show the files from the _public_ directory when you access 
 them:
@@ -127,7 +132,10 @@ them:
 ``` 
 
 To test this, make a HTTP GET request to `localhost:8000/articles/<the weird image name>`, eg:
-`localhost:8000/articles/upload_73830303b8e292a87942bfb6f46e0663.jpg` to see your image.  
+`localhost:8000/articles/upload_73830303b8e292a87942bfb6f46e0663.jpg` to see your image. You may be wondering from where
+does the _/articles/_ come from. It comes from this line  _await storage.put(form.image, 'public/articles');_. Here we
+save our images inside the _public/articles_ directory. But why doesn't the route look like _localhost:8000/public/articles/image-name_?
+This is because the _staticAssets_ setting is set to serve the files from the _public_ directory already. 
  
 In the next part we will add an authentication layer to our app so only we can edit the
  article. >>>>>> [Authentication](auth).

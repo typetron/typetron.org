@@ -13,6 +13,7 @@ Forms are simple classes with fields that show what input is accepted by the app
 inside a _Forms_ directory in the app's root folder with this content:
 
 ```ts
+//Forms/ArticleForm.ts
 import { Field, Form } from '@Typetron/Forms';
 
 export class ArticleForm extends Form {
@@ -32,7 +33,7 @@ We can now use this form in our _add_ from _HomeController_ to capture the user'
 Let's just return the data back to the user to see everything works:
 
 ```ts
-// ...
+//Controllers/Http/HomeController.ts
 import { ArticleForm } from 'App/Forms/ArticleForm';
 
 @Controller()
@@ -47,10 +48,12 @@ export class HomeController {
 }
 ``` 
 
-Nothing special here. We can also validate the fields in the form by adding rules to the using the **@Rules** decorator.
-Let's make the title and content required fields with the title needing at least 5 characters:
+Nothing special here. We can also validate the fields in the form by adding rules to them using
+the _@Rules()_ decorator. Let's make the title and content required fields with the title 
+needing at least 5 characters:
 
 ```ts
+//Forms/ArticleForm.ts
 import { Field, Form, Rules } from '@Typetron/Forms';
 import { MinLength, Required } from '@Typetron/Validation';
 

@@ -12,6 +12,7 @@ so only we can do these actions. To do so we need to protect our routes so only 
 Typetron has support for authentication out of the box. You can protect our routes by using
 the _AuthMiddleware_: 
 ```ts
+// Controllers/Http/HomeController.ts
 import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 import { Article } from 'App/Entities/Article';
@@ -107,4 +108,4 @@ done using postman:
 The server will allow us to access the protected routes while we have this token set in our
 requests. You can check it out by creating a new article, update or delete.
 
-In the next part we will implement a simple frontend that will show our personal blog >>>>>> [Frontend](frontend).
+In the next part, we will a few changes to the app preparing it to hit the real world >>>>>> [Final touches](final-touches).

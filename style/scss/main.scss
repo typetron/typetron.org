@@ -171,3 +171,41 @@ p:not([align=center]) {
 		padding: 0 10px;
 	}
 }
+
+
+.code-toolbar {
+	display: flex;
+	flex-direction: column;
+}
+
+.code-toolbar {
+	position: relative;
+
+	> .highlight {
+		padding-top: 0;
+		order: 1;
+	}
+}
+
+.toolbar {
+	width: 100%;
+	order: 0;
+	display: flex;
+	justify-content: flex-end;
+	position: absolute;
+	top: 5px;
+
+	.button-copy-code {
+		color: #eee;
+		background-color: #ffffff14;
+		outline: none;
+		border-radius: 50px;
+		padding: 2px 5px;
+
+		&:hover {
+			background-color: #ffffff38;
+			cursor: pointer;
+			outline: none;
+		}
+	}
+}

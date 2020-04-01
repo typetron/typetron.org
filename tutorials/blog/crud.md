@@ -5,29 +5,8 @@ title: Crud
 
 ## Creating, updating and deleting
 
-After we created the _Article_ entity, we can now go and create the methods/actions that will take care of handling
-the user's requests. In our case, a user wants to see the latest articles in the blog. Let's add a method inside
-_HomeController_ that will do just that. Remove the _welcome_ method (which is just a dummy method) and add this: 
-
-```ts
-import { Controller, Get } from '@Typetron/Router';
-import { Article } from 'App/Entities/Article';
-
-@Controller()
-export class HomeController {
-
-    @Get()
-    index() {
-        return Article.get();
-    }
-}
-```
-
-The _@Get()_ decorator will register a route inside Typetron that will respond to HTTP GET requests.
-
-The _Article.get()_ will go inside the database and select everything from the _articles_ table and return the
-result to the user. This is similar with making a SQL select like this:`SELECT * from articles`. Now, if we go inside
-the browser we should see the articles in a JSON format.
+After we created the _Article_ entity and showed all the articles, we can now go and create the methods/actions that 
+will take care of handling the other user's requests. 
 
 #### Showing one article
 
@@ -36,12 +15,15 @@ should display the contents of that article. Let's add a method inside _HomeCont
 display one particular article:
    
 ```ts
-// ...
+//Controllers/Http/HomeController.ts
 
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get();
+    }
 
     @Get('{id}')
     read(id: number) {
@@ -60,7 +42,7 @@ We can also use Route-Entity binding, which is just a fancy name, where Typetron
 on the name of the route parameter and the name of the entity:
 
 ```ts
-// ...
+//Controllers/Http/HomeController.ts
 
 @Controller()
 export class HomeController {
@@ -82,7 +64,7 @@ Our app can display all the articles or one particular article. Let's make it mo
 ability to create an article. To do that, add a method inside _HomeController_ with this piece of code:
 
 ```ts
-// ...
+//Controllers/Http/HomeController.ts
 
 @Controller()
 export class HomeController {
@@ -117,10 +99,11 @@ change the body of the request into this JSON:
 ```
 
 To make Typetron take this JSON we should use the form we created earlier. Forms make it easy to organise and validate
-the data coming from users. Having this, we can use this form in our controller like this:
+the data coming from users. Having this, we can use this form in our controller. Replace the current _add_ method with
+this one:
 
 ```ts
-// ...
+//Controllers/Http/HomeController.ts
 import { ArticleForm } from 'App/Forms/ArticleForm';
 
 @Controller()
@@ -144,10 +127,10 @@ Now, you can use Postman to create a new article:
 
 #### Updating and deleting articles
 
-We can easily add an update and delete action to our controller:
+We can easily add, update and delete actions to our controller:
 
 ```ts
-// ...
+//Controllers/Http/HomeController.ts
 
 @Controller()
 export class HomeController {

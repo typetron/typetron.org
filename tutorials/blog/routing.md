@@ -15,10 +15,12 @@ respond to different HTTP requests. In this case, the _HomeController_ has one m
 called whenever a _GET_ request is made to [localhost:8000](http://localhost:8000). The HTTP method is 
 enforced by the _@Get()_ decorator.
 
-We can also return objects or a list of objects in this method( methods are also known as actions). 
-Let's return a dummy list of objects containing the titles of some articles:
+We can also return objects or a list of objects in this method (methods are also known as actions). 
+Let's return a dummy list of objects containing the titles of some articles. Replace the existing _welcome_ method with
+this:
 
 ```ts
+//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 
 @Controller()
@@ -58,6 +60,7 @@ In order to add a new route to our app we just need to add a method to our contr
 appropriate decorator: _@Get()_, _@Post()_, _@Patch()_, _@Put()_ or _@Delete()_. For example, let's add a route that will return the details of an article:
  
 ```ts
+//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 
 @Controller()
@@ -82,6 +85,7 @@ We can make our route smarter by changing 'article' inside _@Get('article')_ to 
 route parameter: 
 
 ```ts
+//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 
 @Controller()
@@ -112,6 +116,7 @@ Going to [localhost:8000/1](http://localhost:8000/1) will show a JSON string lik
 We can also create routes that respond to HTTP POST requests using the _@Post()_ decorator: 
 
 ```ts
+//Controllers/Http/HomeController.ts
 import { Controller, Post } from '@Typetron/Router';
 
 @Controller()

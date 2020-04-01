@@ -3,9 +3,7 @@ layout: tutorial
 title: Frontend setup
 ---
 
-## {{ page.title }}
-
-_**In progress**_ 
+## {{ page.title }} (_In progress_)
 
 > _Typetron will support utility libraries for making frontend development easier_
 
@@ -17,6 +15,15 @@ What we will build:
 
 
 <p align="center">Select the frontend option you would like to use:</p>   
+<div class="box-wrapper" style="justify-content: center;">
+	<a class="box in-progress" href="/tutorials/blog" style="max-width: 22%;">
+		<h5>Vanilla TS</h5>
+		<div class="box-content">
+			<img src="https://www.typescriptlang.org/assets/images/icons/apple-touch-icon-180x180.png" alt="angular">
+		</div>
+		<p><i>In progress</i></p>
+	</a>
+</div>   
 <div class="box-wrapper">
 	<a class="box in-progress" href="/tutorials/blog">
 		<h5>Angular</h5>

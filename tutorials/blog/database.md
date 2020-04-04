@@ -10,7 +10,7 @@ Right now, since Typetron is not event in version 1, it offers support only for 
 But don't worry. Typetron will support most of the popular SQL and NoSQL (MySQL, PostgreSQL, Mongodb, DynamoDB etc) 
 databases before version 1 release. For now, let's just work with SQLite and get some features up and running.
  
-Open the _database.slite_ file found in the root of the project in your favorite SQL editor (you can try 
+Open the _database.sqlite_ file found in the root of the project in your favorite SQL editor (you can try 
 [DB Browser](https://sqlitebrowser.org/)) and create the _articles_ table to store our data:
 ```sql
 create table articles
@@ -28,7 +28,7 @@ Also, fill the tables with some data:
 INSERT INTO articles (title, content, createdAt, updatedAt) VALUES 
     ('Ultimate Crispy "Chicken" Sandwich', 'Content here', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('Chunky Monkey Smoothie Bowls', 'Content here too', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('Chicken chunks with green chunks', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ('Chicken chunks with green curry', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
 ```
 > **_NOTE_** Typetron will have an auto-seeding tool that you can use to populate your database with random data. 
 

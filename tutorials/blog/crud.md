@@ -49,7 +49,7 @@ export class HomeController {
 
     // ...
 
-    @Get('{article}')
+    @Get('{Article}')
     read(article: Article) {
         return article;
     }
@@ -137,14 +137,14 @@ export class HomeController {
 
     // ...
 
-    @Put('{article}')
+    @Patch('{Article}')
     async update(article: Article, form: ArticleForm) {
         article.fill(form);
         await article.save();
         return article;
     }
 
-    @Delete('{article}')
+    @Delete('{Article}')
     async delete(article: Article) {
         await article.delete();
     }

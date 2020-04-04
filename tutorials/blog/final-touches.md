@@ -95,7 +95,7 @@ This will take care of deleting the images from disk only if they exist.
 
 ### Control over data
 Controlling the data that comes out of your app is important. For example, all the methods from our _ArticleController_,
-except the _delete_ method, return a list of articles or onl one article but we can't control directly what fields from
+except the _delete_ method, return a list of articles or only one article but we can't control directly what fields from
 those entities are shown to the user. This is where [Models](/docs/models) come in handy. Models are simple classes that
 extend the _Model_ class from _@Typetron/Models_ and have properties annotated with the _@Field_ decorator. Let's create
 a model for our article:
@@ -165,7 +165,7 @@ export class HomeController {
 
     @Get()
     async index() {
-        return ArticleModel.from(Article.get());
+        return ArticleModel.from(await Article.get());
     }
 
     @Get('{Article}')

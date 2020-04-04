@@ -30,13 +30,13 @@ export class HomeController {
         // ...
     }
 
-    @Patch('{article}')
+    @Patch('{Article}')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
         // ...
     }
 
-    @Delete('{article}')
+    @Delete('{Article}')
     @Middleware(AuthMiddleware)
     async delete(article: Article) {
         await article.delete();

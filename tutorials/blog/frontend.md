@@ -19,7 +19,7 @@ What we will build:
 	<a class="box in-progress" href="/tutorials/blog" style="max-width: 22%;">
 		<h5>Vanilla TS</h5>
 		<div class="box-content">
-			<img src="https://www.typescriptlang.org/assets/images/icons/apple-touch-icon-180x180.png" alt="angular">
+			<img src="https://raw.githubusercontent.com/remojansen/logo.ts/master/ts.png" alt="typescript">
 		</div>
 		<p><i>In progress</i></p>
 	</a>

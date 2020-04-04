@@ -1,4 +1,4 @@
-import { Controller, Delete, Post, Put } from '@Typetron/Router';
+import { Controller, Delete, Patch, Post } from '@Typetron/Router';
 import { Article } from 'App/Entities/Article';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 
@@ -11,7 +11,7 @@ export class ArticleController {
         return article;
     }
 
-    @Put('{Article}')
+    @Patch('{Article}')
     async update(article: Article, form: ArticleForm) {
         article.fill(form);
         await article.save();

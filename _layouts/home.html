@@ -179,7 +179,11 @@
 	</script>
 	<script>
 		Prism.plugins.toolbar.registerButton( 'select-code', function ( env ) {
-			var button       = document.createElement( 'button' );
+			const isFilePath = env.element.classList.contains( 'language-file-path' );
+			if ( isFilePath ) {
+				return;
+			}
+			const button     = document.createElement( 'button' );
 			button.innerHTML = 'Copy';
 			button.className = "button-copy-code";
 

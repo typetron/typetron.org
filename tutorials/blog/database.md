@@ -10,8 +10,10 @@ Right now, since Typetron is not event in version 1, it offers support only for 
 But don't worry. Typetron will support most of the popular SQL and NoSQL (MySQL, PostgreSQL, Mongodb, DynamoDB etc) 
 databases before version 1 release. For now, let's just work with SQLite and get some features up and running.
  
-Open the _database.sqlite_ file found in the root of the project in your favorite SQL editor (you can try 
-[DB Browser](https://sqlitebrowser.org/)) and create the _articles_ table to store our data:
+Open the _database.sqlite_ file found in the root of the project in your favorite SQL editor. You can try 
+[DB Browser](https://sqlitebrowser.org/) which is free. Intellij IDEA and PHPStorm have a database module built-in 
+that you can use. For other Intellij products, like Webstorm, you can install the Database Navigator plugin. 
+Let's create the _articles_ table to store our data:
 ```sql
 create table articles
 (
@@ -38,8 +40,10 @@ Now, since we have our database ready, we can go back to our TypetronBlog app an
 we need to create the entities that we will work with. An Entity is a special class that resembles an entry in
 our database. In this case we have the _articles_ table, so we need to create the _Article_ entity by creating an
 _Article.ts_ file inside Entities folder and write this:  
+```file-path
+📁 Entity/Article.ts
+```
 ```ts
-//Entity/Article.ts
 import { Column, Entity, ID, Meta } from '@Typetron/Database';
 
 @Meta({
@@ -68,8 +72,10 @@ export class Article extends Entity {
 
 
 Let's also add timestamp fields to know when the article was created or updated:
+```file-path
+📁 Entity/Article.ts
+```
 ```ts
-//Entity/Article.ts
 import { Column, Entity, ID, Meta, CreatedAt, UpdatedAt } from '@Typetron/Database';
 
 @Meta({
@@ -99,8 +105,10 @@ is created or updated because they were annotated with the _@CreatedAt()_ and th
 Let's add a method inside _HomeController_ that will show all the articles from the database. Remove the _welcome_ 
 method (which is just a dummy method) and add this: 
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 import { Article } from 'App/Entities/Article';
 

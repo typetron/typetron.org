@@ -19,7 +19,7 @@ And that's it. A very simple web page.
  
 ##### Preparing the environment
 
-Typetron is a framework that runs on top of Node.js. This means you should have [Node.js](https://nodejs.org/)
+Typetron is a framework that runs on top of Node.js. This means you should have [Node.js LTS](https://nodejs.org/)
 installed on our computer. Also, make sure you have [Git](https://git-scm.com/) installed as well since it will be 
 used to create the project. 
 

@@ -14,9 +14,10 @@ Let's imagine a user will click on an article (since we don't have a frontend ye
 should display the contents of that article. Let's add a method inside _HomeController_ again, that will 
 display one particular article:
    
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
-
 @Controller()
 export class HomeController {
 
@@ -41,9 +42,10 @@ _id_ 1. If you change that 1 into 2, you will see the contents of article 2 and 
 We can also use Route-Entity binding, which is just a fancy name, where Typetron will find the Entity for you based 
 on the name of the route parameter and the name of the entity:
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
-
 @Controller()
 export class HomeController {
 
@@ -63,9 +65,10 @@ Passing _article_ as a route parameter and _Article_ as a method argument, Typet
 Our app can display all the articles or one particular article. Let's make it more interesting and add the 
 ability to create an article. To do that, add a method inside _HomeController_ with this piece of code:
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
-
 @Controller()
 export class HomeController {
 
@@ -102,8 +105,10 @@ To make Typetron take this JSON we should use the form we created earlier. Forms
 the data coming from users. Having this, we can use this form in our controller. Replace the current _add_ method with
 this one:
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
 import { ArticleForm } from 'App/Forms/ArticleForm';
 
 @Controller()
@@ -129,9 +134,10 @@ Now, you can use Postman to create a new article:
 
 We can easily add, update and delete actions to our controller:
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
-
 @Controller()
 export class HomeController {
 

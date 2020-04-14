@@ -19,7 +19,7 @@ export default new AppConfig({
 });
 ```
 
-#### Getting the config
+#### Getting config
 If you need the use get some config in one of your classes or services, you can make use of dependency injection
 to get it:
 
@@ -34,3 +34,6 @@ export class HomeController {
     appConfig: AppConfig;
 }
 ```
+
+#### Creating custom configuration files
+_In progress_

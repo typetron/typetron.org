@@ -19,8 +19,10 @@ We can also return objects or a list of objects in this method (methods are also
 Let's return a dummy list of objects containing the titles of some articles. Replace the existing _welcome_ method with
 this:
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 
 @Controller()
@@ -59,8 +61,10 @@ extension.
 In order to add a new route to our app we just need to add a method to our controller and annotate it with the 
 appropriate decorator: _@Get()_, _@Post()_, _@Patch()_, _@Put()_ or _@Delete()_. For example, let's add a route that will return the details of an article:
  
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 
 @Controller()
@@ -84,8 +88,10 @@ our article object.
 We can make our route smarter by changing 'article' inside _@Get('article')_ to _{id}_, making it a 
 route parameter: 
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
 import { Controller, Get } from '@Typetron/Router';
 
 @Controller()
@@ -115,8 +121,10 @@ Going to [localhost:8000/1](http://localhost:8000/1) will show a JSON string lik
 
 We can also create routes that respond to HTTP POST requests using the _@Post()_ decorator: 
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
 import { Controller, Post } from '@Typetron/Router';
 
 @Controller()

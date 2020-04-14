@@ -11,8 +11,11 @@ so only we can do these actions. To do so we need to protect our routes so only 
 
 Typetron has support for authentication out of the box. You can protect our routes by using
 the _AuthMiddleware_: 
+
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-// Controllers/Http/HomeController.ts
 import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 import { Article } from 'App/Entities/Article';
@@ -49,6 +52,7 @@ Now, if you will try to create a new article you will get an error like this:
 {
     "message": "Unauthenticated",
     "stack": [
+        "Route: POST /",
         "Error: Unauthenticated",
         "AuthMiddleware.handle (<..>/Middleware/AuthMiddleware.ts)",
         "processTicksAndRejections (internal/process/task_queues.js:93:5)"
@@ -105,7 +109,7 @@ done using postman:
   <img src="/images/tutorials/blog/article-with-auth.jpg" />
 </p>
 
-The server will allow us to access the protected routes while we have this token set in our
-requests. You can check it out by creating a new article, update or delete.
+The server will allow us to access the protected routes while we send token set in our requests. You can check it 
+out by creating a new article, update or delete.
 
 In the next part, we will a few changes to the app preparing it to hit the real world >>>>>> [Final touches](final-touches).

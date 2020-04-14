@@ -23,7 +23,6 @@ export class LoginForm extends Form {
 You can use the newly created form in your controller methods that have data to process from the user. like a
 login form:
 ```ts
-
 import { Controller, Get, Post } from '@Typetron/Router';
 import { LoginForm } from 'App/Forms/LoginForm';
 

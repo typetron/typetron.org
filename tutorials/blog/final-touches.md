@@ -8,14 +8,17 @@ title: Final touches
 ### Organising controllers
 It is a good practice to organise the controllers per resource to keep them separated, clean and have them worry 
 about only one thing: managing only one resource. In our case, resources are entities, more specifically, the _Article_
-entity. Let's move everything related to the _Article_ entity into an _ArticleController_:
+entity. Let's move everything related to the _Article_ entity from _HomeController_ into an _ArticleController_:
 
+```file-path
+📁 Controllers/Http/ArticleController.ts
+```
 ```ts
-//Controllers/Http/ArticleController.ts
 import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 import { Article } from 'App/Entities/Article';
 import { AuthMiddleware } from '@Typetron/Framework/Middleware';
+import { Storage } from '@Typetron/Storage';
 
 @Controller()
 export class ArticleController {
@@ -62,12 +65,15 @@ When updating the articles we should also delete the old image of that article. 
 article: we need to delete that image from the disk too. We can do this by using the same `Storage` instance. Update the
 _update_ and _delete_ methods to these ones:
 
+```file-path
+📁 Controllers/Http/ArticleController.ts
+```
 ```ts
-//Controllers/Http/ArticleController.ts
 import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 import { Article } from 'App/Entities/Article';
 import { AuthMiddleware } from '@Typetron/Framework/Middleware';
+import { Storage } from '@Typetron/Storage';
 
 @Controller()
 export class ArticleController {
@@ -100,9 +106,11 @@ those entities are shown to the user. This is where [Models](/docs/models) come 
 extend the _Model_ class from _@Typetron/Models_ and have properties annotated with the _@Field_ decorator. Let's create
 a model for our article:
 
+```file-path
+📁 Models/Article.ts
+```
 ```ts
-//Models/Article.ts
-import { Field, Model } from '@Typetron/framework/Models';
+import { Field, Model } from '@Typetron/Models';
 
 export class Article extends Model {
     @Field()
@@ -127,8 +135,10 @@ export class Article extends Model {
 
 And use it inside the _ArticleController_ for the _read_ method first:
 
+```file-path
+📁 Controllers/Http/ArticleController.ts
+```
 ```ts
-//Controllers/Http/ArticleController.ts
 import { Article as ArticleModel } from 'App/Models/Article';
 import { Article } from 'App/Entities/Article';
 
@@ -151,8 +161,10 @@ the Article model and you will see that all of the routes that return articles w
 
 Le's update all of our routes to use the Article model. This is our final controller:
 
+```file-path
+📁 Controllers/Http/ArticleController.ts
+```
 ```ts
-//Controllers/Http/ArticleController.ts
 import { Controller, Delete, Get, Middleware, Patch, Post} from '@Typetron/Router';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 import { Article } from 'App/Entities/Article';
@@ -161,7 +173,7 @@ import { AuthMiddleware } from '@Typetron/Framework/Middleware';
 import { Storage } from '@Typetron/Storage';
 
 @Controller()
-export class HomeController {
+export class ArticleController {
 
     @Get()
     async index() {
@@ -200,5 +212,59 @@ export class HomeController {
     }
 }
 ```
+
+### Services
+
+If you have a complex business logic, you can move it in separate classes and then use those classes in your controllers.
+Here is and example for the _update_ method only:
+
+```file-path
+📁 Services/ArticleService.ts
+```
+```ts
+import { Article as ArticleModel } from 'App/Models/Article';
+import { Storage } from '@Typetron/Storage';
+import { ArticleForm } from 'App/Forms/ArticleForm';
+import { Article } from 'App/Entities/Article';
+import { Inject } from '@Typetron/Container';
+
+export class ArticleService {
+
+    @Inject()
+    storage: Storage;
+
+    async update(article: Article, form: ArticleForm) {
+        await this.storage.delete(`public/assets/articles/${article.image}`);
+        await this.storage.put(form.image, 'public/assets/articles');
+        article.fill(form);
+        await article.save();
+        return ArticleModel.from(article);
+    }
+}
+```
+
+```file-path
+📁 Controllers/Http/ArticleController.ts
+```
+```ts
+@Controller('api')
+export class ArticleController {
+
+    @Inject()
+    articleService: ArticleService;
+
+    // ...
+
+    @Patch('{Article}')
+    @Middleware(AuthMiddleware)
+    async update(article: Article, form: ArticleForm) {
+        return ArticleModel.from(await this.articleService.update(article, form));
+    }
+
+    // ...
+}
+```
+
+Starting from this, you can create a service method for each controller action.
 
 In the next part we will deploy our app on three different platforms >>>>>> [Deploying](deploying).

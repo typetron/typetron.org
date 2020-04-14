@@ -8,8 +8,10 @@ title: Adding Images
 Adding images to our recipes is very easy. Change the _ArticleForm_ to accept and
 image field and make it required so all of our recipes will have one. Like this:
 
+```file-path
+📁 Forms/ArticleForm.ts
+```
 ```ts
-//Forms/ArticleForm.ts
 import { MinLength, Required } from '@Typetron/Validation';
 import { Field, Form, Rules } from '@Typetron/Forms';
 import { Image } from '@Typetron/Storage';
@@ -40,9 +42,10 @@ export class ArticleForm extends Form {
 Now, change the  _add_ method from _HomeController_ to deal with this image: in this
 case, just to save it on disk like so:
 
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
 ```ts
-//Controllers/Http/HomeController.ts
-
 @Controller()
 export class HomeController {
     // ...
@@ -86,8 +89,10 @@ ALTER TABLE articles ADD image VARCHAR;
 
 Then we have to update our _Article_ entity to have this property:
 
+```file-path
+📁 Entity/Article.ts
+```
 ```ts
-//Entity/Article.ts
 import { Column, CreatedAt, Entity, ID, Meta, UpdatedAt } from '@Typetron/Database';
 
 @Meta({
@@ -115,10 +120,10 @@ export class Article extends Entity {
 ```
 
 Let's make a new article by making again a HTTP Post request so the field image will get 
-populated. Now, if we make a HTTP GET request to [localhost:8000](http://localhost:8000) we
-can see our _image_ key with the weird name we've seen in the _public/articles_ directory. 
-All the other articles don't have an image yet. You can use the _edit_ route to update their
-image.
+populated. The value for the image column will the the image's name including the extension. Now, if we make a HTTP GET 
+request to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird name we've seen in 
+the _public/articles_ directory. All the other articles don't have an image yet. You can use the _edit_ route to 
+update their image.
 
 To actually see our image we will have to set up static file serving feature. All we have to
 do is to tell Typetron where these static files are by changing the config from _config/app.ts_

@@ -30,7 +30,7 @@ Also, fill the tables with some data:
 INSERT INTO articles (title, content, createdAt, updatedAt) VALUES 
     ('Ultimate Crispy "Chicken" Sandwich', 'Content here', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('Chunky Monkey Smoothie Bowls', 'Content here too', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-    ('Chicken chunks with green curry', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+    ('Chicken chunks with green curry', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 ```
 > **_NOTE_** Typetron will have an auto-seeding tool that you can use to populate your database with random data. 
 

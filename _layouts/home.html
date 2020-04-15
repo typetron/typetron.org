@@ -2,32 +2,18 @@
 <html data-wf-page="5cd61efa8463a508d5af72ae" data-wf-site="5cd2467915a5c14bc27b77af" lang="en">
 <head>
 	<meta charset="utf-8">
-
-	{% capture title %}
-
-	{% if page.title %}
-	{{page.title}} -
-	{% endif %}
-	{% if layout.title %}
-	{{layout.title}} -
-	{% endif %}
-	Typetron
-	{% unless page.hide_title_suffix or layout.hide_title_suffix %}
-	- Fully-featured Node.js framework
-	{% endunless %}
-
-	{% endcapture %}
-	<title>
-		{{ title }}
-	</title>
-	<meta content="{{title}}" property="og:title">
+	{% capture title %}{% if page.title %}{{page.title}} - {% endif %}{% if layout.title %}{{layout.title}} - {% endif
+	%}Typetron{% unless page.hide_title_suffix or layout.hide_title_suffix %} - Fully-featured Node.js framework{%
+	endunless %}{% endcapture %}
+	<title>{{ title | strip_newlines }}</title>
+	<meta content="{{title | strip_newlines}}" property="og:title">
 	<meta content="width=device-width, initial-scale=1" name="viewport">
 	<meta content="{{site.url}}" property="og:url"/>
 	<meta content="{{site.url}}/images/icon.png" property="og:image"/>
 	<meta content="{{site.description}} {{page.title}}" name="description">
 	<meta content="{{site.description}} {{page.title}}" property="og:description">
 	<meta content="website" property="og:type"/>
-	<meta content="typetron modern framework for nodejs development node typescript clean beautiful fully-featured features enterprise {{page.title}}" name="keywords">
+	<meta content="typetron modern framework nodejs development node typescript clean beautiful fully-featured features enterprise {{page.keywords}} {{page.title}}" name="keywords">
 	<meta content="Ionel Lupu" name="author">
 	<link href="/style/normalize.css" rel="stylesheet" type="text/css">
 	<link href="/style/detheme.css" rel="stylesheet" type="text/css">
@@ -183,25 +169,37 @@
 			if ( isFilePath ) {
 				return;
 			}
+			const isShLanguage = env.element.classList.contains( 'language-sh' );
+
 			const button     = document.createElement( 'button' );
 			button.innerHTML = 'Copy';
 			button.className = "button-copy-code";
 
 			button.addEventListener( 'click', function () {
 				// Source: http://stackoverflow.com/a/11128179/2757940
+				const divNode = document.createElement( 'div' );
+				divNode.style = "white-space: pre-wrap";
+				let text      = env.element.textContent;
+				if ( isShLanguage ) {
+					text = text.replace( /\$ /gm, '' );
+				}
+				divNode.textContent = text;
+				document.body.append( divNode );
 				if ( document.body.createTextRange ) { // ms
 					var range = document.body.createTextRange();
-					range.moveToElementText( env.element );
+					range.moveToElementText( divNode );
 					range.select();
+					document.execCommand( 'copy' );
 				} else if ( window.getSelection ) { // moz, opera, webkit
 					var selection = window.getSelection();
 					var range     = document.createRange();
-					range.selectNodeContents( env.element );
+					range.selectNodeContents( divNode );
 					selection.removeAllRanges();
 					selection.addRange( range );
+					document.execCommand( 'copy' );
+					selection.empty();
 				}
-				document.execCommand( 'copy' );
-				selection.empty();
+				divNode.remove();
 			} );
 
 			return button;

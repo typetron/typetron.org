@@ -11,7 +11,7 @@ Make sure to add the `@Field` decorator to each filed you want to show to the us
 ```ts
 import { Field, Model } from '@Typetron/Models';
 
-export class Post extends Model {
+export class Article extends Model {
     @Field()
     id: number;
 
@@ -32,17 +32,19 @@ export class Post extends Model {
 
 Having this done, you can use the newly created model inside your controller.
 ```ts
-import { Controller } from '@Typetron/Router';
+import { Controller, Get } from '@Typetron/Router'; 
+import { Article as ArticleModel } from 'App/Models/Article';
+import { Article } from 'App/Entities/Article';
 
-@Controller('posts')
-class PostController {
+@Controller('articles')
+class ArticleController {
     
     @Get()
-    all() {
-        return PostModel.from(await Post.all());
+    async all() {
+        return ArticleModel.from(await Article.all());
     }
 }
 ```
 
 This is a great way to expose to the user only what fields are needed and not show them fields with sensitive
-data like passwords or credit card numbers.
+data like password hashes.

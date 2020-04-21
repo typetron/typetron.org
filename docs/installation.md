@@ -8,7 +8,7 @@ title: Installation
 
 ### Requirements
 
-Before you start using Typetron, make sure you have [Node.js](https://nodejs.org) installed.
+Before you start using Typetron, make sure you have [Node.js LTS](https://nodejs.org) installed.
 
 ### Installation
 
@@ -16,6 +16,8 @@ To start using Typetron, clone the blank project from Github:
 ```sh
 $ git clone https://github.com/typetron/typetron my-awesome-project
 ```
+> **_Note_** Typetron will have a CLI tool in the future to make managing projects easier. You will be able to
+> do create new project using commands like this: **$ typetron new TypetronBlog** 
 
 Go into your project's directory and install the required dependencies:
 ```sh

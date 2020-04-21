@@ -5,7 +5,8 @@ title: Configuration
 
 ## {{ page.title }}
 
-_In progress_
+To make your apps fit the desired purpose, Typetron offers a way to configure them through configuration files found in
+the _config_ directory.
 
 ```ts
 export default new AppConfig({
@@ -20,18 +21,26 @@ export default new AppConfig({
 ```
 
 #### Getting config
-If you need the use get some config in one of your classes or services, you can make use of dependency injection
+If you need to get some config in one of your classes, controllers or services, you can make use of dependency injection
 to get it:
 
 ```ts
-import { Controller } from '@Typetron/Router';
+import { Controller, Get } from '@Typetron/Router';
 import { Inject } from '@Typetron/Container';
-import { AppConfig } from '@Typetron/Framework';
+import { AppConfig, DatabseConfig } from '@Typetron/Framework';
 
 @Controller()
 export class HomeController {
     @Inject()
     appConfig: AppConfig;
+
+    @Inject()
+    databaseConfig: DatabseConfig;
+
+    @Get()
+    async index() {
+        return `App runs on port ${this.appConfig.port}`;
+    }
 }
 ```
 

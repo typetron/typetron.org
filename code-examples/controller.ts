@@ -11,14 +11,14 @@ export class ArticleController {
         return article;
     }
 
-    @Patch('{Article}')
+    @Patch(':Article')
     async update(article: Article, form: ArticleForm) {
         article.fill(form);
         await article.save();
         return article;
     }
 
-    @Delete('{Article}')
+    @Delete(':Article')
     async delete(article: Article) {
         await article.delete();
     }

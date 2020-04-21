@@ -39,6 +39,8 @@
             url: query-builder
         -   title: ORM
             url: orm
+        -   title: Seeding
+            url: seeding
 
 -   title: Security
     url: authentication
@@ -59,8 +61,8 @@
             url: mailing
         -   title: Notifications
             url: notifications
-        -   title: Files
-            url: files
+        -   title: Storage
+            url: storage
         -   title: Cache
             url: cache
         -   title: Events

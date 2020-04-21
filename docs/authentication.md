@@ -14,8 +14,8 @@ You can check the `auth.ts` file inside the `config` directory to see the differ
 
 #### Creating a new user
 If you want to create a new use, simply make a POST request to `/register` giving it an email, password and a
-password confirmation input as in the following image and you will have a user created in your database. 
-> **_Note_** Make sure you have a users table that has all the columns from the User entity.
+password confirmation input as in the following image, and you will have a user created in your database. 
+> **_Note_** Make sure you have an 'users' table that has all the columns from the User entity.
  
 ```json
 {
@@ -41,7 +41,7 @@ You will be getting a [JWT](https://jwt.io/) token back that you can use to auth
 You can authenticate a user by using the `AuthMiddleware` on your controllers like this:
 
 ```ts
-import { Controller, Middleware} from '@Typetron/Router';
+import { Controller, Middleware } from '@Typetron/Router';
 import { AuthMiddleware } from '@Typetron/Framework/Middleware';
 
 @Controller()
@@ -63,7 +63,7 @@ export class HomeController {
 Or you can add it to specific methods like this:
  
 ```ts
-import { Controller, Middleware} from '@Typetron/Router';
+import { Controller, Middleware } from '@Typetron/Router';
 import { AuthMiddleware } from '@Typetron/Framework/Middleware';
 
 @Controller()

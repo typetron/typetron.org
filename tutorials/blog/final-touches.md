@@ -27,7 +27,7 @@ export class ArticleController {
         return Article.get();
     }
 
-    @Get('{Article}')
+    @Get(':Article')
     read(article: Article) {
         return article;
     }
@@ -41,7 +41,7 @@ export class ArticleController {
         return article;
     }
 
-    @Patch('{Article}')
+    @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         await storage.put(form.image, 'public/articles');
@@ -50,7 +50,7 @@ export class ArticleController {
         return article;
     }
 
-    @Delete('{Article}')
+    @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article) {
         await article.delete();
@@ -58,12 +58,12 @@ export class ArticleController {
 }
 ```
 
-Now, our app is a little bit more organised. Doing this should not change the functionality of the app.
+Now, our app is a little more organised. Doing this should not change the functionality of the app.
 
 ### Cleaning garbage
 When updating the articles we should also delete the old image of that article. The same applies when deleting an 
-article: we need to delete that image from the disk too. We can do this by using the same `Storage` instance. Update the
-_update_ and _delete_ methods to these ones:
+article: we need to delete that image from the disk too. We can do this by using the same [Storage](/docs/storage)
+instance. Update the _update_ and _delete_ methods to these:
 
 ```file-path
 📁 Controllers/Http/ArticleController.ts
@@ -79,7 +79,7 @@ import { Storage } from '@Typetron/Storage';
 export class ArticleController {
     // ...
 
-    @Patch('{Article}')
+    @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         await storage.delete(`public/articles/${article.image}`);
@@ -89,7 +89,7 @@ export class ArticleController {
         return article;
     }
 
-    @Delete('{Article}')
+    @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article, storage: Storage) {
         await storage.delete(`public/articles/${article.image}`);
@@ -147,7 +147,7 @@ export class ArticleController {
     
     // ...
 
-    @Get('{Article}')
+    @Get(':Article')
     read(article: Article) {
         return ArticleModel.from(article);
     }
@@ -165,7 +165,7 @@ Le's update all of our routes to use the Article model. This is our final contro
 📁 Controllers/Http/ArticleController.ts
 ```
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post} from '@Typetron/Router';
+import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
 import { ArticleForm } from 'App/Forms/ArticleForm';
 import { Article } from 'App/Entities/Article';
 import { Article as ArticleModel } from 'App/Models/Article';
@@ -180,7 +180,7 @@ export class ArticleController {
         return ArticleModel.from(await Article.get());
     }
 
-    @Get('{Article}')
+    @Get(':Article')
     read(article: Article) {
         return ArticleModel.from(article);
     }
@@ -194,7 +194,7 @@ export class ArticleController {
         return ArticleModel.from(article);
     }
 
-    @Patch('{Article}')
+    @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         await storage.delete(`public/articles/${article.image}`);
@@ -204,7 +204,7 @@ export class ArticleController {
         return ArticleModel.from(article);
     }
 
-    @Delete('{Article}')
+    @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article, storage: Storage) {
         await storage.delete(`public/articles/${article.image}`);
@@ -237,8 +237,7 @@ export class ArticleService {
         await this.storage.delete(`public/assets/articles/${article.image}`);
         await this.storage.put(form.image, 'public/assets/articles');
         article.fill(form);
-        await article.save();
-        return ArticleModel.from(article);
+        return await article.save();
     }
 }
 ```
@@ -255,7 +254,7 @@ export class ArticleController {
 
     // ...
 
-    @Patch('{Article}')
+    @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
         return ArticleModel.from(await this.articleService.update(article, form));
@@ -267,4 +266,11 @@ export class ArticleController {
 
 Starting from this, you can create a service method for each controller action.
 
-In the next part we will deploy our app on three different platforms >>>>>> [Deploying](deploying).
+<div class="tutorial-next-page">
+    In the next part we will deploy our app on three different platforms.
+    
+    <a href="deploying">
+        <h3>Next ></h3>
+        Deploying
+    </a>
+</div>

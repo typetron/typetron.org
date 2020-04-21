@@ -9,7 +9,7 @@ Forms are a great way to organise and validate the input from the user. Forms ar
 the `Forms` directory that extend the `Form` class and uses the `@Field` decorator:
  
 ```ts
-import { Field, Form} from '@Typetron/Forms';
+import { Field, Form } from '@Typetron/Forms';
 
 export class LoginForm extends Form {
 
@@ -63,3 +63,46 @@ export class LoginForm extends Form {
 In the form above we've set the email and the password field to be required in the form with the password
 having at least 6 characters in length.
 If the form is not valid, Typetron will throw a HTTP error with the code `422 UNPROCESSABLE_ENTITY`.
+
+<a name="custom-validation"></a>
+#### Custom validation
+
+To create a custom validation rule, all you have to do is to extend the base _Rule_ class from the _Validation_ directory
+like in the example below:
+
+```ts
+import { Rule, RuleValue } from '@Typetron/Validation';
+
+export class IsNumber extends Rule {
+    identifier = 'isNumber';
+
+    passes(attribute: string, value: RuleValue): boolean {
+        return !isNaN(Number(value));
+    }
+
+    message(attribute: string): string {
+        return `The ${attribute} is not a number`;
+    }
+}
+```
+
+To create a validation rule that accepts parameters, you will have to wrap the class in a function like so:
+
+```ts
+import { Rule, RuleInterface, RuleValue } from '@Typetron/Validation';
+import { Type } from '@Typetron/Support';
+
+export function InArray(values: string[]): Type<RuleInterface> {
+    return class extends Rule {
+        identifier = 'inArray';
+
+        passes(attribute: string, value: RuleValue): boolean {
+            return values.includes(value as string);
+        }
+
+        message(attribute: string): string {
+            return `The ${attribute} must have a value from the following list ${values.join(', ')}`;
+        }
+    };
+}
+```

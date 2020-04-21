@@ -31,13 +31,12 @@ INSERT INTO articles (title, content, createdAt, updatedAt) VALUES
     ('Ultimate Crispy "Chicken" Sandwich', 'Content here', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('Chunky Monkey Smoothie Bowls', 'Content here too', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
     ('Chicken chunks with green curry', 'Content here more', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
-```
-> **_NOTE_** Typetron will have an auto-seeding tool that you can use to populate your database with random data. 
+``` 
 
 #### Creating the `Article` entity
 
 Now, since we have our database ready, we can go back to our TypetronBlog app and write some code. First of all,
-we need to create the entities that we will work with. An Entity is a special class that resembles an entry in
+we need to create the entities that we will work with. An [Entity](/docs/orm) is a special class that resembles an entry in
 our database. In this case we have the _articles_ table, so we need to create the _Article_ entity by creating an
 _Article.ts_ file inside Entities folder and write this:  
 ```file-path
@@ -60,16 +59,6 @@ export class Article extends Entity {
     content: string;
 }  
 ```
-
->  **_NOTE_** Typetron will support auto-migrations that will help you create the database schema automatically
-> from your entities and then export a migration once you are finished with your changes. This wil become handy
-> when working on a development environment.
-
->  **_NOTE_** By default, Typetron will use the entity's name to connect to the table. Without the table value
-> added, the Article entity will select from the _article_ table. You can use singular names for tables if you 
-> don't want to use the @Meta decorator. In the future Typetron will have a pluralization feature and you won't
-> need to write the table at plural manually.
-
 
 Let's also add timestamp fields to know when the article was created or updated:
 ```file-path
@@ -129,4 +118,11 @@ result to the user. This is similar with making a SQL select like this:`SELECT *
 the browser we should see the articles in a JSON format.
  
 
-In the next part we will add the basic actions to create, update and delete articles. >>>>>> [Managing articles](crud).
+<div class="tutorial-next-page">
+    In the next part we will add the basic actions to create, update and delete articles.
+    
+    <a href="crud">
+        <h3>Next ></h3>
+        Managing articles
+    </a>
+</div>

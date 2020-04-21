@@ -253,3 +253,19 @@ p:not([align=center]) {
 	border-top-left-radius: 0;
 	border-top-right-radius: 0;
 }
+
+.tutorial-next-page {
+	width: 100%;
+	padding: 20px 20px;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	text-align: right;
+
+	a {
+		text-align: left;
+		white-space: nowrap;
+		margin-left: 20px;
+		font-size: 14px;
+	}
+}

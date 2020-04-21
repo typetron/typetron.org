@@ -10,7 +10,7 @@ To see from where does Typetron render the pages from, we can take a look at _Ho
 the _Controllers/Http_ directory. Here we can see the _welcome_ method that returns the contents of the
 _public/index.html_ file.
 
-A controller is a simple class annotated with the _@Controller()_ decorator. It contains methods that 
+A [controller](/docs/controllers) is a simple class annotated with the _@Controller()_ decorator. It contains methods that 
 respond to different HTTP requests. In this case, the _HomeController_ has one method, _welcome_, that is
 called whenever a _GET_ request is made to [localhost:8000](http://localhost:8000). The HTTP method is 
 enforced by the _@Get()_ decorator.
@@ -85,8 +85,8 @@ export class HomeController {
 Going to [localhost:8000/article](http://localhost:8000/article) will show a JSON string with the data from
 our article object.
 
-We can make our route smarter by changing 'article' inside _@Get('article')_ to _{id}_, making it a 
-route parameter: 
+We can make our route smarter by changing 'article' inside _@Get('article')_ to _:id_, making it a 
+[route parameter](/docs/controllers#route-parameters): 
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
@@ -99,7 +99,7 @@ export class HomeController {
 
     // ...
 
-    @Get('{id}')
+    @Get(':id')
     read(id: number) {
         return {
             id: 'This is article with ID #' + id,
@@ -142,7 +142,7 @@ In order to make POST requests easier, you will need a tool from where you can m
 [Postman](https://getpostman.com/). It is a popular tool used in web development when working with APIs.
 It is only needed in the development phase.
 
-> _**NOTE**_ Would you like us to make tutorials on how to use and master Postman? Leave a message using the 
+> _**Note**_ Would you like us to make tutorials on how to use and master Postman? Leave a message using the 
 > chat box in the right bottom corner or email us at _contact@typetron.org_. 
     
 Now, we can get the message from the route created earlier:
@@ -155,6 +155,12 @@ HTTP Post requests are usually used to receive data from the user and save it in
 can write everything he want in the content of the request. This is why we need to validate the data every time we get
 something from the user.
  
-In the next part we will take a look at Forms and how can we use them to capture and validate user 
-input >>>>>> [Forms](forms).
 
+<div class="tutorial-next-page">
+    In the next part we will take a look at Forms and how can we use them to capture and validate user input. 
+    
+    <a href="forms">
+        <h3>Next ></h3>
+        Forms
+    </a>
+</div>

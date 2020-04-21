@@ -5,17 +5,17 @@ slug: personal-blog-introduction
 
 ## Introduction
     
-In this tutorial we will build a small personal blog for a chef where he will be able to add, edit and delete articles
-of different recipes.
+In this tutorial we will build a small [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) 
+personal blog for a chef where he will be able to add, edit and delete articles of different recipes.
 
 Before diving into Typetron, let's lay down the idea on paper. Will will have:
- - a home page that will display a list of the latest articles. An article has a title, date, content and an image.
- - an about page with personal information
- - a contact page
+ - a Home page that will display a list of the latest articles. An article has a title, date, content and an image.
+ - an About page with personal information
+ - a Contact page
  - a page that displays one article 
  - a page for adding and editing an article
  
-And that's it. A very simple web page.
+That's it. A very simple web page.
  
 ##### Preparing the environment
 
@@ -31,8 +31,6 @@ the following command that will create a directory called _TypetronBlog_ in the 
 ```bash
 $ git clone https://github.com/typetron/typetron TypetronBlog
 ```
-> **_Note_** Typetron will have a CLI tool in the future to make managing projects easier. You will be able to
-> do create new project using commands like this: **$ typetron new TypetronBlog** 
  
 Next, we will go into that project's directory and install all the required dependencies:
 ```bash
@@ -51,6 +49,14 @@ Let's visit [http://localhost:8000](http://localhost:8000) and voila, our blank 
   <img src="/images/tutorials/blog/new.jpg" />
 </p>
 
-In the next part we will take a look at how Typetron shows this page. >>>>>> [Routing](routing).
+_Join the [newsletter](/) to be first to know when new features, tutorials and news are released_
+ 
+<div class="tutorial-next-page">
+    In the next part we will take a look at how Typetron shows this page.
+    
+    <a href="routing">
+        <h3>Next ></h3>
+        Routing
+    </a>
+</div>
 
-_Join the [newsletter](/) to be first to know when new features, tutorials and news are released_ 

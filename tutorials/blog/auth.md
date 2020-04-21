@@ -6,10 +6,10 @@ title: Authentication
 ## Authentication
 
 Right now everyone can add, edit and delete articles on our blog, but we want to restrict this
-so only we can do these actions. To do so we need to protect our routes so only a trusted user
-(you) can access them. This is what authentication is all about.
+so only we can do these actions. To do so, we need to protect our routes so only a trusted user
+(you) can access them. This is what [authentication](/docs/authentication) is all about.
 
-Typetron has support for authentication out of the box. You can protect our routes by using
+Typetron has support for [authentication](/docs/authentication) out of the box. You can protect our routes by using
 the _AuthMiddleware_: 
 
 ```file-path
@@ -33,13 +33,13 @@ export class HomeController {
         // ...
     }
 
-    @Patch('{Article}')
+    @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
         // ...
     }
 
-    @Delete('{Article}')
+    @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article) {
         await article.delete();
@@ -112,4 +112,12 @@ done using postman:
 The server will allow us to access the protected routes while we send token set in our requests. You can check it 
 out by creating a new article, update or delete.
 
-In the next part, we will a few changes to the app preparing it to hit the real world >>>>>> [Final touches](final-touches).
+
+<div class="tutorial-next-page">
+    In the next part, we will a few changes to the app preparing it to hit the real world.
+    
+    <a href="final-touches">
+        <h3>Next ></h3>
+        Final touches
+    </a>
+</div>

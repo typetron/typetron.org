@@ -6,7 +6,7 @@ title: Forms
 ## {{ page.title }}
 
 In the previous part we created a route that responded to a HTTP Post request at [localhost:8000](http://localhost:8000). 
-Let's make use of [Forms](http://localhost:4000/docs/forms) and validate user input so we can save it when we will be 
+Let's make use of [Forms](http://localhost:4000/docs/forms) and validate user input, so we can save it when we will be 
 adding a database to our app.
 
 Forms are simple classes with fields that show what input is accepted by the app. Create an _ArticleForm.ts_ file
@@ -88,7 +88,7 @@ export class ArticleForm extends Form {
     content: string;
 }
 ```
-
+You can also [create your own validation rules](/docs/forms#custom-validation). 
 Now, whenever the client inputs invalid data, he will get an error. Try adding a title with less than 5 
 characters inside the _body_ of the request as a _raw_ JSON like in the image below input 
 and you should see an error like this one:
@@ -97,6 +97,13 @@ and you should see an error like this one:
   <img src="/images/tutorials/blog/invalid-form.jpg" />
 </p> 
 
-How that we know how to validate our data we can save it in a database. In the next part we will setup a SQLite 
-database to store our validated data >>>>>> [Database](database).
 
+<div class="tutorial-next-page">
+    How that we know how to validate our data we can save it in a database. In the next part we will setup a SQLite 
+    database to store our validated data.
+    
+    <a href="database">
+        <h3>Next ></h3>
+        Database
+    </a>
+</div>

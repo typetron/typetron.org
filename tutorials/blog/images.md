@@ -59,7 +59,7 @@ export class HomeController {
 }
 ```
 
-Using the [Storage](/docs/files) class we get access to our disk and use it to store our image.
+Using the [Storage](/docs/storage) class we get access to our disk and use it to store our image.
 
 In order to test this we need to send a special kind of data to the server called
 _form-data_. You can easily make this type of request from Postman by changing the
@@ -131,7 +131,7 @@ file. Luckily, we can easily do this by uncommenting the _staticAssets_ key in t
 This will give Typetron access to show the files from the _public_ directory when you access 
 them:
 ```ts
-    staticAssets: {
+    {
         '*': ['public']
     }
 ``` 
@@ -142,5 +142,11 @@ does the _/articles/_ come from. It comes from this line  _await storage.put(for
 save our images inside the _public/articles_ directory. But why doesn't the route look like _localhost:8000/public/articles/image-name_?
 This is because the _staticAssets_ setting is set to serve the files from the _public_ directory already. 
  
-In the next part we will add an authentication layer to our app so only we can edit the
- article. >>>>>> [Authentication](auth).
+<div class="tutorial-next-page">
+    In the next part we will add an authentication layer to our app so only we can edit the article.
+    
+    <a href="auth">
+        <h3>Next ></h3>
+        Authentication
+    </a>
+</div>

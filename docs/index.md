@@ -40,7 +40,7 @@ Some of the features _Typetron_ aims offers are:
 * [x] Authentication
 * [x] Error handling
 {: style='list-style-type: none'}
-_If you think a feature is missing, please create a Github issue so we can take care of it._
+_If you think a feature is missing, please create a [Github](https://github.com/typetron/typetron) issue, so we can take care of it._
 
 ### Roadmap
 Typetron is still in development and for the next months it aims to have the following features:

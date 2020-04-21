@@ -29,8 +29,14 @@ export class Article extends Entity {
 }
 ```
 
+>  **_NOTE_** Typetron will support auto-migrations that will help you create the database schema automatically
+> from your entities and then export a migration once you are finished with your changes. This wil become handy
+> when working on a development environment.
+
 By default, Typetron uses the lowercase name of the entity as the table name, which is `article` in this
 case. You can change the table name using the `@Meta` decorator:
+
+>  **_NOTE_** Typetron will have a pluralization feature, so you won't need to write the table at plural manually.
 
 ```ts
 @Meta({

@@ -1,6 +1,6 @@
 ---
 layout: docs
-title: Files
+title: Storage
 ---
 
 ## {{ page.title }}

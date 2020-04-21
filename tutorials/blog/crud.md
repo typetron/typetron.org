@@ -26,20 +26,20 @@ export class HomeController {
         return Article.get();
     }
 
-    @Get('{id}')
+    @Get(':id')
     read(id: number) {
         return Article.find(id);
     }
 }
 ```
 
-By giving the _@Get_ decorator the parameter _{id}_, Typetron will register a method that will handle all the
+By giving the _@Get_ decorator the parameter _:id_, Typetron will register a method that will handle all the
 requests to _/1_,_/2_,_/3_ etc., where those numbers represent our article identifier.
 
 Now, if you go to [localhost:8000/1](http://localhost:8000/1) you will see all the contents of a the article with 
 _id_ 1. If you change that 1 into 2, you will see the contents of article 2 and so on.
 
-We can also use Route-Entity binding, which is just a fancy name, where Typetron will find the Entity for you based 
+We can also use [Route-Entity](/docs/controllers#route-entity-binfing) binding, which is just a fancy name, where Typetron will find the Entity for you based 
 on the name of the route parameter and the name of the entity:
 
 ```file-path
@@ -51,7 +51,7 @@ export class HomeController {
 
     // ...
 
-    @Get('{Article}')
+    @Get(':Article')
     read(article: Article) {
         return article;
     }
@@ -143,14 +143,14 @@ export class HomeController {
 
     // ...
 
-    @Patch('{Article}')
+    @Patch(':Article')
     async update(article: Article, form: ArticleForm) {
         article.fill(form);
         await article.save();
         return article;
     }
 
-    @Delete('{Article}')
+    @Delete(':Article')
     async delete(article: Article) {
         await article.delete();
     }
@@ -158,4 +158,11 @@ export class HomeController {
 ```
 
 
-In the next part we will add images to our delicious recipes >>>>>> [Adding images](images).
+<div class="tutorial-next-page">
+    In the next part we will add images to our delicious recipes.
+    
+    <a href="images">
+        <h3>Next ></h3>
+        Adding images
+    </a>
+</div>

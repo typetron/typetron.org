@@ -6,7 +6,7 @@ hide_title_suffix: true
 
 ## {{ page.title }}
 
-To see from where does Typetron render the pages from, we can take a look at _HomeController.ts_ located in
+To see where does Typetron render the pages from, we can take a look at _HomeController.ts_ located in
 the _Controllers/Http_ directory. Here we can see the _welcome_ method that returns the contents of the
 _public/index.html_ file.
 

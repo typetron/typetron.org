@@ -1,0 +1,18 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = crlf
+indent_size = 4
+indent_style = space
+max_line_length = 120
+tab_width = 4
+
+[*.scss]
+indent_style = tab
+
+[{*.cjs, *.js}]
+indent_style = tab
+
+[{*.htm, *.html, *.ng, *.sht, *.shtm, *.shtml}]
+indent_style = tab

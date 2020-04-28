@@ -160,6 +160,10 @@ p:not([align=center]) {
 	min-height: calc(100vh - 100px);
 }
 
+.section.first-section.background-image-side {
+	min-height: calc(100vh - 300px);
+}
+
 .text-center {
 	text-align: center;
 }

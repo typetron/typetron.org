@@ -27,7 +27,7 @@ to get it:
 ```ts
 import { Controller, Get } from '@Typetron/Router';
 import { Inject } from '@Typetron/Container';
-import { AppConfig, DatabseConfig } from '@Typetron/Framework';
+import { AppConfig, DatabaseConfig } from '@Typetron/Framework';
 
 @Controller()
 export class HomeController {
@@ -35,7 +35,7 @@ export class HomeController {
     appConfig: AppConfig;
 
     @Inject()
-    databaseConfig: DatabseConfig;
+    databaseConfig: DatabaseConfig;
 
     @Get()
     async index() {

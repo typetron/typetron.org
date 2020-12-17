@@ -1689,12 +1689,12 @@ a {
 	height : 400px;
 }
 
-.carousel {
-	width            : auto;
-	height           : 530px;
-	margin-left      : 0%;
-	background-color : transparent;
-}
+/*!*.carousel {*!*/
+/*!*	width            : auto;*!*/
+/*!*	height           : 530px;*!*/
+/*!*	margin-left      : 0%;*!*/
+/*	background-color : transparent;*/
+/*}*/
 
 .mask-2 {
 	overflow     : visible;
@@ -3541,10 +3541,10 @@ a {
 		font-size : 28px;
 	}
 
-	.carousel {
-		height     : 330px;
-		margin-top : 30px;
-	}
+	/*.carousel {*/
+	/*	height     : 330px;*/
+	/*	margin-top : 30px;*/
+	/*}*/
 
 	.mask-2 {
 		width : 100%;
@@ -3938,11 +3938,11 @@ a {
 		padding-left  : 0px;
 	}
 
-	.carousel {
-		display    : block;
-		height     : 200px;
-		margin-top : 15px;
-	}
+	/*.carousel {*/
+	/*	display    : block;*/
+	/*	height     : 200px;*/
+	/*	margin-top : 15px;*/
+	/*}*/
 
 	.mask-2 {
 		overflow : hidden;

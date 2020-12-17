@@ -1,15 +1,15 @@
--   title: Tutorial Introduction
+-   title: Introduction
     slug: personal-blog-introduction
     url: .
 -   title: Adding routes to our app
     url: routing
--   title: Handling user input with forms
+-   title: Handling content with forms
     url: forms
--   title: Setting up the database
+-   title: Showing articles
     url: database
--   title: Creating, updating and deleting
+-   title: Managing articles
     url: crud
--   title: Image upload
+-   title: Articles images
     url: images
 -   title: Authentication
     url: auth

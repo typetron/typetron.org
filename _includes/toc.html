@@ -1,7 +1,3 @@
----
-layout: home
-title: Building a personal blog
----
 <div class="section" style="padding-top: 0;">
 	<div class="wrapper">
 		<div class="row">
@@ -9,7 +5,7 @@ title: Building a personal blog
 				<div class="w-col w-col-3 table-of-contents">
 					<ul>
 						{% assign currentPage = page.name %}
-						{% for item in site.data.tutorials_toc %}
+						{% for item in include.toc_data %}
 						{% assign itemPage = item.url | append: '.md' %}
 						<li>
 							<a class="{% if item.title == page.title or itemPage == currentPage or item.slug and item.slug == page.slug %}active{% endif %}" href="{{ item.url }}">

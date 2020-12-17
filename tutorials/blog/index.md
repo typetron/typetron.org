@@ -1,12 +1,12 @@
 ---
-layout: tutorial
+layout: blog
 slug: personal-blog-introduction
 ---
 
 ## Introduction
     
-In this tutorial we will build a small [REST API](https://en.wikipedia.org/wiki/Representational_state_transfer) 
-personal blog for a chef where he will be able to add, edit and delete articles of different recipes.
+In this tutorial we will build a small personal blog of a restaurant chef where he will be able to add, edit and delete
+articles of different recipes.
 
 Before diving into Typetron, let's lay down the idea on paper. Will will have:
  - a Home page that will display a list of the latest articles. An article has a title, date, content and an image.
@@ -15,7 +15,7 @@ Before diving into Typetron, let's lay down the idea on paper. Will will have:
  - a page that displays one article 
  - a page for adding and editing an article
  
-That's it. A very simple web page.
+That's it. A very simple web app.
  
 ##### Preparing the environment
 

@@ -1,5 +1,5 @@
 ---
-layout: tutorial
+layout: blog
 title: Deploying
 ---
 

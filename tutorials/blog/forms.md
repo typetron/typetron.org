@@ -1,5 +1,5 @@
 ---
-layout: tutorial
+layout: blog
 title: Forms
 ---
 
@@ -16,15 +16,15 @@ inside a _Forms_ directory in the app's root folder with this content:
 📁 Forms/ArticleForm.ts
 ```
 ```ts
-import { Field, Form } from '@Typetron/Forms';
+import { Field, Form } from '@Typetron/Forms'
 
 export class ArticleForm extends Form {
 
     @Field()
-    title: string;
+    title: string
 
     @Field()
-    content: string;
+    content: string
 }
 ``` 
 Here we have a simple class that extends the base _Form_ class from Typetron. The base _Form_ class contains special
@@ -38,7 +38,7 @@ Let's just return the data back to the user to see everything works:
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
-import { ArticleForm } from 'App/Forms/ArticleForm';
+import { ArticleForm } from 'App/Forms/ArticleForm'
 
 @Controller()
 export class HomeController {
@@ -47,7 +47,7 @@ export class HomeController {
 
     @Post()
     add(form: ArticleForm) {
-        return form;
+        return form
     }
 }
 ``` 
@@ -69,8 +69,8 @@ needing at least 5 characters:
 📁 Forms/ArticleForm.ts
 ```
 ```ts
-import { Field, Form, Rules } from '@Typetron/Forms';
-import { MinLength, Required } from '@Typetron/Validation';
+import { Field, Form, Rules } from '@Typetron/Forms'
+import { MinLength, Required } from '@Typetron/Validation'
 
 export class ArticleForm extends Form {
 
@@ -79,13 +79,13 @@ export class ArticleForm extends Form {
         Required,
         MinLength(5)
     )
-    title: string;
+    title: string
 
     @Field()
     @Rules(
         Required
     )
-    content: string;
+    content: string
 }
 ```
 You can also [create your own validation rules](/docs/forms#custom-validation). 

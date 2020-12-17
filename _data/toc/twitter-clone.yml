@@ -1,0 +1,27 @@
+-   title: Introduction
+    url: .
+    slug: tutorial-twitter-clone
+-   title: Adding tweets
+    url: tweets
+-   title: Liking tweets
+    url: likes
+-   title: Replying to tweets
+    url: replies
+-   title: Retweeting tweets
+    url: retweets
+-   title: Uploading images when tweeting
+    url: images
+-   title: Editing user profile
+    url: profile
+-   title: Follow/unfollow users
+    url: follow
+-   title: Notifications
+    url: notifications
+-   title: Topics and hashtags
+    url: topics_and_hashtags
+-   title: User mentions
+    url: mentions
+-   title: Building the frontend
+    url: frontend
+-   title: Deploying the app
+    url: deploying

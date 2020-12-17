@@ -1,5 +1,5 @@
 ---
-layout: tutorial
+layout: blog
 title: Final touches
 ---
 
@@ -14,86 +14,78 @@ entity. Let's move everything related to the _Article_ entity from _HomeControll
 📁 Controllers/Http/ArticleController.ts
 ```
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
-import { ArticleForm } from 'App/Forms/ArticleForm';
-import { Article } from 'App/Entities/Article';
-import { AuthMiddleware } from '@Typetron/Framework/Middleware';
-import { Storage } from '@Typetron/Storage';
+import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { ArticleForm } from 'App/Forms/ArticleForm'
+import { Article } from 'App/Entities/Article'
+import { File, Storage } from '@Typetron/Storage'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 
 @Controller()
 export class ArticleController {
+
     @Get()
-    async index() {
-        return Article.get();
+    index() {
+        return Article.get()
     }
 
     @Get(':Article')
     read(article: Article) {
-        return article;
+        return article
     }
 
     @Post()
     @Middleware(AuthMiddleware)
     async add(form: ArticleForm, storage: Storage) {
-        await storage.put(form.image, 'public/articles');
-        const article = new Article(form);
-        await article.save();
-        return article;
+        if (form.image instanceof File) {
+            await storage.put(form.image, 'public/articles')
+        }
+        return Article.create(form)
     }
 
     @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
-        await storage.put(form.image, 'public/articles');
-        article.fill(form);
-        await article.save();
-        return article;
+        if (form.image instanceof File) {
+            await storage.delete(`public/articles/${article.image}`)
+            await storage.put(form.image, 'public/articles')
+        }
+        return article.save(form)
     }
 
     @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article) {
-        await article.delete();
+        await article.delete()
     }
 }
 ```
 
-Now, our app is a little more organised. Doing this should not change the functionality of the app.
+Now, our app is a little more organised. Doing this should not change the functionality of the app. Don't forget to 
+remove the HomeController since we don't use it anymore.
 
 ### Cleaning garbage
-When updating the articles we should also delete the old image of that article. The same applies when deleting an 
-article: we need to delete that image from the disk too. We can do this by using the same [Storage](/docs/storage)
-instance. Update the _update_ and _delete_ methods to these:
+When deleting articles, we should also delete the image of that article. We can do this by using the same 
+[Storage](/docs/storage) instance. Update the  _delete_ method to this:
 
 ```file-path
 📁 Controllers/Http/ArticleController.ts
 ```
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
-import { ArticleForm } from 'App/Forms/ArticleForm';
-import { Article } from 'App/Entities/Article';
-import { AuthMiddleware } from '@Typetron/Framework/Middleware';
-import { Storage } from '@Typetron/Storage';
+import { Controller, Delete, Middleware } from '@Typetron/Router'
+import { ArticleForm } from 'App/Forms/ArticleForm'
+import { Article } from 'App/Entities/Article'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Storage } from '@Typetron/Storage'
 
 @Controller()
 export class ArticleController {
     // ...
 
-    @Patch(':Article')
-    @Middleware(AuthMiddleware)
-    async update(article: Article, form: ArticleForm, storage: Storage) {
-        await storage.delete(`public/articles/${article.image}`);
-        await storage.put(form.image, 'public/articles');
-        article.fill(form);
-        await article.save();
-        return article;
-    }
-
     @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article, storage: Storage) {
-        await storage.delete(`public/articles/${article.image}`);
-        await article.delete();
+        await storage.delete(`public/articles/${article.image}`)
+        await article.delete()
     }
 }
 ```
@@ -101,7 +93,7 @@ This will take care of deleting the images from disk only if they exist.
 
 ### Control over data
 Controlling the data that comes out of your app is important. For example, all the methods from our _ArticleController_,
-except the _delete_ method, return a list of articles or only one article but we can't control directly what fields from
+except the _delete_ method, return a list of articles or only one article, but we can't control directly what fields from
 those entities are shown to the user. This is where [Models](/docs/models) come in handy. Models are simple classes that
 extend the _Model_ class from _@Typetron/Models_ and have properties annotated with the _@Field_ decorator. Let's create
 a model for our article:
@@ -110,134 +102,135 @@ a model for our article:
 📁 Models/Article.ts
 ```
 ```ts
-import { Field, Model } from '@Typetron/Models';
+import { Field, Model } from '@Typetron/Models'
 
 export class Article extends Model {
     @Field()
-    id: number;
+    id: number
 
     @Field()
-    title: string;
+    title: string
 
     @Field()
-    content: string;
+    content: string
 
     @Field()
-    image: string;
+    image: string
 
     @Field()
-    createdAt: Date;
+    createdAt: Date
 
     @Field()
-    updatedAt: Date;
+    updatedAt: Date
 }
 ``` 
 
-And use it inside the _ArticleController_ for the _read_ method first:
+Let 's use it inside our _ArticleController_:
 
 ```file-path
 📁 Controllers/Http/ArticleController.ts
 ```
 ```ts
-import { Article as ArticleModel } from 'App/Models/Article';
-import { Article } from 'App/Entities/Article';
-
-@Controller()
-export class ArticleController {
-    
-    // ...
-
-    @Get(':Article')
-    read(article: Article) {
-        return ArticleModel.from(article);
-    }
-}
-```
-Now, the endpoint [localhost:8000/1](http://localhost:8000/1) will return the same thing. You will notice the the fields
-from the model are the same as the fields from the entity. It may be redundant in this case to use a Model to control
-the data that comes out of your app, but it's a good practice that will become handy when working on large scale
-projects. This way you will have a centralized way of controlling your data. Go ahead and remove some of the fields from
-the Article model and you will see that all of the routes that return articles will have their fields filtered.  
-
-Le's update all of our routes to use the Article model. This is our final controller:
-
-```file-path
-📁 Controllers/Http/ArticleController.ts
-```
-```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router';
-import { ArticleForm } from 'App/Forms/ArticleForm';
-import { Article } from 'App/Entities/Article';
-import { Article as ArticleModel } from 'App/Models/Article';
-import { AuthMiddleware } from '@Typetron/Framework/Middleware';
-import { Storage } from '@Typetron/Storage';
+import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { ArticleForm } from 'App/Forms/ArticleForm'
+import { Article } from 'App/Entities/Article'
+import { File, Storage } from '@Typetron/Storage'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Article as ArticleModel } from 'App/Models/Article'
 
 @Controller()
 export class ArticleController {
 
     @Get()
     async index() {
-        return ArticleModel.from(await Article.get());
+        return ArticleModel.fromMany(await Article.get())
     }
 
     @Get(':Article')
     read(article: Article) {
-        return ArticleModel.from(article);
+        return ArticleModel.from(article)
     }
 
     @Post()
     @Middleware(AuthMiddleware)
     async add(form: ArticleForm, storage: Storage) {
-        await storage.put(form.image, 'public/articles');
-        const article = new Article(form);
-        await article.save();
-        return ArticleModel.from(article);
+        if (form.image instanceof File) {
+            await storage.put(form.image, 'public/articles')
+        }
+        return ArticleModel.from(await Article.create(form))
     }
 
     @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
-        await storage.delete(`public/articles/${article.image}`);
-        await storage.put(form.image, 'public/articles');
-        article.fill(form);
-        await article.save();
-        return ArticleModel.from(article);
+        if (form.image instanceof File) {
+            await storage.delete(`public/articles/${article.image}`)
+            await storage.put(form.image, 'public/articles')
+        }
+        return ArticleModel.from(await article.save(form))
     }
 
     @Delete(':Article')
     @Middleware(AuthMiddleware)
     async delete(article: Article, storage: Storage) {
-        await storage.delete(`public/articles/${article.image}`);
-        await article.delete();
+        await storage.delete(`public/articles/${article.image}`)
+        await article.delete()
     }
 }
 ```
+Now, the endpoint [localhost:8000/1](http://localhost:8000/1) will return the same thing. You will notice the fields
+from the model are the same as the fields from the entity. It may be redundant in this case to use a Model to control
+the data that comes out, but it's a good practice to have in mind. It will become handy when working on large scale
+projects. This way you will have a centralized way of controlling your data. To test this, remove some properties from
+the Article model, and you will see that all the routes that return articles will have their fields filtered based on
+how _ArticleModel_ looks like.
 
 ### Services
 
 If you have a complex business logic, you can move it in separate classes and then use those classes in your controllers.
-Here is and example for the _update_ method only:
+Here is and example for the _create_, _update_ and _delete_ methods:
 
 ```file-path
 📁 Services/ArticleService.ts
 ```
 ```ts
-import { Article as ArticleModel } from 'App/Models/Article';
-import { Storage } from '@Typetron/Storage';
-import { ArticleForm } from 'App/Forms/ArticleForm';
-import { Article } from 'App/Entities/Article';
-import { Inject } from '@Typetron/Container';
+import { Delete, Middleware, Patch, Post } from '@Typetron/Router'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { ArticleForm } from 'App/Forms/ArticleForm'
+import { File, Storage } from '@Typetron/Storage'
+import { Article as ArticleModel } from 'App/Models/Article'
+import { Article } from 'App/Entities/Article'
+import { Inject } from '@Typetron/Container'
 
 export class ArticleService {
 
     @Inject()
-    storage: Storage;
+    storage: Storage
 
+    @Post()
+    @Middleware(AuthMiddleware)
+    async add(form: ArticleForm) {
+        if (form.image instanceof File) {
+            await this.storage.put(form.image, 'public/articles')
+        }
+        return ArticleModel.from(await Article.create(form))
+    }
+
+    @Patch(':Article')
+    @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
-        await this.storage.delete(`public/assets/articles/${article.image}`);
-        await this.storage.put(form.image, 'public/assets/articles');
-        article.fill(form);
-        return await article.save();
+        if (form.image instanceof File) {
+            await this.storage.delete(`public/articles/${article.image}`)
+            await this.storage.put(form.image, 'public/articles')
+        }
+        return ArticleModel.from(await article.save(form))
+    }
+
+    @Delete(':Article')
+    @Middleware(AuthMiddleware)
+    async delete(article: Article) {
+        await this.storage.delete(`public/articles/${article.image}`)
+        await article.delete()
     }
 }
 ```
@@ -246,25 +239,52 @@ export class ArticleService {
 📁 Controllers/Http/ArticleController.ts
 ```
 ```ts
-@Controller('api')
+import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { ArticleForm } from 'App/Forms/ArticleForm'
+import { Article } from 'App/Entities/Article'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Article as ArticleModel } from 'App/Models/Article'
+import { Inject } from '@Typetron/Container'
+import { ArticleService } from 'App/Services/ArticleService'
+
+@Controller()
 export class ArticleController {
 
     @Inject()
-    articleService: ArticleService;
+    articleService: ArticleService
 
-    // ...
+    @Get()
+    async index() {
+        return ArticleModel.fromMany(await Article.get())
+    }
+
+    @Get(':Article')
+    read(article: Article) {
+        return ArticleModel.from(article)
+    }
+
+    @Post()
+    @Middleware(AuthMiddleware)
+    async add(form: ArticleForm) {
+        return this.articleService.add(form)
+    }
 
     @Patch(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
-        return ArticleModel.from(await this.articleService.update(article, form));
+        return this.articleService.update(article, form)
     }
 
-    // ...
+    @Delete(':Article')
+    @Middleware(AuthMiddleware)
+    async delete(article: Article) {
+        return this.articleService.delete(article)
+    }
 }
 ```
 
-Starting from this, you can create a service method for each controller action.
+The _@Inject()_ will create a singleton instance of _Storage_ or _ArticleService_ automatically for you when used.
+You can learn more about _@Inject()_ in the [container section from docs](/docs/container.md).
 
 <div class="tutorial-next-page">
     In the next part we will deploy our app on three different platforms.

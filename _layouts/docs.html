@@ -11,7 +11,7 @@ layout: home
 				<div class="w-col w-col-3 table-of-contents">
 					<ul>
 						{% assign currentPage = page.name %}
-						{% for item in site.data.docs_toc %}
+						{% for item in site.data.toc.docs %}
 						{% assign itemPage = item.url | append: '.md' %}
 						<li>
 							<b>

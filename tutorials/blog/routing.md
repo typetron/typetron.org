@@ -1,5 +1,5 @@
 ---
-layout: tutorial
+layout: blog
 title: Routing
 hide_title_suffix: true
 ---
@@ -23,7 +23,7 @@ this:
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
-import { Controller, Get } from '@Typetron/Router';
+import { Controller, Get } from '@Typetron/Router'
 
 @Controller()
 export class HomeController {
@@ -37,7 +37,7 @@ export class HomeController {
             {
                 title: 'Protein rich meal for gym'
             }
-        ];
+        ]
     }
 }
 ```
@@ -65,19 +65,22 @@ appropriate decorator: _@Get()_, _@Post()_, _@Patch()_, _@Put()_ or _@Delete()_.
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
-import { Controller, Get } from '@Typetron/Router';
+import { Controller, Get } from '@Typetron/Router'
 
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    welcome() {
+        // ...
+    }
 
     @Get('article')
     read() {
         return {
             title: 'Making a healthy breakfast',
             content: 'Content of this article here...'
-        };
+        }
     }
 }
 ```
@@ -92,12 +95,15 @@ We can make our route smarter by changing 'article' inside _@Get('article')_ to 
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
-import { Controller, Get } from '@Typetron/Router';
+import { Controller, Get } from '@Typetron/Router'
 
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    welcome() {
+        // ...
+    }
 
     @Get(':id')
     read(id: number) {
@@ -105,7 +111,7 @@ export class HomeController {
             id: 'This is article with ID #' + id,
             title: 'Making a healthy breakfast',
             content: 'Content of this article here...'
-        };
+        }
     }
 }
 ```
@@ -125,7 +131,7 @@ We can also create routes that respond to HTTP POST requests using the _@Post()_
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
-import { Controller, Post } from '@Typetron/Router';
+import { Controller, Post } from '@Typetron/Router'
 
 @Controller()
 export class HomeController {
@@ -134,7 +140,7 @@ export class HomeController {
 
     @Post()
     add() {
-        return 'this route will add an article';
+        return 'this route will add an article'
     }
 }
 ```

@@ -248,9 +248,12 @@ p:not([align=center]) {
 	background: #282a36;
 	color: #ffffff;
 	padding: 2px 5px;
-	margin-bottom: 1px;
+	margin-bottom: 12px;
 	border-radius: 5px;
+}
 
+p + .code-toolbar{
+	margin-top: -20px;
 }
 
 .code-toolbar + .highlighter-rouge {

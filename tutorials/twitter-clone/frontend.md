@@ -1,5 +1,6 @@
 ---
-layout: blog
+layout: twitter-clone
+
 title: Frontend setup
 ---
 
@@ -7,16 +8,9 @@ title: Frontend setup
 
 > _Typetron will support utility libraries for making frontend development easier_
 
-What we will build:
-
-<p align="center" class="window">
-  <img src="/images/tutorials/blog/frontend-intro.jpg" />
-</p> 
-
-
 <p align="center">Select the frontend option you would like to use:</p>   
-<div class="box-wrapper" style="justify-content: center">
-	<a class="box in-progress" href="/tutorials/blog" style="max-width: 22%">
+<div class="box-wrapper" style="justify-content: center;">
+	<a class="box in-progress" href="/tutorials/blog" style="max-width: 22%;">
 		<h5>Typescript only</h5>
 		<div class="box-content">
 			<img src="https://raw.githubusercontent.com/remojansen/logo.ts/master/ts.png" alt="typescript">

@@ -1,6 +1,6 @@
 ---
-layout: tutorial
-title: Crud
+layout: blog
+title: CRUD on articles
 ---
 
 ## Creating, updating and deleting
@@ -23,12 +23,12 @@ export class HomeController {
 
     @Get()
     index() {
-        return Article.get();
+        return Article.get()
     }
 
     @Get(':id')
     read(id: number) {
-        return Article.find(id);
+        return Article.find(id)
     }
 }
 ```
@@ -46,6 +46,9 @@ on the name of the route parameter and the name of the entity:
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
+import { Controller, Get, Post } from '@Typetron/Router'
+import { Article } from 'App/Entities/Article'
+
 @Controller()
 export class HomeController {
 
@@ -53,7 +56,7 @@ export class HomeController {
 
     @Get(':Article')
     read(article: Article) {
-        return article;
+        return article
     }
 }
 ```
@@ -63,12 +66,15 @@ Passing _article_ as a route parameter and _Article_ as a method argument, Typet
 #### Creating an article
 
 Our app can display all the articles or one particular article. Let's make it more interesting and add the 
-ability to create an article. To do that, add a method inside _HomeController_ with this piece of code:
+ability to create an article. To do that, replace the _add_ method inside _HomeController_ with this piece of code:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
+import { Controller, Get, Post } from '@Typetron/Router'
+import { Article } from 'App/Entities/Article'
+
 @Controller()
 export class HomeController {
 
@@ -76,17 +82,17 @@ export class HomeController {
 
     @Post()
     async add() {
-        const article = new Article();
-        article.title = 'My awesome article';
-        article.content = 'My awesome content';
-        await article.save();
-        return article;
+        const article = new Article()
+        article.title = 'My awesome article'
+        article.content = 'My awesome content'
+        await article.save()
+        return article
     }
 }
 ```
 
 The _@Post()_ decorator will register a route that will handle all the HTTP POST requests.
-Since we don't have a frontend with a form that we can fill, we can't make such requests from our browser but we can 
+Since we don't have a frontend with a form that we can fill, we can't make such requests from our browser, but we can 
 use [Postman](https://www.getpostman.com/) for that. There, we can change the HTTP Method to POST and write the url 
 we want to post to, which is _localhost:8000_. If we run this request and check our database we will see we 
 will have a new article with the title _My awesome article_. Actually, every time we run that request we will create
@@ -109,7 +115,8 @@ this one:
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
-import { ArticleForm } from 'App/Forms/ArticleForm';
+import { Controller, Get, Post } from '@Typetron/Router'
+import { ArticleForm } from 'App/Forms/ArticleForm'
 
 @Controller()
 export class HomeController {
@@ -117,10 +124,8 @@ export class HomeController {
     // ...
 
     @Post()
-    async add(form: ArticleForm) {
-        const article = new Article(form);
-        await article.save();
-        return article;
+    add(form: ArticleForm) {
+        return Article.create(form)
     }
 }
 ```
@@ -138,23 +143,39 @@ We can easily add, update and delete actions to our controller:
 📁 Controllers/Http/HomeController.ts
 ```
 ```ts
+import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
+import { ArticleForm } from 'App/Forms/ArticleForm'
+import { Article } from 'App/Entities/Article'
+
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
+
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
+
+    @Post()
+    add(form: ArticleForm) {
+        return Article.create(form)
+    }
 
     @Patch(':Article')
-    async update(article: Article, form: ArticleForm) {
-        article.fill(form);
-        await article.save();
-        return article;
+    update(article: Article, form: ArticleForm) {
+        return article.save(form)
     }
 
     @Delete(':Article')
     async delete(article: Article) {
-        await article.delete();
+        await article.delete()
     }
 }
+
 ```
 
 

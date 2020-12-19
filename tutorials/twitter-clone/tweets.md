@@ -209,7 +209,7 @@ authenticated user.
 
 One other thing that you probably noticed is that we type-hinted the _request.content_ property to _{content: string}_. 
 This is done to ensure we will have intellisense in our IDEs. We can continue doing so for every endpoint we create, but
-there is a way of getting rid of this that will bring more feature to the table: Forms.
+there is a way of getting rid of this that will bring more features to the table: Forms.
 
 #### Adding the tweet form
 Forms are just classes that show what is the shape of our request. This becomes in handy when we want to add request
@@ -221,7 +221,6 @@ validations. Let's add a form for our endpoint that creates a tweet:
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
 import { Required } from '@Typetron/Validation'
-import { File } from '@Typetron/Storage'
 
 export class TweetForm extends Form {
     @Field()
@@ -285,7 +284,7 @@ import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 export class HomeController {
 
     @Get()
-    async tweets() {
+    tweets() {
         return Tweet.with('user').orderBy('createdAt', 'DESC').get()
     }
 }

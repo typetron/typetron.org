@@ -119,7 +119,7 @@ export class TweetForm extends Form {
 Now that the form accepts media files, we can update the _TweetController.create_ method to upload them:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 
 ```ts
@@ -171,7 +171,7 @@ us the _.save()_ method that we can use to save one or multiple entities.
 The last thing we need to do, is to update the endpoint that returns all the tweets to show the media of a tweet:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 
 ```ts

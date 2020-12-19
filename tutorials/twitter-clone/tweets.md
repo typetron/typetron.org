@@ -99,7 +99,7 @@ Let's create a route that we can use to add tweets in the database. We can add t
 file in the Controllers directory:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 ```ts
 import { Controller, Post } from '@Typetron/Router'
@@ -125,7 +125,7 @@ logged-in user, but we didn't talk about this yet.
 
 #### Registering and logging-in
 Typetron has an authentication system built-in, and we can use that to register and login. You can find thin
-functionality in the _Controllers/AuthController.ts_ file. ([More about Authentication](/docs/authentication)).
+functionality in the _Controllers/Http/AuthController.ts_ file. ([More about Authentication](/docs/authentication)).
 
 Having this in mind, we can use the `/register` route to register a user:
 
@@ -175,7 +175,7 @@ route from earlier. If you are sending a request with a valid authentication tok
 user like in the updated example below:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
@@ -237,7 +237,7 @@ Now we can use this in our endpoint:
 
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
@@ -273,7 +273,7 @@ endpoint.
 
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'

@@ -81,7 +81,7 @@ In this scenario we will have:
 Having these relationships in place we can now easily add the follow feature in our _UserController_:
 
 ```file-path
-📁 Controllers/UserController.ts
+📁 Controllers/Http/UserController.ts
 ```
 
 ```ts
@@ -118,7 +118,7 @@ of a user but this time, searching the user based on its username. This will bec
 information about a user when we only have its username handle:
 
 ```file-path
-📁 Controllers/UserController.ts
+📁 Controllers/Http/UserController.ts
 ```
 
 ```ts
@@ -182,7 +182,7 @@ Now that we have the followers feature added, we can modify the endpoint that re
 latest tweets from the users I am following. Let's also add pagination:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 
 ```ts

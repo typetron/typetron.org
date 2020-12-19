@@ -100,7 +100,7 @@ Now we can create the endpoint that will update the user's profile information. 
 caller _UserController_:
 
 ```file-path
-📁 Controllers/UserController.ts
+📁 Controllers/Http/UserController.ts
 ```
 
 ```ts

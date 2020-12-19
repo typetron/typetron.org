@@ -15,7 +15,7 @@ This is a really easy one because it doesn't involve any new entities. All we ne
 created a new tweet to send mention notifications:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 
 ```ts

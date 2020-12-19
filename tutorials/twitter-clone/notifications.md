@@ -203,7 +203,7 @@ We need to update the _follow_ method of the _UserController_ to create a notifi
 
 
 ```file-path
-📁 Controllers/UserController.ts
+📁 Controllers/Http/UserController.ts
 ```
 
 ```ts
@@ -244,7 +244,7 @@ export class UserController {
 We need to update the _like_ method of the _TweetController_ to create a notification when a user likes a tweet:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 
 ```ts
@@ -297,7 +297,7 @@ export class TweetController {
 #### Adding the "reply" and "retweet" notification
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 
 ```ts
@@ -381,7 +381,7 @@ This looks a bit complex, but it's actually a lot of duplicated code that we can
 
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 
 ```ts

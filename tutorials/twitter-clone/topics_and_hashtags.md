@@ -88,7 +88,7 @@ export class TopicsForm extends Form {
 Now, we can update _UserController_ to return all the topics of a user and also save them if necessary:
 
 ```file-path
-📁 Controllers/UserController.ts
+📁 Controllers/Http/UserController.ts
 ```
 ```ts
 import { Controller, Get, Middleware, Post } from '@Typetron/Router'
@@ -122,7 +122,7 @@ In order to link a tweet with hashtags, we need to identify the hashtags in the 
 (Regexp for short). Let's modify the _TweetController_ and add this feature:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
@@ -209,7 +209,7 @@ Now, that we've added the ability to set topics for users and hashtags for tweet
 return the latest tweets based on that:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
@@ -255,7 +255,7 @@ hashtags from the user's topics. There is also room for query optimization here 
 extracting the duplicated code in a method:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
@@ -310,7 +310,7 @@ Since we are here, lets also add an endpoint that will return all the tweets of 
 use this to show all the tweets of a user when going to its profile:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'

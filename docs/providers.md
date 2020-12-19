@@ -10,23 +10,23 @@ the `Provider` abstract class from `@Typetron/Framework` and implement the `regi
 look at on of the most important provider of an app: `RoutingProvider` found inside `Providers` directory:
  
 ```ts
-import { AppConfig, Provider } from '@Typetron/Framework';
-import { Router } from '@Typetron/Router';
-import { Inject } from '@Typetron/Container';
+import { AppConfig, Provider } from '@Typetron/Framework'
+import { Router } from '@Typetron/Router'
+import { Inject } from '@Typetron/Container'
 
 export class RoutingProvider extends Provider {
-    directory = 'Controllers';
+    directory = 'Controllers'
 
     @Inject()
-    appConfig: AppConfig;
+    appConfig: AppConfig
 
     @Inject()
-    router: Router;
+    router: Router
 
     register() {
-        this.router.middleware = this.appConfig.middleware || [];
+        this.router.middleware = this.appConfig.middleware || []
 
-        this.router.loadControllers(this.app.directory + '/' + this.directory);
+        this.router.loadControllers(this.app.directory + '/' + this.directory)
     }
 }
 ```
@@ -35,25 +35,25 @@ The `RoutingProvider` is responsible for registering your controllers from a spe
 you want to use a second directory to load controllers from, you can change this provider to do just that:
 
 ```ts
-import { AppConfig, Provider } from '@Typetron/Framework';
-import { Router } from '@Typetron/Router';
-import { Inject } from '@Typetron/Container';
+import { AppConfig, Provider } from '@Typetron/Framework'
+import { Router } from '@Typetron/Router'
+import { Inject } from '@Typetron/Container'
 
 export class RoutingProvider extends Provider {
-    directory = 'Controllers';
-    customDirectory = 'CustomDirectory';
+    directory = 'Controllers'
+    customDirectory = 'CustomDirectory'
 
     @Inject()
-    appConfig: AppConfig;
+    appConfig: AppConfig
 
     @Inject()
-    router: Router;
+    router: Router
 
     register() {
-        this.router.middleware = this.appConfig.middleware || [];
+        this.router.middleware = this.appConfig.middleware || []
 
-        this.router.loadControllers(this.app.directory + '/' + this.directory);
-        this.router.loadControllers(this.app.directory + '/' + this.customDirectory);
+        this.router.loadControllers(this.app.directory + '/' + this.directory)
+        this.router.loadControllers(this.app.directory + '/' + this.customDirectory)
     }
 }
 ```

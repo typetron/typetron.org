@@ -86,7 +86,7 @@ export class TweetForm extends Form {
 ```
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 
 ```ts
@@ -120,7 +120,7 @@ The last thing we need to do, is to update the endpoint that returns all the twe
 tweet. We also need to return the parent of a retweet and its user:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 
 ```ts

@@ -99,7 +99,7 @@ If the user calls this endpoint a second time, we need to remove the like entry 
 act as a toggle for likes. Let's add this functionality in our _TweetController_:
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
@@ -143,7 +143,7 @@ it create a new like instance with the same properties. Find more about the [ORM
 The next thing we need to do, is to update the endpoint that returns all the tweet to show the likes count of a tweet:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
@@ -169,7 +169,7 @@ One last thing we need to add is to return some sort of information if the curre
 Let's update the _HomeController_, and then we can talk about the code:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'

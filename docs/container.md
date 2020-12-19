@@ -12,8 +12,8 @@ injection.
 Let's look at an example:
 
 ```ts
-import { Controller, Get } from '@Typetron/Router';
-import { Request } from '@Typetron/Http';
+import { Controller, Get } from '@Typetron/Router'
+import { Request } from '@Typetron/Web'
 
 @Controller('articles')
 export class ArticleController {
@@ -35,12 +35,12 @@ provider automatically the dependency needed.
 In fact, you can use any class as a dependency and Typetron will automatically resolve that dependency for you:
   
 ```ts
-import { Controller, Get } from '@Typetron/Router';
-import { Request } from '@Typetron/Http';
+import { Controller, Get } from '@Typetron/Router'
+import { Request } from '@Typetron/Web'
 
 class Logger {
     log(uri: string) {
-        console.log(`A request was made to ${uri}`);
+        console.log(`A request was made to ${uri}`)
     }
 }
 
@@ -48,8 +48,8 @@ class Logger {
 export class ArticleController {
     @Get()
     search(request: Request, logger: Logger) {
-        logger.log(request.uri);
-        return "searching articles";
+        logger.log(request.uri)
+        return "searching articles"
     }
 }
 ```
@@ -61,17 +61,17 @@ You can also add dependencies to dependencies and Typetron will resolve them rec
 decorator:
 
 ```ts
-import { Controller, Get } from '@Typetron/Router';
-import { Request } from '@Typetron/Http';
-import { Inject } from '@Typetron/Container';
+import { Controller, Get } from '@Typetron/Router'
+import { Request } from '@Typetron/Web'
+import { Inject } from '@Typetron/Container'
 
 class Logger {
 
     @Inject()
-    request: Request;
+    request: Request
 
     log() {
-        console.log(`A request was made to ${this.request.uri}`);
+        console.log(`A request was made to ${this.request.uri}`)
     }
 }
 
@@ -79,8 +79,8 @@ class Logger {
 export class ArticleController {
     @Get()
     search(logger: Logger) {
-        logger.log();
-        return "searching articles";
+        logger.log()
+        return "searching articles"
     }
 }
 ```
@@ -92,14 +92,14 @@ string key.
  
 An example of binding to interface can be found inside `AppProvider`: 
 ```ts
-import { Provider } from '@Typetron/Framework';
-import { ErrorHandlerInterface } from '@Typetron/Http';
-import { AppErrorHandler } from 'App/Services/AppErrorHandler';
+import { Provider } from '@Typetron/Framework'
+import { ErrorHandlerInterface } from '@Typetron/Web'
+import { AppErrorHandler } from 'App/Services/AppErrorHandler'
 
 export class AppProvider extends Provider {
 
     async register() {
-        this.app.set(ErrorHandlerInterface, this.app.get(ErrorHandler));
+        this.app.set(ErrorHandlerInterface, this.app.get(ErrorHandler))
     }
 
 }

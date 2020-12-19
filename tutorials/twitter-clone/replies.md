@@ -74,7 +74,7 @@ export class TweetForm extends Form {
 ```
 
 ```file-path
-📁 Controllers/TweetController.ts
+📁 Controllers/Http/TweetController.ts
 ```
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
@@ -105,7 +105,7 @@ export class TweetController {
 The last thing we need to do, is to update the endpoint that returns all the tweets, to show the replies count of a tweet:
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
@@ -130,7 +130,7 @@ Before we wrap up this step, let's also add one more thing. If you used Twitter 
 a reply's parent with its content and user. Let's add this functionality in our _HomeController_ that :
 
 ```file-path
-📁 Controllers/HomeController.ts
+📁 Controllers/Http/HomeController.ts
 ```
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'

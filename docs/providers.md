@@ -1,14 +1,15 @@
 ---
 layout: docs
+
 title: Providers
 ---
 
 ## {{ page.title }}
 
 Providers are simple classes used to register something in the framework at boot time. A provider must extend
-the `Provider` abstract class from `@Typetron/Framework` and implement the `register` method. Let's take a
-look at on of the most important provider of an app: `RoutingProvider` found inside `Providers` directory:
- 
+the _Provider_ abstract class from _@Typetron/Framework_ and implement the _register_ method. In the example below is an
+implementation of a _RoutingProvider_ used to register the routes of your app:
+
 ```ts
 import { AppConfig, Provider } from '@Typetron/Framework'
 import { Router } from '@Typetron/Router'
@@ -31,8 +32,8 @@ export class RoutingProvider extends Provider {
 }
 ```
 
-The `RoutingProvider` is responsible for registering your controllers from a specific directory. If, for example,
-you want to use a second directory to load controllers from, you can change this provider to do just that:
+The _RoutingProvider_ is responsible for registering your controllers from a specific directory. If, for example, you
+want to use a second directory to load controllers from, you can change this provider to do just that:
 
 ```ts
 import { AppConfig, Provider } from '@Typetron/Framework'

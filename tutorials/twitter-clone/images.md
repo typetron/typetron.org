@@ -168,6 +168,21 @@ _storage.put_ method will return the name of the saved images. This name is rand
 uniqueness. The next step is to save all these image names in the media of the tweet. The _HasMany_ relationship gives
 us the _.save()_ method that we can use to save one or multiple entities.
 
+
+Let's make a request with the _media_ property to add images to a tweet. Since we are sending files, the form's body 
+type should be _form-data_:
+
+```file-path
+🌐 [POST] /tweet
+```
+
+```json
+{
+    "content": "my tweet content",
+    "media": [imageFile1, imageFile2]
+}
+```
+
 The last thing we need to do, is to update the endpoint that returns all the tweets to show the media of a tweet:
 
 ```file-path

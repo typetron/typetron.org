@@ -146,6 +146,13 @@ export class TweetController {
 _Like.firstOrNew_ will try to find an entry in the database with the properties given. If doesn't find any, it will it
 create a new like instance with the same properties. Find more about the [ORM here](/docs/database)
 
+Let's make a request to this endpoint to add a like to a tweet:
+
+```file-path
+🌐 [POST] /tweet/{tweet id}/like
+```
+
+
 The next thing we need to do, is to update the endpoint that returns all the tweet to show the likes count of a tweet:
 
 ```file-path
@@ -164,7 +171,10 @@ export class HomeController {
 
     @Get()
     async tweets() {
-        const tweets = await Tweet.with('user').withCount('likes').orderBy('createdAt', 'DESC').get()
+        const tweets = await Tweet.with('user')
+            .withCount('likes')
+            .orderBy('createdAt', 'DESC')
+            .get()
 
         return TweetModel.from(tweets)
     }

@@ -195,6 +195,18 @@ export class TweetController {
 This is the entire tweet creation functionality from our Twitter clone app. To send user mention notifications we just
 search the usernames in the tweet's content and insert a specific notification in the database.
 
+Let's make a request to test this feature:
+
+```file-path
+🌐 [POST] /
+```
+
+```json
+{
+    "content": "How are you doing @joe"
+}
+```
+
 <div class="tutorial-next-page">
     In the next part we will start creating the frontend part of the app
 

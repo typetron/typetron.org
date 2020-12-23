@@ -107,6 +107,19 @@ export class TweetController {
     }
 }
 ```
+Let's make a request with the _replyParent_ property to add a reply to a tweet:
+
+```file-path
+🌐 [POST] /tweet
+```
+
+```json
+{
+    "content": "my tweet content",
+    "replyParent": 1
+}
+```
+
 
 The last thing we need to do, is to update the endpoint that returns all the tweets, to show the replies count of a
 tweet:

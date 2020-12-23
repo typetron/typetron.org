@@ -167,9 +167,25 @@ export class UserController {
 }
 ```
 
-We only upload an image in the public directory only when we receive an instance of a _File_ in the request, but not
+We upload an image in the public directory only when we receive an instance of a _File_ in the request, but not
 before deleting the old ones, so we don't end up with images on disk that are not used. If the user sends back a string
 for _photo_ or _cover_ images, it means he sent the old paths of those images.
+
+
+Let's make a request to update the user's profile:
+
+```file-path
+🌐 [Patch] /user
+```
+
+```json
+{
+    "name": "John Doe",
+    "bio": "Building apps with Typetron",
+    "photo": imageFile,
+    "cover": imageFile
+}
+```
 
 <div class="tutorial-next-page">
     In the next part we will follow and unfollow users

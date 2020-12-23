@@ -209,6 +209,25 @@ You probably noticed that we used the _@Middleware(AuthMiddleware())_. This is u
 accessed by users that are not authenticated. Also, it will allow us to use the _@AuthUser_ decorator to get the
 authenticated user.
 
+Let's make a request that will call this endpoint. Don't forget to add the login token in the _Authorization_ header of
+your request. The token should be prefixed with the _'Bearer '_ text:
+
+```text
+📋 Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzd<...super long string...>"
+```
+
+```file-path
+🌐 [POST] /tweet
+```
+
+```json
+{
+    "content": "my tweet content"
+}
+```
+
+Now we should have our tweet created in the database.
+
 One other thing that you probably noticed is that we type-hinted the _request.body_ property to _{content: string}_.
 This is done to ensure we will have intellisense in our IDEs. We can continue doing so for every endpoint we create, but
 there is a way of getting rid of this that will bring more features to the table: Forms.
@@ -297,6 +316,9 @@ export class HomeController {
 
 The _.with('user')_ method will eager-load the 'user' relationship for every tweet. This will solve the n+1 problem when
 playing with databases. Find more about eager-loading in [database documentation](/docs/database)
+
+Making a request to the endpoint [localhost:8000](http://localhost:8000/) should give use all the tweets with their
+users:
 
 #### Cleaning the response
 

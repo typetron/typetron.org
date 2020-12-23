@@ -116,6 +116,19 @@ export class TweetController {
 }
 ```
 
+Let's make a request with the _retweetParent_ property to add a retweet to a tweet:
+
+```file-path
+🌐 [POST] /tweet
+```
+
+```json
+{
+    "content": "my tweet content",
+    "retweetParent": 1
+}
+```
+
 The last thing we need to do, is to update the endpoint that returns all the tweets to show the retweets count of a
 tweet. We also need to return the parent of a retweet and its user:
 

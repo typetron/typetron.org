@@ -135,6 +135,22 @@ export class UserController {
 }
 ```
 
+Let's make a request to update a user's topics where the value for the _topics_ property is an array of topics ids:
+
+```file-path
+🌐 [POST] /user/topics
+```
+
+```json
+{
+    "topics": [
+        1,
+        2,
+        3
+    ]
+}
+```
+
 #### Adding hashtags to tweets
 
 In order to link a tweet with hashtags, we need to identify the hashtags in the tweet's content using Regular
@@ -196,7 +212,7 @@ export class TweetController {
         }
 
         await tweet.load('user')
-        
+
         return TweetModel.from(tweet)
     }
 
@@ -271,7 +287,7 @@ export class HomeController {
             .orderBy('createdAt', 'DESC')
             .limit((page - 1) * limit, limit)
             .get()
-        
+
         return TweetModel.from(tweets)
 
     }
@@ -308,7 +324,7 @@ export class HomeController {
         const tweets = await this.getTweetsQuery(page, limit)
             .whereIn('userId', followings.pluck('id').concat(this.user.id))
             .get()
-        
+
         return TweetModel.from(tweets)
     }
 
@@ -322,7 +338,7 @@ export class HomeController {
                 query => query.table('hashtags_tweets').select('tweetId').whereIn('hashTagId', userHashtags.pluck('id'))
             )
             .get()
-        
+
         return TweetModel.from(tweets)
     }
 
@@ -340,6 +356,16 @@ export class HomeController {
             .limit((page - 1) * limit, limit)
     }
 }
+```
+
+Let's make a request to test these endpoints:
+
+```file-path
+🌐 [GET] /?page=1&limit=5
+```
+
+```file-path
+🌐 [GET] /explore?page=1&limit=10
 ```
 
 Since we are here, lets also add an endpoint that will return all the tweets of a user based on a given username. We can
@@ -370,6 +396,12 @@ export class HomeController {
         return TweetModel.from(this.getTweetsQuery(page, limit).where('userId', user.id).get())
     }
 }
+```
+
+Let's also make here a request to test this endpoint:
+
+```file-path
+🌐 [GET] /joe/tweets
 ```
 
 <div class="tutorial-next-page">

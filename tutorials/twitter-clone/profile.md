@@ -9,7 +9,7 @@ title: Update the user profile
 Updating the user profile is the same as updating any other entity. Before doing so, we need to update the _User_ entity
 and add a few more properties:
 
-#### Creating the Media entity
+#### Updating the User entity
 
 This entity will store the images and videos names of tweets. We also need to update the _Tweet_ entity to reflect the
 addition of this entity:
@@ -97,7 +97,34 @@ handle the case when you can make a request with _photo_ and _cover_ properties 
 #### Creating the user profile update endpoint
 
 Now we can create the endpoint that will update the user's profile information. Let's add this in a new controller
-caller _UserController_:
+called _UserController_ and also update the _User_ model:
+
+```file-path
+📁 Models/User.ts
+```
+```ts
+import { Field, Model } from '@Typetron/Models'
+
+export class User extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    username: string
+
+    @Field()
+    name: string
+
+    @Field()
+    photo: string
+
+    @Field()
+    cover: string
+
+    @Field()
+    bio?: string
+}
+```
 
 ```file-path
 📁 Controllers/Http/UserController.ts
@@ -108,6 +135,7 @@ import { Controller, Middleware, Patch } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { UserForm } from 'App/Forms/UserForm'
 import { File, Storage } from '@Typetron/Storage'
@@ -134,7 +162,7 @@ export class UserController {
             form.cover = await this.storage.put(form.cover, 'public')
         }
         await this.user.save(form)
-        return this.user
+        return UserModel.from(this.user)
     }
 }
 ```
@@ -146,7 +174,7 @@ for _photo_ or _cover_ images, it means he sent the old paths of those images.
 <div class="tutorial-next-page">
     In the next part we will follow and unfollow users
 
-    <a href="tweets">
+    <a href="follow">
         <h3>Next ></h3>
         Following/Unfollowing users
     </a>

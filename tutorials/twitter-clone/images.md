@@ -177,6 +177,7 @@ The last thing we need to do, is to update the endpoint that returns all the twe
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -190,7 +191,7 @@ export class HomeController {
 
     @Get()
     async tweets() {
-        return Tweet
+        const tweets = await Tweet
             .with(
                 'user',
                 'media',
@@ -200,15 +201,79 @@ export class HomeController {
             )
             .withCount('likes', 'replies', 'retweets')
             .orderBy('createdAt', 'DESC')
+            .get()
 
+        return TweetModel.from(tweets)        
     }
+}
+```
+
+Of course, we also need to update the _Tweet_ model and add a model for the _Media_ entity:
+
+```file-path
+📁 Models/Media.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+
+export class Media extends Model {
+    @Field()
+    path: string
+}
+```
+
+
+```file-path
+📁 Models/Tweet.ts
+```
+
+```ts
+import { Field, FieldMany, Model } from '@Typetron/Models'
+import { User } from './User'
+import { Media } from './Media'
+import { Like } from './Like'
+
+export class Tweet extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    content: string
+
+    @Field()
+    user: User
+
+    @Field()
+    likesCount = 0
+
+    @FieldMany(Like)
+    likes: Like[] = []
+
+    @Field()
+    retweetsCount = 0
+
+    @Field()
+    replyParent?: Tweet
+
+    @Field()
+    retweetParent?: Tweet
+
+    @Field()
+    repliesCount = 0
+
+    @FieldMany(Media)
+    media: Media[] = []
+
+    @Field()
+    createdAt: Date
 }
 ```
 
 <div class="tutorial-next-page">
     In the next part we will add the ability to update the user profile
 
-    <a href="tweets">
+    <a href="profile">
         <h3>Next ></h3>
         User profile
     </a>

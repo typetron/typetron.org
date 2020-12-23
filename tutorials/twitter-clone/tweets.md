@@ -1,5 +1,6 @@
 ---
 layout: twitter-clone
+
 title: Showing the latest tweets
 ---
 
@@ -21,6 +22,7 @@ Go inside the _Entities_ directory and create the _Tweet.ts_ file there:
 ```file-path
 📁 Entities/Tweet.ts
 ```
+
 ```ts
 import {
     Column,
@@ -65,9 +67,11 @@ You can check this database by opening the _database.sqlite_ file with a SQLite 
 > we postponed the MySQL feature before the V1 release. You can find more about the [Roadmap here](https://github.com/typetron/framework)
 
 One thing we also need to do, is to update the _User_ entity to reflect the added relationship.
+
 ```file-path
 📁 Entities/User.ts
 ```
+
 ```ts
 import { Column, Options, Relation, HasMany } from '@Typetron/Database'
 import { User as Authenticable } from '@Typetron/Framework/Auth'
@@ -85,22 +89,18 @@ export class User extends Authenticable {
 }
 ```
 
-This information is used by Typetron to better understand you app, and it also has some other benefits like accessing a
-user's tweets like so:
-```ts
-const myTweets = await user.tweets.get()
-```
-
-You can find more information about [relationships here](/docs/orm).
+This information is used by Typetron to better understand you app, and it also has some other benefits that we will see
+throughout the tutorial. You can find more information about [relationships here](/docs/orm).
 
 #### Adding tweets in the database
 
-Let's create a route that we can use to add tweets in the database. We can add this route in a new _TweetController_ 
+Let's create a route that we can use to add tweets in the database. We can add this route in a new _TweetController_
 file in the Controllers directory:
 
 ```file-path
 📁 Controllers/Http/TweetController.ts
 ```
+
 ```ts
 import { Controller, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
@@ -111,7 +111,7 @@ export class TweetController {
 
     @Post()
     create(request: Request) {
-        const data = request.content as {content: string}
+        const data = request.body as {content: string}
         return Tweet.create({
             content: data.content,
             // user:  we need users before proceeding
@@ -121,9 +121,10 @@ export class TweetController {
 ```
 
 As you probably noticed in the Tweet entity, it needs a User to which it belongs to. In our case, this user should the
-logged-in user, but we didn't talk about this yet. 
+logged-in user, but we didn't talk about this yet.
 
 #### Registering and logging-in
+
 Typetron has an authentication system built-in, and we can use that to register and login. You can find thin
 functionality in the _Controllers/Http/AuthController.ts_ file. ([More about Authentication](/docs/authentication)).
 
@@ -177,6 +178,7 @@ user like in the updated example below:
 ```file-path
 📁 Controllers/Http/TweetController.ts
 ```
+
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
@@ -194,7 +196,7 @@ export class TweetController {
 
     @Post()
     create(request: Request) {
-        const data = request.content as {content: string}
+        const data = request.body as {content: string}
         return Tweet.create({
             content: data.content,
             user: this.user
@@ -204,20 +206,22 @@ export class TweetController {
 ```
 
 You probably noticed that we used the _@Middleware(AuthMiddleware())_. This is used to protect the routes from being
-accessed by users that are not authenticated. Also, it will allow us to use the _@AuthUser_ decorator to get the 
+accessed by users that are not authenticated. Also, it will allow us to use the _@AuthUser_ decorator to get the
 authenticated user.
 
-One other thing that you probably noticed is that we type-hinted the _request.content_ property to _{content: string}_. 
+One other thing that you probably noticed is that we type-hinted the _request.body_ property to _{content: string}_.
 This is done to ensure we will have intellisense in our IDEs. We can continue doing so for every endpoint we create, but
 there is a way of getting rid of this that will bring more features to the table: Forms.
 
 #### Adding the tweet form
+
 Forms are just classes that show what is the shape of our request. This becomes in handy when we want to add request
 validations. Let's add a form for our endpoint that creates a tweet:
 
 ```file-path
 📁 Forms/TweetForm.ts
 ```
+
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
 import { Required } from '@Typetron/Validation'
@@ -231,13 +235,13 @@ export class TweetForm extends Form {
 
 We can now use this form in our endpoints inside _TweetController_:
 
-That's it. The shape of our request that creates a tweet has only the _content_ property of type _string_ that is required.
-Now we can use this in our endpoint:
-
+That's it. The shape of our request that creates a tweet has only the _content_ property of type _string_ that is
+required. Now we can use this in our endpoint:
 
 ```file-path
 📁 Controllers/Http/TweetController.ts
 ```
+
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
@@ -264,16 +268,17 @@ export class TweetController {
 ```
 
 ## Showing tweets
-The last thing we need to do, is to show a list of tweets to the user. Let's add this in our _HomeController_ and not
-in _TweetController_ because we want to see the tweets from our root endpoint like _http://localhost:8000/_. This
-is just a personal preference. You can safely add the same endpoint in the _TweetController_, and it will work exactly
-the same. Keep in mind that _TweetController_ has a prefix, so you would have to use the _http://localhost:8000/tweet_ 
-endpoint.
 
+The last thing we need to do, is to show a list of tweets to the user. Let's add this in our _HomeController_ and not
+in _TweetController_ because we want to see the tweets from our root endpoint like _http://localhost:8000/_. This is
+just a personal preference. You can safely add the same endpoint in the _TweetController_, and it will work exactly the
+same. Keep in mind that _TweetController_ has a prefix, so you would have to use the _http://localhost:8000/tweet_
+endpoint. Don't forget to remove the old _welcome_ endpoint:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
@@ -290,15 +295,67 @@ export class HomeController {
 }
 ```
 
-The _.with('user')_ method will eager-load the 'user' relationship for every tweet. This will solve the n+1 problem
-when playing with databases. Find more about eager-loading in [database documentation](/docs/database)
+The _.with('user')_ method will eager-load the 'user' relationship for every tweet. This will solve the n+1 problem when
+playing with databases. Find more about eager-loading in [database documentation](/docs/database)
+
+#### Cleaning the response
+
+As you probably saw, the response contains a few properties than we might not want to see, like the password property on
+the user. We can hide unwanted properties using [Models](/docs/models). Let's create a mode for the Tweet entity since
+we already have one for the user in the _Models/User.ts_ file:
+
+```file-path
+📁 Models/Tweet.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+import { User } from './User'
+
+export class Tweet extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    content: string
+
+    @Field()
+    user: User
+
+    @Field()
+    createdAt: Date
+}
+```
+
+Once we created this, we can use it in the controller:
+
+```file-path
+📁 Controllers/Http/HomeController.ts
+```
+
+```ts
+import { Controller, Get, Middleware } from '@Typetron/Router'
+import { Tweet } from 'App/Entities/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+
+@Controller()
+@Middleware(AuthMiddleware)
+export class HomeController {
+
+    @Get()
+    tweets() {
+        return TweetModel.from(Tweet.with('user').orderBy('createdAt', 'DESC').get())
+    }
+}
+```
 
 <div class="tutorial-next-page">
     In the next part we will create the endpoint that will show the latest tweets
 
-    <a href="tweets">
+    <a href="likes">
         <h3>Next ></h3>
-        Routing
+        Liking tweets
     </a>
 
 </div>

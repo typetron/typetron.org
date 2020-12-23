@@ -36,7 +36,7 @@ These are some of the features _Typetron_ aims to have:
 * [x] Forms & Validations
 * [x] Utilities/helper functions
 * [x] Easy debugging
-* [x] Tests(and code coverage)
+* [x] Testing
 * [x] Authentication
 * [x] Error handling
 * [ ] CLI

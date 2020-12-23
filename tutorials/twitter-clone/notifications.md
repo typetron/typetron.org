@@ -210,6 +210,7 @@ We need to update the _follow_ method of the _UserController_ to create a notifi
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Notification } from 'App/Entities/Notification'
 
@@ -234,7 +235,7 @@ export class UserController {
             await notification.notifiers.attach(this.user.id)
         }
 
-        return this.user
+        return UserModel.from(this.user)
     }
 }
 ```
@@ -250,6 +251,7 @@ We need to update the _like_ method of the _TweetController_ to create a notific
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -288,7 +290,7 @@ export class TweetController {
             await notification?.notifiers.attach(this.user.id)
         }
 
-        return tweet
+        return TweetModel.from(tweet)
     }
 }
 ```
@@ -303,6 +305,7 @@ export class TweetController {
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
@@ -371,7 +374,8 @@ export class TweetController {
         }
 
         await tweet.load('user')
-        return tweet
+        
+        return TweetModel.from(tweet)
     }
 
 }
@@ -387,6 +391,7 @@ This looks a bit complex, but it's actually a lot of duplicated code that we can
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
@@ -431,14 +436,15 @@ export class TweetController {
         }
 
         await tweet.load('user')
-        return tweet
+        
+        return TweetModel.from(tweet)
     }
 
     private async addNotification(tweet: Tweet, parent: number, type: 'reply' | 'retweet') {
         const parentTweet = await Tweet.find(parent)
         const parentTweetUser = parentTweet?.user.get()
         /**
-         * we need to create a 'reply' notification if the user that replied the tweet is not its author.
+         * we need to create a notification if the user that replied/retweeted with this tweet is not its author.
          */
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             const notification = await Notification.firstOrCreate({
@@ -453,10 +459,87 @@ export class TweetController {
 }
 ```
 
+#### Getting the user notifications
+
+We now need a few endpoints:
+- one that we can use to read all the notifications of the logged-in user
+- one for getting the count of all unread notifications. This will be used to show a notifications badge in the interface
+with the number of unread notifications
+- one for marking the unread notifications as read
+
+Let's not also forget to create a _Notification_ model:
+
+```file-path
+📁 Models/Notification.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+import { User } from './User'
+import { Tweet } from './Tweet'
+
+export class Notification extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    type: 'follow' | 'like' | 'reply' | 'retweet'
+
+    @Field()
+    notifiers: User[] = []
+
+    @Field()
+    tweet: Tweet
+}
+```
+
+
+```file-path
+📁 Controllers/Http/NotificationController.ts
+```
+
+```ts
+import { Controller, Get, Middleware, Post } from '@Typetron/Router'
+import { AuthUser } from '@Typetron/Framework/Auth'
+import { User } from 'App/Entities/User'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Notification as NotificationModel } from 'App/Models/Notification'
+import { Notification } from 'App/Entities/Notification'
+
+@Controller('notification')
+@Middleware(AuthMiddleware)
+export class NotificationController {
+
+    @AuthUser()
+    user: User
+
+    @Get()
+    async get() {
+        const notifications = await Notification
+            .with('notifiers', 'tweet')
+            .where('userId', this.user.id)
+            .orderBy('createdAt')
+            .get()
+
+        return NotificationModel.from(notifications)
+    }
+
+    @Get('unread')
+    async unread() {
+        return await Notification.where('user', this.user.id).whereNull('readAt').count()
+    }
+
+    @Post('read')
+    async markAsRead() {
+        await Notification.where('user', this.user.id).whereNull('readAt').update('readAt', new Date())
+    }
+}
+```
+
 <div class="tutorial-next-page">
     In the next part we will add the ability to change the topics of the user
 
-    <a href="tweets">
+    <a href="topics_and_hashtags">
         <h3>Next ></h3>
         Topics
     </a>

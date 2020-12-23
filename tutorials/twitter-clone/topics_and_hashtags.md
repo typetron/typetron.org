@@ -67,8 +67,8 @@ export class Hashtag extends Entity {
 ```
 
 #### Adding/removing topics for the user
-Let's add an endpoint that a user can use to add or remove topics based on their personal preferences:
 
+Let's add an endpoint that a user can use to add or remove topics based on their personal preferences:
 
 ```file-path
 📁 Forms/TopicsForm.ts
@@ -85,15 +85,34 @@ export class TopicsForm extends Form {
 }
 ```
 
-Now, we can update _UserController_ to return all the topics of a user and also save them if necessary:
+Now, we can update _UserController_ to return all the topics of a user and also save them if necessary after we create
+the _Topics_ model:
+
+```file-path
+📁 Models/Topics.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+
+export class Topic extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    name: string
+}
+```
 
 ```file-path
 📁 Controllers/Http/UserController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware, Post } from '@Typetron/Router'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { Topic as TopicModel } from 'App/Models/Topics'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { TopicsForm } from 'App/Forms/TopicsForm'
 
@@ -106,7 +125,7 @@ export class UserController {
 
     @Get('topics')
     async getTopics() {
-        return this.user.topics.get()
+        return TopicModel.from(this.user.topics.get())
     }
 
     @Post('topics')
@@ -118,12 +137,14 @@ export class UserController {
 
 #### Adding hashtags to tweets
 
-In order to link a tweet with hashtags, we need to identify the hashtags in the tweet's content using Regular expressions
+In order to link a tweet with hashtags, we need to identify the hashtags in the tweet's content using Regular
+expressions
 (Regexp for short). Let's modify the _TweetController_ and add this feature:
 
 ```file-path
 📁 Controllers/Http/TweetController.ts
 ```
+
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
@@ -132,6 +153,7 @@ import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { Storage } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
 import { Hashtag } from 'App/Entities/Hashtag'
@@ -174,14 +196,15 @@ export class TweetController {
         }
 
         await tweet.load('user')
-        return tweet
+        
+        return TweetModel.from(tweet)
     }
 
     private async addNotification(tweet: Tweet, parent: number, type: 'reply' | 'retweet') {
         const parentTweet = await Tweet.find(parent)
         const parentTweetUser = parentTweet?.user.get()
         /**
-         * we need to create a 'reply' notification if the user that replied the tweet is not its author.
+         * we need to create a notification if the user that replied/retweeted with this tweet is not its author.
          */
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             const notification = await Notification.firstOrCreate({
@@ -205,15 +228,18 @@ export class TweetController {
 ```
 
 #### Showing relevant tweets to users
-Now, that we've added the ability to set topics for users and hashtags for tweets, we can create a new endpoint that will
-return the latest tweets based on that:
+
+Now, that we've added the ability to set topics for users and hashtags for tweets, we can create a new endpoint that
+will return the latest tweets based on that:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -229,7 +255,7 @@ export class HomeController {
     @Get('explore')
     async explore(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
         const userHashtags = await Hashtag.whereIn('topic', this.user.topics.items.pluck('id')).get()
-        return Tweet
+        const tweets = await Tweet
             .with(
                 'user',
                 'media',
@@ -245,21 +271,25 @@ export class HomeController {
             .orderBy('createdAt', 'DESC')
             .limit((page - 1) * limit, limit)
             .get()
+        
+        return TweetModel.from(tweets)
 
     }
 }
 ```
 
-This might look complex, but what is does is just selecting all the tweets from the platform that contain all the 
+This might look complex, but what is does is just selecting all the tweets from the platform that contain all the
 hashtags from the user's topics. There is also room for query optimization here but let's only optimize the code by
 extracting the duplicated code in a method:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -275,19 +305,25 @@ export class HomeController {
     @Get()
     async tweets(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
         const followings = await this.user.following.get()
-        return this.getTweetsQuery(page, limit).whereIn('userId', followings.pluck('id').concat(this.user.id)).get()
+        const tweets = await this.getTweetsQuery(page, limit)
+            .whereIn('userId', followings.pluck('id').concat(this.user.id))
+            .get()
+        
+        return TweetModel.from(tweets)
     }
 
     @Get('explore')
     async explore(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
         await this.user.load('topics')
         const userHashtags = await Hashtag.whereIn('topic', this.user.topics.items.pluck('id')).get()
-        return this.getTweetsQuery(page, limit)
+        const tweets = await this.getTweetsQuery(page, limit)
             .whereIn(
                 'id',
                 query => query.table('hashtags_tweets').select('tweetId').whereIn('hashTagId', userHashtags.pluck('id'))
             )
             .get()
+        
+        return TweetModel.from(tweets)
     }
 
     getTweetsQuery(page: number, limit: number) {
@@ -312,10 +348,12 @@ use this to show all the tweets of a user when going to its profile:
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 
 @Controller()
 @Middleware(AuthMiddleware)
@@ -329,18 +367,17 @@ export class HomeController {
             throw new Error('User not found')
         }
 
-        return this.getTweetsQuery(page, limit).where('userId', user.id)
+        return TweetModel.from(this.getTweetsQuery(page, limit).where('userId', user.id).get())
     }
 }
 ```
 
-
 <div class="tutorial-next-page">
     In the next part we will follow and unfollow users
 
-    <a href="tweets">
+    <a href="mentions">
         <h3>Next ></h3>
-        Following/Unfollowing users
+        Mentions
     </a>
 
 </div>

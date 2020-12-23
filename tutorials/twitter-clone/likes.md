@@ -1,18 +1,21 @@
 ---
 layout: twitter-clone
+
 title: Liking tweets
 ---
 
 ## {{page.title}}
 
-Liking a tweet is easy enough. We just need a database table to hold the likes for each individual tweet. 
+Liking a tweet is easy enough. We just need a database table to hold the likes for each individual tweet.
 
 #### Creating the Like entity
+
 Let's create an entity that will hold the likes of tweets:
 
 ```file-path
 📁 Entities/Like.ts
 ```
+
 ```ts
 import { CreatedAt, Entity, Options, PrimaryColumn, Relation, BelongsTo } from '@Typetron/Database'
 import { Tweet } from 'App/Entities/Tweet';
@@ -41,6 +44,7 @@ Let's also update the Tweet and User entities to reflect this change:
 ```file-path
 📁 Entities/User.ts
 ```
+
 ```ts
 import { Column, Options, Relation, HasMany } from '@Typetron/Database'
 import { User as Authenticable } from '@Typetron/Framework/Auth'
@@ -66,6 +70,7 @@ export class User extends Authenticable {
 ```file-path
 📁 Entities/Tweets.ts
 ```
+
 ```ts
 import { BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { User } from './User'
@@ -92,8 +97,8 @@ export class Tweet extends Entity {
 }
 ```
 
-
 #### Liking tweets action
+
 What we need to do in the controllers, is to create a like entry if a user calls the like endpoint for the first time.
 If the user calls this endpoint a second time, we need to remove the like entry from the database. This endpoint will
 act as a toggle for likes. Let's add this functionality in our _TweetController_:
@@ -101,6 +106,7 @@ act as a toggle for likes. Let's add this functionality in our _TweetController_
 ```file-path
 📁 Controllers/Http/TweetController.ts
 ```
+
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
@@ -137,17 +143,19 @@ export class TweetController {
 
 ```
 
-_Like.firstOrNew_ will try to find an entry in the database with the properties given. If doesn't find any, it will
-it create a new like instance with the same properties. Find more about the [ORM here](/docs/database) 
+_Like.firstOrNew_ will try to find an entry in the database with the properties given. If doesn't find any, it will it
+create a new like instance with the same properties. Find more about the [ORM here](/docs/database)
 
 The next thing we need to do, is to update the endpoint that returns all the tweet to show the likes count of a tweet:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 
 @Controller()
@@ -156,7 +164,9 @@ export class HomeController {
 
     @Get()
     async tweets() {
-        return Tweet.with('user').withCount('likes').orderBy('createdAt', 'DESC').get()
+        const tweets = await Tweet.with('user').withCount('likes').orderBy('createdAt', 'DESC').get()
+
+        return TweetModel.from(tweets)
     }
 }
 ```
@@ -164,16 +174,17 @@ export class HomeController {
 The _withCount_ method will return all the tweets with their properties but also and additional property _likesCount_
 which is the number of likes a tweet has.
 
-
-One last thing we need to add is to return some sort of information if the currently logged-in user liked a tweet or not.
-Let's update the _HomeController_, and then we can talk about the code:
+One last thing we need to add is to return some sort of information if the currently logged-in user liked a tweet or
+not. Let's update the _HomeController_, and then we can talk about the code:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
 ```
+
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -187,23 +198,76 @@ export class HomeController {
 
     @Get()
     async tweets() {
-        return Tweet
+        const tweets = await Tweet
             .with('user', ['likes', query => query.where('userId', this.user.id)])
             .withCount('likes')
             .orderBy('createdAt', 'DESC')
             .get()
+        
+        return TweetModel.from(tweets)
     }
 }
 ```
 
-We eager-load the likes of tweets, but we filter down the likes to only those from the currently logged-in user. This 
-means if I like a tweet, that tweet will have exactly one entry in the _likes_ property, otherwise it will be an
-empty array.
+We eager-load the likes of tweets, but we filter down the likes to only those from the currently logged-in user. This
+means if I like a tweet, that tweet will have exactly one entry in the _likes_ property, otherwise it will be an empty
+array.
+
+Let's add a model for the _Like_ entity as well and update our _Tweet_ model:
+
+```file-path
+📁 Models/Like.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+import { User } from './User'
+
+export class Like extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    user: User
+}
+```
+
+```file-path
+📁 Models/Tweet.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+import { User } from './User'
+import { Like } from './Like'
+
+export class Tweet extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    content: string
+
+    @Field()
+    user: User
+
+    @FieldMany(Like)
+    likes: Like[] = []
+
+    @Field()
+    likesCount = 0
+
+    @Field()
+    createdAt: Date
+}
+```
+
+Now, we should see a cleaner response when making a request to _[GET] http://localhost:8000/_
 
 <div class="tutorial-next-page">
     In the next part we will add the ability to reply to a tweet
 
-    <a href="tweets">
+    <a href="replies">
         <h3>Next ></h3>
         Replying to tweets
     </a>

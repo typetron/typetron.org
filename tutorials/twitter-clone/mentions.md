@@ -6,8 +6,87 @@ title: User mentions
 
 ## {{page.title}}
 
-User mentions are a way of letting one or more users that you mentioned them in a tweet. These users will receive a 
+User mentions are a way of letting one or more users that you mentioned them in a tweet. These users will receive a
 "mention" notification letting them know there were mentioned in your tweet.
+
+#### Updating the Notification entity
+
+Since we have a new type of notification, we need to update the type property of the _Notification_ entity and also its
+model:
+
+```file-path
+📁 Entities/Notification.ts
+```
+
+```ts
+import {
+    BelongsTo,
+    BelongsToMany,
+    Column,
+    CreatedAt,
+    Entity,
+    Options,
+    PrimaryColumn,
+    Relation,
+    UpdatedAt
+} from '@Typetron/Database'
+import { User } from 'App/Entities/User'
+import { Tweet } from 'App/Entities/Tweet'
+
+@Options({
+    table: 'notifications'
+})
+export class Notification extends Entity {
+    @PrimaryColumn()
+    id: number
+
+    @Column()
+    type: 'follow' | 'like' | 'reply' | 'retweet' | 'mention'
+
+    @Relation(() => User, 'notifications')
+    user: BelongsTo<User>
+
+    @Relation(() => User, 'activity')
+    notifiers: BelongsToMany<User>
+
+    @Relation(() => Tweet, 'notifications')
+    tweet: BelongsTo<Tweet>
+
+    @Column()
+    readAt: Date
+
+    @CreatedAt()
+    createdAt: Date
+
+    @UpdatedAt()
+    updatedAt: Date
+}
+
+```
+
+```file-path
+📁 Models/Notification.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+import { User } from './User'
+import { Tweet } from './Tweet'
+
+export class Notification extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    type: 'follow' | 'like' | 'reply' | 'retweet' | 'mention'
+
+    @Field()
+    notifiers: User[] = []
+
+    @Field()
+    tweet: Tweet
+}
+```
 
 #### Adding the mention feature
 
@@ -70,6 +149,7 @@ export class TweetController {
         }
 
         await tweet.load('user')
+
         return TweetModel.from(tweet)
     }
 
@@ -77,7 +157,7 @@ export class TweetController {
         const parentTweet = await Tweet.find(parent)
         const parentTweetUser = parentTweet?.user.get()
         /**
-         * we need to create a 'reply' notification if the user that replied the tweet is not its author.
+         * we need to create a notification if the user that replied/retweeted with this tweet is not its author.
          */
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             await this.addNotification(tweet, parentTweetUser.id, type)
@@ -118,7 +198,7 @@ search the usernames in the tweet's content and insert a specific notification i
 <div class="tutorial-next-page">
     In the next part we will start creating the frontend part of the app
 
-    <a href="tweets">
+    <a href="frontend">
         <h3>Next ></h3>
         Frontend
     </a>

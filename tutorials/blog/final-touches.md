@@ -143,7 +143,7 @@ export class ArticleController {
 
     @Get()
     async index() {
-        return ArticleModel.fromMany(await Article.get())
+        return ArticleModel.from(Article.get())
     }
 
     @Get(':Article')
@@ -255,7 +255,7 @@ export class ArticleController {
 
     @Get()
     async index() {
-        return ArticleModel.fromMany(await Article.get())
+        return ArticleModel.from(Article.get())
     }
 
     @Get(':Article')

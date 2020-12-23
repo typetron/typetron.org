@@ -100,15 +100,11 @@ export class UserController {
     @Post('follow/:User')
     async follow(userToFollow: User) {
         await this.user.following.attach(userToFollow.id)
-
-        return this.user
     }
 
     @Post('unfollow/:User')
     async unfollow(userToUnfollow: User) {
         await this.user.following.detach(userToUnfollow.id)
-
-        return this.user
     }
 }
 ```
@@ -126,6 +122,7 @@ import { Controller, Get, Middleware, Post } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'
 
@@ -147,7 +144,7 @@ export class UserController {
             throw new Error('User not found')
         }
 
-        return user.followers
+        return UserModel.from(user.followers)
     }
 
     @Get(':username/following')
@@ -158,21 +155,17 @@ export class UserController {
             throw new Error('User not found')
         }
 
-        return user.following
+        return UserModel.from(user.following)
     }
 
     @Post('follow/:User')
     async follow(userToFollow: User) {
         await this.user.following.attach(userToFollow.id)
-
-        return this.user
     }
 
     @Post('unfollow/:User')
     async unfollow(userToUnfollow: User) {
         await this.user.following.detach(userToUnfollow.id)
-
-        return this.user
     }
 }
 ```
@@ -188,6 +181,7 @@ latest tweets from the users I am following. Let's also add pagination:
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -202,7 +196,7 @@ export class HomeController {
     @Get()
     async tweets(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
         const followings = await this.user.following.get()
-        return Tweet
+        const tweets = await Tweet
             .with(
                 'user',
                 'media',
@@ -214,6 +208,9 @@ export class HomeController {
             .withCount('likes', 'replies', 'retweets')
             .orderBy('createdAt', 'DESC')
             .limit((page - 1) * limit, limit)
+            .get()
+        
+        return TweetModel.from(tweets)
     }
 }
 ```
@@ -222,7 +219,7 @@ export class HomeController {
 <div class="tutorial-next-page">
     In the next part we will send notifications to users
 
-    <a href="tweets">
+    <a href="notifications">
         <h3>Next ></h3>
         Sending notifications
     </a>

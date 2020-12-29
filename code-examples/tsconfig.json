@@ -1,0 +1,40 @@
+{
+	"compilerOptions": {
+		"module": "commonjs",
+		"target": "es2017",
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"sourceMap": true,
+		"declaration": true,
+		"strict": true,
+		"strictPropertyInitialization": false,
+		"forceConsistentCasingInFileNames": true,
+		"declarationMap": true,
+		//		"noUnusedLocals": true,
+		//		"noUnusedParameters": true,
+		"outDir": "./dist",
+		"moduleResolution": "node",
+		"lib": [
+			"esnext"
+		],
+		"types": [
+			"reflect-metadata",
+			"@types/node"
+		],
+		"baseUrl": ".",
+		"paths": {
+			"@Typetron/*": [
+				"*"
+			]
+		}
+	},
+	"include": [
+		"./**/*.ts"
+	],
+	"exclude": [
+		"node_modules",
+		"test",
+		"dist"
+	]
+}
+

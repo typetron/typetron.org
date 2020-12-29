@@ -5,21 +5,18 @@ import { ArticleForm } from 'App/Forms/ArticleForm';
 @Controller('articles')
 export class ArticleController {
     @Get()
-    async all() {
+    all() {
         return Article.get();
     }
 
     @Post()
-    async add(form: ArticleForm) {
-        const article = new Article(form);
-        await article.save();
-        return article;
+    add(form: ArticleForm) {
+        return Article.create(form);
     }
 
     @Patch(':Article')
-    async update(article: Article, form: ArticleForm) {
-        await article.fill(form).save();
-        return article;
+    update(article: Article, form: ArticleForm) {
+        return article.fill(form).save();
     }
 
     @Delete(':Article')

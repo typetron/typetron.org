@@ -6,7 +6,7 @@
 -   title: Handling content with forms
     url: forms
 -   title: Showing articles
-    url: database
+    url: articles
 -   title: Managing articles
     url: crud
 -   title: Articles images

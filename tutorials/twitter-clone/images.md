@@ -106,7 +106,7 @@ export class TweetForm extends Form {
     content: string
 
     @Field()
-    media: File[] = []
+    media: Image[] = []
 
     @Field()
     replyParent?: number
@@ -284,6 +284,38 @@ export class Tweet extends Model {
     createdAt: Date
 }
 ```
+
+#### Seeing images in the browser
+In order to see images in the browser, we need to activate the static assets feature in our app. We can do this from the
+_config/app.ts_ file:
+
+```file-path
+📁 config/app.ts
+```
+
+```ts
+/* tslint:disable:no-default-export */
+import { AppConfig, DatabaseProvider } from '@Typetron/Framework'
+import { RoutingProvider } from 'App/Providers/RoutingProvider'
+import { AppProvider } from 'App/Providers/AppProvider'
+
+export default new AppConfig({
+    port: 8000,
+    environment: 'development',
+    middleware: [],
+    providers: [
+        AppProvider,
+        RoutingProvider,
+        DatabaseProvider
+    ],
+    staticAssets: {
+        '': ['public'] // <-- this
+    }
+})
+```
+
+Now, we can open the image using this url: _localhost:8000/articles/<the weird image name>_,
+eg: _localhost:8000/articles/upload_73830303b8e292a87942bfb6f46e0663.jpg_.
 
 <div class="tutorial-next-page">
     In the next part we will add the ability to update the user profile

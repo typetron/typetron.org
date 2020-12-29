@@ -69,6 +69,10 @@ users. In order to login we need to have users in our database. Let's create one
 
 Make an HTTP POST request to [localhost:8000/register](http://localhost:8000/register) with the following content in
 order to register a user:
+
+```file-path
+🌐 [POST] /register
+```
 ```json
 {
 	"email": "admin@admin.test",
@@ -83,6 +87,17 @@ order to register a user:
 
 Now we can use the _/login_ endpoint to get a [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token)
 authentication token:
+
+
+```file-path
+🌐 [POST] /login
+```
+```json
+{
+	"email": "admin@admin.test",
+	"password": "password",
+}
+```
 
 <p align="center" class="window">
   <img src="/images/tutorials/blog/login.jpg" />
@@ -135,7 +150,7 @@ export class AuthController {
             throw new Error('Passwords don\'t match')
         }
 
-        return UserModel.from(await this.auth.register(form.email, form.password))
+        return UserModel.from(this.auth.register(form.email, form.password))
     }
 
     @Post('login')

@@ -37,7 +37,7 @@ export class ArticleController {
     @Middleware(AuthMiddleware)
     async add(form: ArticleForm, storage: Storage) {
         if (form.image instanceof File) {
-            await storage.put(form.image, 'public/articles')
+            await storage.save(form.image, 'public/articles')
         }
         return Article.create(form)
     }
@@ -47,7 +47,7 @@ export class ArticleController {
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image instanceof File) {
             await storage.delete(`public/articles/${article.image}`)
-            await storage.put(form.image, 'public/articles')
+            await storage.save(form.image, 'public/articles')
         }
         return article.save(form)
     }
@@ -155,9 +155,9 @@ export class ArticleController {
     @Middleware(AuthMiddleware)
     async add(form: ArticleForm, storage: Storage) {
         if (form.image instanceof File) {
-            await storage.put(form.image, 'public/articles')
+            await storage.save(form.image, 'public/articles')
         }
-        return ArticleModel.from(await Article.create(form))
+        return ArticleModel.from(Article.create(form))
     }
 
     @Patch(':Article')
@@ -165,9 +165,9 @@ export class ArticleController {
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image instanceof File) {
             await storage.delete(`public/articles/${article.image}`)
-            await storage.put(form.image, 'public/articles')
+            await storage.save(form.image, 'public/articles')
         }
-        return ArticleModel.from(await article.save(form))
+        return ArticleModel.from(article.save(form))
     }
 
     @Delete(':Article')
@@ -211,9 +211,9 @@ export class ArticleService {
     @Middleware(AuthMiddleware)
     async add(form: ArticleForm) {
         if (form.image instanceof File) {
-            await this.storage.put(form.image, 'public/articles')
+            await this.storage.save(form.image, 'public/articles')
         }
-        return ArticleModel.from(await Article.create(form))
+        return ArticleModel.from(Article.create(form))
     }
 
     @Patch(':Article')
@@ -221,9 +221,9 @@ export class ArticleService {
     async update(article: Article, form: ArticleForm) {
         if (form.image instanceof File) {
             await this.storage.delete(`public/articles/${article.image}`)
-            await this.storage.put(form.image, 'public/articles')
+            await this.storage.save(form.image, 'public/articles')
         }
-        return ArticleModel.from(await article.save(form))
+        return ArticleModel.from(article.save(form))
     }
 
     @Delete(':Article')

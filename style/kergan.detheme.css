@@ -3354,6 +3354,11 @@ a {
 		width : 100%;
 	}
 
+	.col.lg-8.sm-12 {
+		width : 100%;
+        overflow: auto;
+	}
+
 	.value-proposition-container {
 		display                : -webkit-box;
 		display                : -webkit-flex;

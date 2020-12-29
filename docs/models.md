@@ -7,8 +7,8 @@ title: Models
 ## {{ page.title }}
 
 Models are simple classes that define how the output of your [Controllers](/docs/controllers) should look like. To
-create a model simply create a class that extends the _Model_ class inside _Models_ directory. Make sure to add the _
-@Field_ decorator to each filed you want to show to the user:
+create a model simply create a class that extends the _Model_ class inside _Models_ directory. Make sure to add the
+_@Field_ decorator to each field you want to show to the user:
 
 ```ts
 import { Field, Model } from '@Typetron/Models'

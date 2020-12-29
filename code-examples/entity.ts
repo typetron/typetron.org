@@ -1,4 +1,4 @@
-import { Column, Entity, ID, OneToMany } from '@Typetron/Database';
+import { Column, Entity, ID, HasMany, Relation } from '@Typetron/Database';
 import { Comment } from 'App/Entities/Comment';
 
 export class Article extends Entity {
@@ -17,6 +17,6 @@ export class Article extends Entity {
     @Column()
     updatedAt: Date;
 
-    @OneToMany(() => Comment, 'article')
-    comments: Comment[];
+    @Relation(() => Comment, 'article')
+    comments: HasMany<Comment>;
 }

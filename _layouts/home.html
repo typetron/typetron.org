@@ -49,10 +49,11 @@
 <body class="body">
 	<div class="nav-bar w-nav" data-animation="default" data-collapse="medium" data-duration="400">
 		<div class="wrapper navbar-2 w-container">
-			<div class="div-block-8"><a class="nav-logo-2 w-inline-block home-title" href="/">
-				<img alt="logo" src="/images/icon.svg" width="100">
-				Typetron <sub style="vertical-align: super; font-size: 12px;">Beta</sub>
-			</a>
+			<div class="div-block-8">
+				<a class="nav-logo-2 w-inline-block home-title" href="/" style="white-space: nowrap;">
+					<img alt="logo" src="/images/icon.svg" width="100">
+					Typetron <sub style="vertical-align: super; font-size: 12px;">Beta</sub>
+				</a>
 			</div>
 			<nav class="nav-menu-2 w-nav-menu" role="navigation">
 				<a class="nav-link-2 w-nav-link {% if page.layout == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
@@ -166,11 +167,12 @@
 	</script>
 	<script>
 		Prism.plugins.toolbar.registerButton( 'select-code', function ( env ) {
-			const isFilePath = env.element.classList.contains( 'language-file-path' );
+			const classList = env.element.classList
+			const isFilePath = classList.contains( 'language-file-path' );
 			if ( isFilePath ) {
 				return;
 			}
-			const isShLanguage = env.element.classList.contains( 'language-sh' );
+			const isShLanguage = classList.contains( 'language-sh' ) || classList.contains( 'language-bash' );
 
 			const button     = document.createElement( 'button' );
 			button.innerHTML = 'Copy';

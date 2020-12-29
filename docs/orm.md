@@ -16,10 +16,6 @@ Before you get started with the ORM, make sure you [configured the database](/do
 
 Every entity class is a file inside the _Entities_ directory:
 
-```file-path
-📁 Entities/Article.ts
-```
-
 ```ts
 import { Column, Entity, ID, PrimaryColumn } from '@Typetron/Database'
 
@@ -260,14 +256,106 @@ export class Article extends Entity {
 
 #### Relationships
 
+##### One to One
+
+A one-to-one relationship is a very simple relationship between two entities. We can define this relationship using
+the _HasOne_ type on a property on our main entity, followed by its inverse using _BelongsTo_ type on our child entity.
+Here is an example:
+
+```ts
+import { BelongsTo, Column, Entity, HasOne, ID, PrimaryColumn, Relation } from '@Typetron/Database'
+
+export class User extends Entity {
+    @PrimaryColumn()
+    id: ID
+
+    @Column()
+    name: string
+
+    @Relation(() => Laptop, 'user')
+    laptop: HasOne<Laptop>
+}
+
+class Laptop extends Entity {
+    @PrimaryColumn()
+    id: ID
+
+    @Column()
+    name: string
+
+    @Relation(() => User, 'laptop')
+    user: BelongsTo<User>
+}
+
+```
+
+We can get the value of this relationship by accessing the _laptop_ property of a user:
+```ts
+const user = await User.find(1)
+const laptop = await user.laptop.get()
+```
+
 ##### One to Many
 
-_In progress_
+This relationship is used when a parent entity can have one or more child entities. For example, a car make can have one
+or more car models:
 
-##### Many to One
+```ts
+import { BelongsTo, Column, Entity, HasMany, Relation } from '@Typetron/Database'
 
-_In progress_
+export class Make extends Entity {
+    @Column()
+    name: string
+
+    @Relation(() => Model, 'make')
+    models: HasMany<Model>
+}
+
+export class Model extends Entity {
+    @Column()
+    name: string
+
+    @Relation(() => Make, 'models')
+    make: BelongsTo<Make>
+}
+```
+
+We can get the value of this relationship by accessing the _models_ property of a car make:
+```ts
+const make = await Make.find(1)
+const models = await make.models.get()
+```
+
 
 ##### Many to Many
+This is the most complex relationship of them all because it also requires an additional database table. For example, a
+user can have many roles attached to it, but also, a role can be attached to many users. We can define the relationship
+like this:
 
-_In progress_
+```ts
+import { BelongsToMany, Column, Entity, Relation } from '@Typetron/Database'
+
+export class User extends Entity {
+    @Column()
+    name: string
+
+    @Relation(() => Role, 'users')
+    roles: BelongsToMany<Role>
+}
+
+export class Role extends Entity {
+    @Column()
+    name: string
+
+    @Relation(() => User, 'roles')
+    users: BelongsToMany<User>
+}
+```
+
+We can get the roles of a user in the same manner as before:
+
+
+```ts
+const user = await User.find(1)
+const roles = await user.roles.get()
+```

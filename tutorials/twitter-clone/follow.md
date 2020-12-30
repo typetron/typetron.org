@@ -111,7 +111,7 @@ export class UserController {
 
 As easy as that, we now can follow and unfollow users.Let's also add some endpoints to get the followers and following
 of a user but this time, searching the user based on its username. This will become in handy when we want to get
-information about a user when we only have its handle, like _@ionel_ or *@typetron\_*:
+information about a user when we only have its handle, like _@ionel_ or *@typetron\_* :
 
 ```file-path
 📁 Controllers/Http/UserController.ts
@@ -171,7 +171,7 @@ export class UserController {
 ```
 
 #### Showing tweets from followed users
-Now that we have the followers feature added, we can modify the endpoint that returns the latest tweets to return the
+Now that we have the followers feature added, we can modify the endpoint that returns the latest tweets, to return the
 latest tweets from the users I am following. Let's also add pagination:
 
 ```file-path

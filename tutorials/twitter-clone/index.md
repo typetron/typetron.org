@@ -68,7 +68,7 @@ We will begin with the backend part of the app, and then we will finish by creat
 Before diving into the backend part with Typetron, let's lay down the idea on paper, so we know what to follow. We will have:
 - a Home page that will display the latest tweet from the platform based on the people you are following
 - an Explore page what will show the latest tweets from the platform based on what topics you've selected
-- a Notifications page that will show you the latest interactions on you and on your tweets, like new followers or tweets likes.
+- a Notifications page that will show you the latest interactions on your tweets, like new followers or tweets likes.
 - a Profile page where you can see a user's information, tweets and interact with him
  
 Some features of Tweetee will be:

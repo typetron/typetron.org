@@ -117,7 +117,7 @@ the value you've set. In this case, it will use the custom _ErrorHandler_ class 
 By default, the container creates singleton instances for the dependencies you use, but there are use cases when you 
 want to create an instance every time you need one, or at every user request. This option is called the scope of the
 service. You can set the scope of a service by using the _@Injectable()_ decorator and then set the necessary scope, just
-like in the examples below;
+like in the examples below.
 
 ##### Singleton scope
 Creating an instance that will be globally used in the app as a singleton:

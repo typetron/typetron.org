@@ -6,7 +6,7 @@ title: Retweeting tweets
 
 ## {{page.title}}
 
-The reply functionality is almost 100% similar to the reply one. This is because a retweet is almost the same thing as a
+The retweet functionality is almost 100% similar to the reply one. This is because a retweet is almost the same thing as a
 reply, with a few key differences.
 
 #### Updating the Tweet entity
@@ -55,9 +55,9 @@ export class Tweet extends Entity {
 }
 ```
 
-This might be a bit confusing but let's explain what is happening. We added the _replyParent_ column which is actually
-the id of the parent tweet. The _replies_ relationship is the inverse of the _replyParent_. It will give us all the
-replies of a tweet.
+This might be a bit confusing but let's explain what is happening. We added the _retweetParent_ column which is actually
+the id of the parent tweet. The _retweets_ relationship is the inverse of the _retweetParent_. It will give us all the
+retweets of a tweet.
 
 #### Adding the retweet functionality
 
@@ -136,13 +136,12 @@ tweet. We also need to return the parent of a retweet and its user:
 ```
 
 ```ts
-import { Controller, Get, Middleware, Query } from '@Typetron/Router'
+import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
 import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
-import { EntityQuery } from '@Typetron/Database/EntityQuery'
 
 @Controller()
 @Middleware(AuthMiddleware)

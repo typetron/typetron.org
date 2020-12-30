@@ -49,8 +49,8 @@ export class User extends Authenticable {
 ```
 
 We added the _username_ property, which is the handle of a user. We will use this later in order to mention people in
-our tweets using the '@' symbol. The _bio_ will be a short description fo a user. The _photo_ and _cover_ will contain a
-path to an image. The _photo_ is the avatar image of the user, and the _cover_ is the image that will show up when you
+our tweets using the '@' symbol. The _bio_ will be a short description for a user. The _photo_ and _cover_ will contain
+a path to an image. The _photo_ is the avatar image of the user, and the _cover_ is the image that will show up when you
 will visit a user's profile.
 
 #### Creating the UserForm
@@ -75,7 +75,7 @@ export class UserForm extends Form {
     @Field()
     @Rules(Required)
     username: string
-    
+
     @Field()
     bio?: string
 
@@ -94,7 +94,6 @@ handle the case when you can make a request with _photo_ and _cover_ properties 
 
 Now we can create the endpoint that will update the user's profile information. Let's add this in a new controller
 called _UserController_ and also update the _User_ model:
-
 
 ```file-path
 📁 Controllers/Http/UserController.ts
@@ -122,7 +121,6 @@ export class UserController {
 
     @Patch()
     async update(form: UserForm) {
-
         if (form.photo instanceof File) {
             await this.storage.delete(`public/${this.user.photo}`)
             form.photo = await this.storage.save(form.photo, 'public')
@@ -132,6 +130,7 @@ export class UserController {
             form.cover = await this.storage.save(form.cover, 'public')
         }
         await this.user.save(form)
+
         return UserModel.from(this.user)
     }
 }
@@ -166,8 +165,8 @@ export class User extends Model {
 ```
 
 We upload an image in the public directory only when we receive an instance of a _File_ in the request, but not before
-deleting the old ones, so we don't end up with images on disk that are not used. If the user sends back a string for _
-photo_ or _cover_ images, it means he sent the old paths of those images.
+deleting the old ones, so we don't end up with images on disk that are not used. If the user sends back a string for
+_photo_ or _cover_ images, it means he sent the old paths of those images.
 
 Let's make a _form-data_ request to update the user's profile:
 
@@ -177,6 +176,7 @@ Let's make a _form-data_ request to update the user's profile:
 
 ```json
 {
+    "username": "joe",
     "name": "John Doe",
     "bio": "Building apps with Typetron",
     "photo": imageFile,

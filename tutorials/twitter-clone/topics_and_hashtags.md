@@ -40,7 +40,7 @@ export class Topic extends Entity {
 ```
 
 ```file-path
-📁 Entities/Hastag.ts
+📁 Entities/Hashtag.ts
 ```
 
 ```ts
@@ -66,19 +66,148 @@ export class Hashtag extends Entity {
 }
 ```
 
+Let's not forget to update the relationships on the _User_ and _Tweet_ entities:
+
+```file-path
+📁 Entities/User.ts
+```
+
+```ts
+import { BelongsToMany, BelongsToManyOptions, Column, HasMany, Options, Relation } from '@Typetron/Database'
+import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { Tweet } from 'App/Entities/Tweet'
+import { Like } from 'App/Entities/Like'
+import { Notification } from 'App/Entities/Notification'
+import { Topic } from 'App/Entities/Topic'
+
+@Options({
+    table: 'users'
+})
+export class User extends Authenticable {
+    @Column()
+    name: string
+
+    @Column()
+    username: string
+
+    @Column()
+    bio: string
+
+    @Column()
+    photo: string
+
+    @Column()
+    cover: string
+
+    @Relation(() => Like, 'user')
+    likes: HasMany<Like>
+
+    @Relation(() => Tweet, 'user')
+    tweets: HasMany<Tweet>
+
+    @Relation(() => Notification, 'user')
+    notifications: HasMany<Notification>
+
+    @Relation(() => Notification, 'notifiers')
+    activity: BelongsToMany<Notification>
+
+    @Relation(() => Topic, 'enthusiasts')
+    topics: BelongsToMany<Topic>
+
+    @Relation(() => User, 'following')
+    @BelongsToManyOptions({
+        table: 'followers',
+        column: 'followerId',
+        foreignColumn: 'followingId'
+    })
+    followers: BelongsToMany<User>
+
+    @Relation(() => User, 'followers')
+    @BelongsToManyOptions({
+        table: 'followers',
+        column: 'followingId',
+        foreignColumn: 'followerId'
+    })
+    following: BelongsToMany<User>
+}
+```
+
+```file-path
+📁 Entities/Tweet.ts
+```
+
+```ts
+import {
+    BelongsTo,
+    BelongsToMany,
+    Column,
+    CreatedAt,
+    Entity,
+    HasMany,
+    Options,
+    PrimaryColumn,
+    Relation
+} from '@Typetron/Database'
+import { User } from './User'
+import { Like } from './Like'
+import { Media } from './Media'
+import { Notification } from 'App/Entities/Notification'
+import { Hashtag } from 'App/Entities/Hashtag'
+
+@Options({
+    table: 'tweets'
+})
+export class Tweet extends Entity {
+    @PrimaryColumn()
+    id: number
+
+    @Column()
+    content: string
+
+    @Relation(() => Media, 'tweet')
+    media: HasMany<Media>
+
+    @Relation(() => User, 'tweets')
+    user: BelongsTo<User>
+
+    @Relation(() => Like, 'tweet')
+    likes: HasMany<Like>
+
+    @Relation(() => Tweet, 'replies')
+    replyParent: BelongsTo<Tweet>
+
+    @Relation(() => Tweet, 'retweets')
+    retweetParent: BelongsTo<Tweet>
+
+    @Relation(() => Tweet, 'replyParent')
+    replies: HasMany<Tweet>
+
+    @Relation(() => Tweet, 'retweetParent')
+    retweets: HasMany<Tweet>
+
+    @Relation(() => Notification, 'tweet')
+    notifications: HasMany<Notification>
+
+    @Relation(() => Hashtag, 'tweets')
+    hashtags: BelongsToMany<Hashtag>
+
+    @CreatedAt()
+    createdAt: Date
+}
+```
 #### Adding/removing topics for the user
 
 Let's add an endpoint that a user can use to add or remove topics based on their personal preferences:
 
 ```file-path
-📁 Forms/TopicsForm.ts
+📁 Forms/UserTopicsForm.ts
 ```
 
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
 import { Required } from '@Typetron/Validation'
 
-export class TopicsForm extends Form {
+export class UserTopicsForm extends Form {
     @Field()
     @Rules(Required)
     topics: number[] = []
@@ -89,7 +218,7 @@ Now, we can update _UserController_ to return all the topics of a user and also 
 the _Topics_ model:
 
 ```file-path
-📁 Models/Topics.ts
+📁 Models/Topic.ts
 ```
 
 ```ts
@@ -114,7 +243,7 @@ import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
 import { Topic as TopicModel } from 'App/Models/Topics'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
-import { TopicsForm } from 'App/Forms/TopicsForm'
+import { UserTopicsForm } from 'App/Forms/UserTopicsForm'
 
 @Controller('user')
 @Middleware(AuthMiddleware)
@@ -129,7 +258,7 @@ export class UserController {
     }
 
     @Post('topics')
-    async setTopics(form: TopicsForm) {
+    async setTopics(form: UserTopicsForm) {
         await this.user.topics.sync(...form.topics)
     }
 }

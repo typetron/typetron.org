@@ -1,22 +1,22 @@
-import { Column, Entity, ID, HasMany, Relation } from '@Typetron/Database';
-import { Comment } from 'App/Entities/Comment';
+import { Column, Entity, ID, HasMany, Relation } from '@Typetron/Database'
+import { Comment } from 'App/Entities/Comment'
 
 export class Article extends Entity {
     @Column()
-    id: ID;
+    id: ID
 
     @Column()
-    title: string;
+    title: string
 
     @Column()
-    content: string;
+    content: string
 
     @Column()
-    createdAt: Date;
+    createdAt: Date
 
     @Column()
-    updatedAt: Date;
+    updatedAt: Date
 
     @Relation(() => Comment, 'article')
-    comments: HasMany<Comment>;
+    comments: HasMany<Comment>
 }

@@ -53,19 +53,6 @@ export class Tweet extends Entity {
 }
 ```
 
-Saving this file will automatically create the _tweets_ table for you in the sqlite database from inside the project.
-You can check this database by opening the _database.sqlite_ file with a SQLite client.
-
-> _**Question**_: Why is the database updated automatically?
->
-> _**Answer**_: By default, Typetron has the option of automatically update the database turned on.
-> This option can be changed from _config/database.ts_ file. [More info here](/docs/database)
-
-> _**Question**_: What if I want to use a MySQL server?
->
-> _**Answer**_: Typetron will support MySQL drivers in the future, but because it is still in heavy development,
-> we postponed the MySQL feature before the V1 release. You can find more about the [Roadmap here](https://github.com/typetron/framework)
-
 One thing we also need to do, is to update the _User_ entity to reflect the added relationship.
 
 ```file-path
@@ -91,6 +78,21 @@ export class User extends Authenticable {
 
 This information is used by Typetron to better understand you app, and it also has some other benefits that we will see
 throughout the tutorial. You can find more information about [relationships here](/docs/orm).
+
+
+Saving these files will automatically create the _tweets_ table for you in the sqlite database from inside the project.
+You can check this database by opening the _database.sqlite_ file with a SQLite client.
+
+> _**Question**_: Why is the database updated automatically?
+>
+> _**Answer**_: By default, Typetron has the option of automatically update the database turned on.
+> This option can be changed from _config/database.ts_ file. [More info here](/docs/database)
+
+> _**Question**_: What if I want to use a MySQL server?
+>
+> _**Answer**_: Typetron will support MySQL drivers in the future, but because it is still in heavy development,
+> we postponed the MySQL feature before the V1 release. You can find more about the [Roadmap here](https://github.com/typetron/framework)
+
 
 #### Adding tweets in the database
 
@@ -120,7 +122,7 @@ export class TweetController {
 }
 ```
 
-As you probably noticed in the Tweet entity, it needs a User to which it belongs to. In our case, this user should the
+As you probably noticed in the Tweet entity, it needs a User it belongs to. In our case, this user should the
 logged-in user, but we didn't talk about this yet.
 
 #### Registering and logging-in
@@ -291,8 +293,8 @@ export class TweetController {
 The last thing we need to do, is to show a list of tweets to the user. Let's add this in our _HomeController_ and not
 in _TweetController_ because we want to see the tweets from our root endpoint like _http://localhost:8000/_. This is
 just a personal preference. You can safely add the same endpoint in the _TweetController_, and it will work exactly the
-same. Keep in mind that _TweetController_ has a prefix, so you would have to use the _http://localhost:8000/tweet_
-endpoint. Don't forget to remove the old _welcome_ endpoint:
+same. Keep in mind that _TweetController_ has the _tweet_ prefix, so you would have to use the _http://localhost:8000/tweet_
+endpoint. Don't forget to remove the old _welcome_ endpoint if you add this functionality in _HomeController_:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts

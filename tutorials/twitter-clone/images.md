@@ -6,8 +6,9 @@ title: Adding images to tweets
 
 ## {{page.title}}
 
-A tweet can have one or more images attached to it. This means we need another database table to save the images names
-into. This new table will need a new entity to be created.
+A tweet can have one or more images attached to it. We will save these images on this, but we will need to save the name
+of the image in the database. This means we need another database table to save the images names into. This new table
+will need a new entity to be created.
 
 #### Creating the Media entity
 
@@ -95,7 +96,7 @@ files:
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
 import { Required } from '@Typetron/Validation'
-import { Image } from '@Typetron/Storage'
+import { File } from '@Typetron/Storage'
 
 export class TweetForm extends Form {
 
@@ -106,7 +107,7 @@ export class TweetForm extends Form {
     content: string
 
     @Field()
-    media: Image[] = []
+    media: File[] = []
 
     @Field()
     replyParent?: number
@@ -168,8 +169,7 @@ _storage.save_ method will return the name of the saved images. This name is ran
 uniqueness. The next step is to save all these image names in the media of the tweet. The _HasMany_ relationship gives
 us the _.save()_ method that we can use to save one or multiple entities.
 
-
-Let's make a request with the _media_ property to add images to a tweet. Since we are sending files, the form's body 
+Let's make a request with the _media_ property to add images to a tweet. Since we are sending files, the form's body
 type should be _form-data_:
 
 ```file-path
@@ -179,7 +179,10 @@ type should be _form-data_:
 ```json
 {
     "content": "my tweet content",
-    "media": [imageFile1, imageFile2]
+    "media": [
+        imageFile1,
+        imageFile2
+    ]
 }
 ```
 
@@ -192,7 +195,7 @@ The last thing we need to do, is to update the endpoint that returns all the twe
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -218,7 +221,7 @@ export class HomeController {
             .orderBy('createdAt', 'DESC')
             .get()
 
-        return TweetModel.from(tweets)        
+        return TweetModel.from(tweets)
     }
 }
 ```
@@ -237,7 +240,6 @@ export class Media extends Model {
     path: string
 }
 ```
-
 
 ```file-path
 📁 Models/Tweet.ts
@@ -286,6 +288,7 @@ export class Tweet extends Model {
 ```
 
 #### Seeing images in the browser
+
 In order to see images, we need to activate the static assets feature in our app. We can do this from the
 _config/app.ts_ file:
 
@@ -314,8 +317,8 @@ export default new AppConfig({
 })
 ```
 
-Now, we can open the image using this url: _localhost:8000/tweets-media/the-weird-image-name_,
-eg: _localhost:8000/tweets-media/upload_73830303b8e292.jpg_.
+Now, we can open the image using this url: _localhost:8000/tweets-media/the-weird-image-name_, eg: _localhost:
+8000/tweets-media/upload_73830303b8e292.jpg_.
 
 <div class="tutorial-next-page">
     In the next part we will add the ability to update the user profile

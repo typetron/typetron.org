@@ -104,6 +104,11 @@ export class TweetController {
             user: this.user
         })
     }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        // ...
+    }
 }
 ```
 Let's make a request with the _replyParent_ property to add a reply to a tweet:
@@ -130,13 +135,17 @@ tweet:
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { AuthUser } from '@Typetron/Framework/Auth'
 
 @Controller()
 @Middleware(AuthMiddleware)
 export class HomeController {
 
+    @AuthUser()
+    user: User
+    
     @Get()
     async tweets() {
         const tweets = await Tweet
@@ -160,7 +169,7 @@ a reply's parent with its content and user. Let's add this functionality in our 
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'

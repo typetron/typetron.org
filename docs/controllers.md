@@ -138,7 +138,7 @@ export default new AppConfig({
     middleware: [
         MyMiddleware
     ],
-});
+})
 ```
 
 #### Controller middleware

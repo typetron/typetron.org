@@ -8,7 +8,7 @@ title: Notifications
 
 Notifications are a simple way of telling the user what happened on the platform in regard to a user's profile and tweets.
 We will have a few types of notifications:
-- "a user follower user" notification
+- "a user followed you" notification
 - "a user likes your tweet" notification
 - "a user replied to your tweet" notification
 - "a user retweeted your tweet" notification
@@ -346,7 +346,7 @@ export class TweetController {
             if (retweetUser && retweetUser.id !== this.user.id) {
                 const notification = await Notification.firstOrCreate({
                     type: 'retweet',
-                    user: retweetUser.id,
+                    user: retweetUser,
                     readAt: undefined,
                     tweet
                 })
@@ -365,7 +365,7 @@ export class TweetController {
             if (replyUser && replyUser.id !== this.user.id) {
                 const notification = await Notification.firstOrCreate({
                     type: 'reply',
-                    user: replyUser.id,
+                    user: replyUser,
                     readAt: undefined,
                     tweet
                 })
@@ -381,7 +381,8 @@ export class TweetController {
 }
 ```
 
-This looks a bit complex, but it's actually a lot of duplicated code that we can rewrite as: 
+This looks a bit complex, but it's actually a lot of duplicated code  as you can see the code under the if statements
+that we can rewrite as: 
 
 
 ```file-path
@@ -449,7 +450,7 @@ export class TweetController {
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             const notification = await Notification.firstOrCreate({
                 type: type,
-                user: parentTweetUser.id,
+                user: parentTweetUser,
                 readAt: undefined,
                 tweet
             })
@@ -461,7 +462,7 @@ export class TweetController {
 
 #### Getting the user notifications
 
-We now need a few endpoints:
+To get a user's notifications, we need a few endpoints:
 - one that we can use to read all the notifications of the logged-in user
 - one for getting the count of all unread notifications. This will be used to show a notifications badge in the interface
 with the number of unread notifications
@@ -474,7 +475,7 @@ Let's not also forget to create a _Notification_ model:
 ```
 
 ```ts
-import { Field, Model } from '@Typetron/Models'
+import { Field, Model, FieldMany } from '@Typetron/Models'
 import { User } from './User'
 import { Tweet } from './Tweet'
 
@@ -485,7 +486,7 @@ export class Notification extends Model {
     @Field()
     type: 'follow' | 'like' | 'reply' | 'retweet'
 
-    @Field()
+    @FieldMany(User)
     notifiers: User[] = []
 
     @Field()

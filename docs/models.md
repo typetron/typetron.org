@@ -43,7 +43,7 @@ import { Article } from 'App/Entities/Article'
 class ArticleController {
 
     @Get()
-    async all() {
+    all() {
         return ArticleModel.from(Article.all())
     }
 }

@@ -136,8 +136,8 @@ command.
 
 Let's make a new article by making again an HTTP Post request, so the field image will get populated in the database.
 The value for the image column will be the image's name including the extension. Now, if we make an HTTP GET request
-to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird name we've seen in the _
-public/articles_ directory.
+to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird name we've seen in the 
+_public/articles_ directory.
 
 There is a small issue though. All the other articles don't have an image yet. You can use the _edit_ route to update
 their image, but before that we need to update the endpoint to upload images too. This will get a bit complicated since

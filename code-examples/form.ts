@@ -1,5 +1,5 @@
-import { Field, Form, Rules } from '@Typetron/Forms';
-import { MinLength, Required } from '@Typetron/Validation';
+import { Field, Form, Rules } from '@Typetron/Forms'
+import { MinLength, Required } from '@Typetron/Validation'
 
 export class ArticleForm extends Form {
 
@@ -8,14 +8,14 @@ export class ArticleForm extends Form {
         Required,
         MinLength(5)
     )
-    title: string;
+    title: string
 
     @Field()
     @Rules(
         Required
     )
-    content: string;
+    content: string
 
     @Field()
-    tags: number[] = [];
+    tags: number[] = []
 }

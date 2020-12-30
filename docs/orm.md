@@ -65,9 +65,6 @@ change the name of the columns that will match from the property by passing it a
 decorator:
 
 ```ts
-@Options({
-    table: 'articles'
-})
 export class Article extends Entity {
     // ...
     @Column('body')
@@ -105,7 +102,7 @@ Each object inside articles array is an instance of the Article entity
 You can get specific columns from the database by passing and array of properties to the _.get()_ method:
 
 ```ts
-const articles = await Article.get(['id', 'title']) // SELECT `title` FROM `article`
+const articles = await Article.get(['id', 'title']) // SELECT `id`, `title` FROM `article`
 /*
 [
   {

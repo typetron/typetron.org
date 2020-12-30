@@ -27,8 +27,8 @@ const fileExists = await storage.exists('index.ts')
 #### Write to a file
 ```ts
 const file = await storage.read('index.html')
-await storage.put(file, 'public/html')
-await storage.put(file, 'public/html' , 'main.html')
+await storage.save(file, 'public/html')
+await storage.save(file, 'public/html' , 'main.html')
 ```
 
 #### Create a directory

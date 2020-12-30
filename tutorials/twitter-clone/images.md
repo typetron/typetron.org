@@ -11,7 +11,7 @@ into. This new table will need a new entity to be created.
 
 #### Creating the Media entity
 
-This entity will store the images and videos names of tweets. We also need to update the _Tweet_ entity to reflect the
+This entity will store the images and video names of tweets. We also need to update the _Tweet_ entity to reflect the
 addition of this entity:
 
 ```file-path
@@ -95,7 +95,7 @@ files:
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
 import { Required } from '@Typetron/Validation'
-import { File } from '@Typetron/Storage'
+import { Image } from '@Typetron/Storage'
 
 export class TweetForm extends Form {
 
@@ -153,7 +153,7 @@ export class TweetController {
         })
 
         const mediaFiles = await Promise.all(
-            form.media.map(file => this.storage.put(file, 'public/tweets-media'))
+            form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
@@ -164,7 +164,7 @@ export class TweetController {
 
 This needs a bit of an explanation. The _Promise.all_ is effectively the uploading part. Here, all the files from
 _form.media_ are asynchronously uploaded in the _public/tweet-media_ directory. After all of them are uploaded, the
-_storage.put_ method will return the name of the saved images. This name is randomly generated to preserve their
+_storage.save_ method will return the name of the saved images. This name is randomly generated to preserve their
 uniqueness. The next step is to save all these image names in the media of the tweet. The _HasMany_ relationship gives
 us the _.save()_ method that we can use to save one or multiple entities.
 
@@ -286,7 +286,7 @@ export class Tweet extends Model {
 ```
 
 #### Seeing images in the browser
-In order to see images in the browser, we need to activate the static assets feature in our app. We can do this from the
+In order to see images, we need to activate the static assets feature in our app. We can do this from the
 _config/app.ts_ file:
 
 ```file-path
@@ -314,8 +314,8 @@ export default new AppConfig({
 })
 ```
 
-Now, we can open the image using this url: _localhost:8000/articles/<the weird image name>_,
-eg: _localhost:8000/articles/upload_73830303b8e292a87942bfb6f46e0663.jpg_.
+Now, we can open the image using this url: _localhost:8000/tweets-media/the-weird-image-name_,
+eg: _localhost:8000/tweets-media/upload_73830303b8e292.jpg_.
 
 <div class="tutorial-next-page">
     In the next part we will add the ability to update the user profile

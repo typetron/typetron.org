@@ -70,7 +70,6 @@ As like in the last step, we just need to update the _TweetForm_ and the _TweetC
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
 import { Required } from '@Typetron/Validation'
-import { File } from '@Typetron/Storage'
 
 export class TweetForm extends Form {
     @Field()

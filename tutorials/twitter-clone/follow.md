@@ -63,7 +63,7 @@ export class User extends Authenticable {
 }
 ```
 
-The _followers_ property will contain the users that followers a specific user, and the _following_ properties will
+The _followers_ property will contain the users that follow a specific user, and the _following_ property will
 contain the users a specific user is following. This might be confusing but let's explain this with an example.
 
 Let's say we have three users: Joe, Mike and Alex where
@@ -111,7 +111,7 @@ export class UserController {
 
 As easy as that, we now can follow and unfollow users.Let's also add some endpoints to get the followers and following
 of a user but this time, searching the user based on its username. This will become in handy when we want to get
-information about a user when we only have its username handle:
+information about a user when we only have its handle, like _@ionel_ or *@typetron\_*:
 
 ```file-path
 📁 Controllers/Http/UserController.ts
@@ -144,7 +144,7 @@ export class UserController {
             throw new Error('User not found')
         }
 
-        return UserModel.from(user.followers)
+        return UserModel.from(user.followers.get())
     }
 
     @Get(':username/following')
@@ -155,7 +155,7 @@ export class UserController {
             throw new Error('User not found')
         }
 
-        return UserModel.from(user.following)
+        return UserModel.from(user.following.get())
     }
 
     @Post('follow/:User')

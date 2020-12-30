@@ -95,7 +95,7 @@ throughout the tutorial. You can find more information about [relationships here
 #### Adding tweets in the database
 
 Let's create a route that we can use to add tweets in the database. We can add this route in a new _TweetController_
-file in the Controllers directory:
+file in the _Controllers/Http_ directory:
 
 ```file-path
 📁 Controllers/Http/TweetController.ts
@@ -128,7 +128,7 @@ logged-in user, but we didn't talk about this yet.
 Typetron has an authentication system built-in, and we can use that to register and login. You can find thin
 functionality in the _Controllers/Http/AuthController.ts_ file. ([More about Authentication](/docs/authentication)).
 
-Having this in mind, we can use the `/register` route to register a user:
+Having this in mind, we can use the _/register_ route to register a user:
 
 ```file-path
 🌐 [POST] /register
@@ -323,7 +323,7 @@ users:
 #### Cleaning the response
 
 As you probably saw, the response contains a few properties than we might not want to see, like the password property on
-the user. We can hide unwanted properties using [Models](/docs/models). Let's create a mode for the Tweet entity since
+the user. We can hide unwanted properties using [Models](/docs/models). Let's create a model for the Tweet entity since
 we already have one for the user in the _Models/User.ts_ file:
 
 ```file-path

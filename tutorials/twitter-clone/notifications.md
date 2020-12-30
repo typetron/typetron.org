@@ -331,7 +331,7 @@ export class TweetController {
         await this.user.tweets.save(tweet)
 
         const mediaFiles = await Promise.all(
-            form.media.map(file => this.storage.put(file, 'public/tweets-media'))
+            form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
@@ -417,7 +417,7 @@ export class TweetController {
         await this.user.tweets.save(tweet)
 
         const mediaFiles = await Promise.all(
-            form.media.map(file => this.storage.put(file, 'public/tweets-media'))
+            form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 

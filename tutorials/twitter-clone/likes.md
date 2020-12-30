@@ -162,7 +162,7 @@ The next thing we need to do, is to update the endpoint that returns all the twe
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 
 @Controller()
@@ -171,7 +171,8 @@ export class HomeController {
 
     @Get()
     async tweets() {
-        const tweets = await Tweet.with('user')
+        const tweets = await Tweet
+            .with('user')
             .withCount('likes')
             .orderBy('createdAt', 'DESC')
             .get()

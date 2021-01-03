@@ -56,7 +56,7 @@ replies of a tweet.
 #### Adding the reply functionality
 
 The only thing we need to so is to add a new property in the _TweetForm_ called _replyParent_ that can be the id of the
-tweet we want to create a reply on. Also, we need to update the _TweetController_ to add this id in the newly created
+tweet we want to create a reply on. Also, we need to update the _TweetsController_ to add this id in the newly created
 tweet:
 
 ```file-path
@@ -78,43 +78,54 @@ export class TweetForm extends Form {
 ```
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
 
     @Post()
     create(form: TweetForm) {
-        return Tweet.create({
-            content: form.content,
-            replyParent: form.replyParent,
-            user: this.user
-        })
+        return TweetModel.from(
+            Tweet.create({
+                content: form.content,
+                replyParent: form.replyParent,
+                user: this.user
+            })
+        )
     }
 
     @Post(':Tweet/like')
     async like(tweet: Tweet) {
-        // ...
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+        } else {
+            await like.save()
+        }
+
+        return TweetModel.from(tweet)
     }
 }
 ```
+
 Let's make a request with the _replyParent_ property to add a reply to a tweet:
 
 ```file-path
-🌐 [POST] /tweet
+🌐 [POST] /tweets
 ```
 
 ```json
@@ -123,7 +134,6 @@ Let's make a request with the _replyParent_ property to add a reply to a tweet:
     "replyParent": 1
 }
 ```
-
 
 The last thing we need to do, is to update the endpoint that returns all the tweets, to show the replies count of a
 tweet:
@@ -145,7 +155,7 @@ export class HomeController {
 
     @AuthUser()
     user: User
-    
+
     @Get()
     async tweets() {
         const tweets = await Tweet
@@ -153,7 +163,7 @@ export class HomeController {
             .withCount('likes', 'replies')
             .orderBy('createdAt', 'DESC')
             .get()
-        
+
         return TweetModel.from(tweets)
     }
 }
@@ -192,7 +202,7 @@ export class HomeController {
             .withCount('likes', 'replies')
             .orderBy('createdAt', 'DESC')
             .get()
-        
+
         return TweetModel.from(tweets)
     }
 }

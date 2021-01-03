@@ -101,31 +101,37 @@ export class Tweet extends Entity {
 
 What we need to do in the controllers, is to create a like entry if a user calls the like endpoint for the first time.
 If the user calls this endpoint a second time, we need to remove the like entry from the database. This endpoint will
-act as a toggle for likes. Let's add this functionality in our _TweetController_:
+act as a toggle for likes. Let's add this functionality in our _TweetsController_:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Like } from 'App/Entities/Like'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
 
     @Post()
     create(form: TweetForm) {
-        // ...
+        return TweetModel.from(
+            Tweet.create({
+                content: form.content,
+                user: this.user
+            })
+        )
     }
 
     @Post(':Tweet/like')
@@ -137,7 +143,7 @@ export class TweetController {
             await like.save()
         }
 
-        return tweet
+        return TweetModel.from(tweet)
     }
 }
 
@@ -150,7 +156,7 @@ Find more about the [ORM here](/docs/database)
 Let's make a request to this endpoint to add a like to a tweet:
 
 ```file-path
-🌐 [POST] /tweet/{tweet id}/like
+🌐 [POST] /tweets/{tweet id}/like
 ```
 
 
@@ -196,7 +202,7 @@ not. Let's update the _HomeController_, and then we can talk about the code:
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'

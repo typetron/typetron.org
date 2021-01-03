@@ -47,7 +47,26 @@ import { ArticleForm } from 'App/Forms/ArticleForm'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    welcome() {
+        return [
+            {
+                title: 'Making a healthy breakfast'
+            },
+            {
+                title: 'Protein rich meal for gym'
+            }
+        ]
+    }
+
+    @Get(':id')
+    read(id: number) {
+        return {
+            id: 'This is article with ID #' + id,
+            title: 'Making a healthy breakfast',
+            content: 'Content of this article here...'
+        }
+    }
 
     @Post()
     add(form: ArticleForm) {

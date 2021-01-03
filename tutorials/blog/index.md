@@ -1,5 +1,6 @@
 ---
 layout: blog
+
 slug: personal-blog-introduction
 ---
 

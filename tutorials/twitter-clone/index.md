@@ -1,5 +1,6 @@
 ---
 layout: twitter-clone
+
 slug: tutorial-twitter-clone
 ---
 

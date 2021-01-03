@@ -83,7 +83,7 @@ Let's have a real world use case to better understand this:
 need to add a notifier to it. In this case we add Alex
 - Joe opens the notifications page. In this case we set the _readAt_ property with the current read date.
 
-Having this system we automatically grouped the notifications based on the interactions of the users, just like on Twitter.
+Having this system we automatically group the notifications based on the interactions of the users, just like on Twitter.
 
 Let's update the _User_ and _Tweet_ entities to reflect the added entity above:
 
@@ -109,7 +109,7 @@ export class User extends Authenticable {
     username: string
 
     @Column()
-    bio: string
+    bio?: string
 
     @Column()
     photo: string
@@ -199,27 +199,69 @@ export class Tweet extends Entity {
 
 
 #### Adding the "follow" notification
-We need to update the _follow_ method of the _UserController_ to create a notification when a user follows another user:
+We need to update the _follow_ method of the _UsersController_ to create a notification when a user follows another user:
 
 
 ```file-path
-📁 Controllers/Http/UserController.ts
+📁 Controllers/Http/UsersController.ts
 ```
 
 ```ts
-import { Controller, Middleware, Post } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post } from '@Typetron/Router'
+import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
 import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Storage } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
 
-@Controller('user')
+@Controller('users')
 @Middleware(AuthMiddleware)
-export class UserController {
+export class UsersController {
 
     @AuthUser()
     user: User
+
+    @Inject()
+    storage: Storage
+
+    @Patch()
+    async update(form: UserForm) {
+        if (form.photo) {
+            await this.storage.delete(`public/${this.user.photo}`)
+            form.photo = await this.storage.save(form.photo, 'public')
+        }
+        if (form.cover) {
+            await this.storage.delete(`public/${this.user.cover}`)
+            form.cover = await this.storage.save(form.cover, 'public')
+        }
+        await this.user.save(form)
+
+        return UserModel.from(this.user)
+    }
+
+    @Get(':username/followers')
+    async followers(username: string) {
+        const user = await User.where('username', username).first()
+
+        if (!user) {
+            throw new Error('User not found')
+        }
+
+        return UserModel.from(user.followers.get())
+    }
+
+    @Get(':username/following')
+    async following(username: string) {
+        const user = await User.where('username', username).first()
+
+        if (!user) {
+            throw new Error('User not found')
+        }
+
+        return UserModel.from(user.following.get())
+    }
 
     @Post('follow/:User')
     async follow(userToFollow: User) {
@@ -237,33 +279,66 @@ export class UserController {
 
         return UserModel.from(this.user)
     }
+
+    @Post('unfollow/:User')
+    async unfollow(userToUnfollow: User) {
+        await this.user.following.detach(userToUnfollow.id)
+    }
 }
 ```
 
 
 #### Adding the "like" notification
-We need to update the _like_ method of the _TweetController_ to create a notification when a user likes a tweet:
+We need to update the _like_ method of the _TweetsController_ to create a notification when a user likes a tweet:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
+import { Like } from 'App/Entities/Like'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
-import { Like } from 'App/Entities/Like'
+import { Inject } from '@Typetron/Container'
+import { Storage } from '@Typetron/Storage'
+import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
+
+    @Inject()
+    storage: Storage
+
+    @Post()
+    async create(form: TweetForm) {
+        const tweet = await Tweet.create({
+            content: form.content,
+            replyParent: form.replyParent,
+            retweetParent: form.retweetParent,
+            user: this.user
+        })
+
+        if (form.media instanceof File) {
+            form.media = [form.media]
+        }
+
+        const mediaFiles = await Promise.all(
+            form.media.map(file => this.storage.save(file, 'public/tweets-media'))
+        )
+        await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
+
+        return TweetModel.from(tweet)
+    }
 
     @Post(':Tweet/like')
     async like(tweet: Tweet) {
@@ -295,19 +370,22 @@ export class TweetController {
 }
 ```
 
+Making a request to follow a user should create a notification entry in the database. Later we will add a controller to
+get those notifications.
 
 #### Adding the "reply" and "retweet" notification
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
+import { Like } from 'App/Entities/Like'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
@@ -315,9 +393,9 @@ import { Storage } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -325,10 +403,15 @@ export class TweetController {
     @Inject()
     storage: Storage
 
+
     @Post()
     async create(form: TweetForm) {
         const tweet = new Tweet(form)
         await this.user.tweets.save(tweet)
+
+        if (form.media instanceof File) {
+            form.media = [form.media]
+        }
 
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
@@ -374,25 +457,52 @@ export class TweetController {
         }
 
         await tweet.load('user')
-        
+
         return TweetModel.from(tweet)
     }
 
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        let notification: Notification | undefined
+        /**
+         * Check to see if the tweet's user is not its author because
+         * we don't want to send a notification to its author
+         */
+        if (tweet.user.get()?.id !== this.user.id) {
+            notification = await Notification.firstOrCreate({
+                type: 'like',
+                user: tweet.user.get(),
+                readAt: undefined,
+                tweet
+            })
+        }
+
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+            await notification?.notifiers.detach(this.user.id)
+        } else {
+            await like.save()
+            await notification?.notifiers.attach(this.user.id)
+        }
+
+        return TweetModel.from(tweet)
+    }
 }
 ```
 
-This looks a bit complex, but it's actually a lot of duplicated code  as you can see the code under the if statements
-that we can rewrite as: 
+This looks a bit complex, but it's actually a lot of duplicated code under the if statements, that we can rewrite as: 
 
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Like } from 'App/Entities/Like'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
@@ -402,9 +512,9 @@ import { Storage } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -417,6 +527,10 @@ export class TweetController {
         const tweet = new Tweet(form)
         await this.user.tweets.save(tweet)
 
+        if (form.media instanceof File) {
+            form.media = [form.media]
+        }
+        
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
@@ -457,6 +571,34 @@ export class TweetController {
             await notification.notifiers.attach(this.user.id)
         }
     }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        let notification: Notification | undefined
+        /**
+         * Check to see if the tweet's user is not its author because
+         * we don't want to send a notification to its author
+         */
+        if (tweet.user.get()?.id !== this.user.id) {
+            notification = await Notification.firstOrCreate({
+                type: 'like',
+                user: tweet.user.get(),
+                readAt: undefined,
+                tweet
+            })
+        }
+
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+            await notification?.notifiers.detach(this.user.id)
+        } else {
+            await like.save()
+            await notification?.notifiers.attach(this.user.id)
+        }
+
+        return TweetModel.from(tweet)
+    }
 }
 ```
 
@@ -496,7 +638,7 @@ export class Notification extends Model {
 
 
 ```file-path
-📁 Controllers/Http/NotificationController.ts
+📁 Controllers/Http/NotificationsController.ts
 ```
 
 ```ts
@@ -507,9 +649,9 @@ import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Notification as NotificationModel } from 'App/Models/Notification'
 import { Notification } from 'App/Entities/Notification'
 
-@Controller('notification')
+@Controller('notifications')
 @Middleware(AuthMiddleware)
-export class NotificationController {
+export class NotificationsController {
 
     @AuthUser()
     user: User
@@ -536,6 +678,11 @@ export class NotificationController {
     }
 }
 ```
+
+Now, we can get all the notifications for our user making a request to `[GET] /notifications`. We can also get the number 
+of unread notifications by making a request to `[GET] /notifications/unread` and then we can mark all the unread
+notifications as read by making a request to `[GET] /notifications/read`. I decided to leave these request separate, so 
+we have greater control.
 
 <div class="tutorial-next-page">
     In the next part we will add the ability to change the topics of the user

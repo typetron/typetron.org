@@ -53,6 +53,9 @@ export class Tweet extends Entity {
 }
 ```
 
+Don't worry about the error in the entity. We will have to add the inverse of the relationship in the _User_ entity to
+make it go away. The inverse relationship will tell Typetron more info about our entities.
+
 One thing we also need to do, is to update the _User_ entity to reflect the added relationship.
 
 ```file-path
@@ -79,7 +82,6 @@ export class User extends Authenticable {
 This information is used by Typetron to better understand you app, and it also has some other benefits that we will see
 throughout the tutorial. You can find more information about [relationships here](/docs/orm).
 
-
 Saving these files will automatically create the _tweets_ table for you in the sqlite database from inside the project.
 You can check this database by opening the _database.sqlite_ file with a SQLite client.
 
@@ -93,14 +95,13 @@ You can check this database by opening the _database.sqlite_ file with a SQLite 
 > _**Answer**_: Typetron will support MySQL drivers in the future, but because it is still in heavy development,
 > we postponed the MySQL feature before the V1 release. You can find more about the [Roadmap here](https://github.com/typetron/framework)
 
-
 #### Adding tweets in the database
 
-Let's create a route that we can use to add tweets in the database. We can add this route in a new _TweetController_
+Let's create a route that we can use to add tweets in the database. We can add this route in a new _TweetsController_
 file in the _Controllers/Http_ directory:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
@@ -108,8 +109,8 @@ import { Controller, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
 import { Request } from '@Typetron/Web'
 
-@Controller('tweet')
-export class TweetController {
+@Controller('tweets')
+export class TweetsController {
 
     @Post()
     create(request: Request) {
@@ -122,8 +123,8 @@ export class TweetController {
 }
 ```
 
-As you probably noticed in the Tweet entity, it needs a User it belongs to. In our case, this user should the
-logged-in user, but we didn't talk about this yet.
+As you probably noticed in the Tweet entity, it needs a User it belongs to. In our case, this user should the logged-in
+user, but we didn't talk about this yet.
 
 #### Registering and logging-in
 
@@ -173,12 +174,13 @@ a [JWT](https://jwt.io/) token similar to this:
 }
 ```
 
-We can use this token in our request for endpoints that need an authenticated user, like the _TweetController.create_
-route from earlier. If you are sending a request with a valid authentication token, you can then get the authenticated
-user like in the updated example below:
+We can use this token in our request for endpoints that need an authenticated user, like the _TweetsController.create_
+route created earlier. All we have to do is to send the _Authorization: "Barer token_string"_ header in our request. If
+you are sending a request with a valid authentication token, you can then get the authenticated user like in the updated
+example below:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
@@ -189,9 +191,9 @@ import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Request } from '@Typetron/Web'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -212,14 +214,14 @@ accessed by users that are not authenticated. Also, it will allow us to use the 
 authenticated user.
 
 Let's make a request that will call this endpoint. Don't forget to add the login token in the _Authorization_ header of
-your request. The token should be prefixed with the _'Bearer '_ text:
+your request. The token should be prefixed with the _'Bearer '_ string:
 
 ```text
 📋 Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzd<...super long string...>"
 ```
 
 ```file-path
-🌐 [POST] /tweet
+🌐 [POST] /tweets
 ```
 
 ```json
@@ -254,13 +256,13 @@ export class TweetForm extends Form {
 }
 ```
 
-We can now use this form in our endpoints inside _TweetController_:
+We can now use this form in our endpoints inside _TweetsController_:
 
-That's it. The shape of our request that creates a tweet has only the _content_ property of type _string_ that is
-required. Now we can use this in our endpoint:
+That's it. Our request that creates a tweet should have only the _content_ property. Now we can use this form in our
+endpoint:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
@@ -271,9 +273,9 @@ import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -291,9 +293,10 @@ export class TweetController {
 ## Showing tweets
 
 The last thing we need to do, is to show a list of tweets to the user. Let's add this in our _HomeController_ and not
-in _TweetController_ because we want to see the tweets from our root endpoint like _http://localhost:8000/_. This is
-just a personal preference. You can safely add the same endpoint in the _TweetController_, and it will work exactly the
-same. Keep in mind that _TweetController_ has the _tweet_ prefix, so you would have to use the _http://localhost:8000/tweet_
+in _TweetsController_ because we want to see the tweets from our root endpoint like _http://localhost:8000/_. This is
+just a personal preference. You can safely add the same endpoint in the _TweetsController_, and it will work exactly the
+same. Keep in mind that _TweetsController_ has the _tweet_ prefix, so you would have to use
+the _http://localhost:8000/tweet_
 endpoint. Don't forget to remove the old _welcome_ endpoint if you add this functionality in _HomeController_:
 
 ```file-path
@@ -370,6 +373,40 @@ export class HomeController {
     @Get()
     tweets() {
         return TweetModel.from(Tweet.with('user').orderBy('createdAt', 'DESC').get())
+    }
+}
+```
+
+Let's also update the _TweetsController_ to user the _Tweet_ model, so we get a consistent response through our app:
+
+```file-path
+📁 Controllers/Http/TweetsController.ts
+```
+
+```ts
+import { Controller, Middleware, Post } from '@Typetron/Router'
+import { Tweet } from 'App/Entities/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
+import { TweetForm } from 'App/Forms/TweetForm'
+import { User } from 'App/Entities/User'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { AuthUser } from '@Typetron/Framework/Auth'
+
+@Controller('tweets')
+@Middleware(AuthMiddleware)
+export class TweetsController {
+
+    @AuthUser()
+    user: User
+
+    @Post()
+    create(form: TweetForm) {
+        return TweetModel.from(
+            Tweet.create({
+                content: form.content,
+                user: this.user
+            })
+        )
     }
 }
 ```

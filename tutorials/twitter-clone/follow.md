@@ -9,7 +9,6 @@ title: Follow/Unfollow users
 This is one of the most complex features of the app because it will make use of self-referencing relationships using
 pivot tables. Let's update the _Users_ entity to add this feature:
 
-
 ```file-path
 📁 Entities/User.ts
 ```
@@ -31,7 +30,7 @@ export class User extends Authenticable {
     username: string
 
     @Column()
-    bio: string
+    bio?: string
 
     @Column()
     photo: string
@@ -63,39 +62,60 @@ export class User extends Authenticable {
 }
 ```
 
-The _followers_ property will contain the users that follow a specific user, and the _following_ property will
-contain the users a specific user is following. This might be confusing but let's explain this with an example.
+The _followers_ property will contain the users that follow a specific user, and the _following_ property will contain
+the users a specific user is following. This might be confusing but let's explain this with an example.
 
 Let's say we have three users: Joe, Mike and Alex where
+
 - Joe is following Mike and Alex
 - Mike is following Joe.
 - Alex is following Mike
 
 In this scenario we will have:
+
 - Joe with one follower: Mike, and two followings: Mike and Alex
 - Mike with two followers: Joe and Alex, and one following: Joe
 - Alex with one follower: Joe, and one following: Mike
 
-
 #### Following and unfollowing a user
-Having these relationships in place we can now easily add the follow feature in our _UserController_:
+
+Having these relationships in place we can now easily add the follow feature in our _UsersController_:
 
 ```file-path
-📁 Controllers/Http/UserController.ts
+📁 Controllers/Http/UsersController.ts
 ```
 
 ```ts
-import { Controller, Middleware, Post } from '@Typetron/Router'
+import { Controller, Middleware, Post, Patch } from '@Typetron/Router'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Storage } from '@Typetron/Storage'
 
-@Controller('user')
+@Controller('users')
 @Middleware(AuthMiddleware)
-export class UserController {
+export class UsersController {
 
     @AuthUser()
     user: User
+
+    @Inject()
+    storage: Storage
+
+    @Patch()
+    async update(form: UserForm) {
+        if (form.photo) {
+            await this.storage.delete(`public/${this.user.photo}`)
+            form.photo = await this.storage.save(form.photo, 'public')
+        }
+        if (form.cover) {
+            await this.storage.delete(`public/${this.user.cover}`)
+            form.cover = await this.storage.save(form.cover, 'public')
+        }
+        await this.user.save(form)
+
+        return UserModel.from(this.user)
+    }
 
     @Post('follow/:User')
     async follow(userToFollow: User) {
@@ -109,12 +129,20 @@ export class UserController {
 }
 ```
 
-As easy as that, we now can follow and unfollow users.Let's also add some endpoints to get the followers and following
-of a user but this time, searching the user based on its username. This will become in handy when we want to get
-information about a user when we only have its handle, like _@ionel_ or *@typetron\_* :
+As easy as that, we now can follow and unfollow users. Let's make a few requests to test that. Don't forget to add
+another user in the app using the register endpoint. In my case, the next added user had the ID 2, so I will use that
+in my _follow_ request:
 
 ```file-path
-📁 Controllers/Http/UserController.ts
+🌐 [POST] /users/follow/2
+```
+
+Let's also add some endpoints to get the followers and following of a user but this time, searching the user based on
+its username. This will become in handy when we want to get information about a user when we only have its handle,
+like _@ionel_ or *@typetron\_* :
+
+```file-path
+📁 Controllers/Http/UsersController.ts
 ```
 
 ```ts
@@ -126,15 +154,30 @@ import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'
 
-@Controller('user')
+@Controller('users')
 @Middleware(AuthMiddleware)
-export class UserController {
+export class UsersController {
 
     @AuthUser()
     user: User
 
     @Inject()
     storage: Storage
+
+    @Patch()
+    async update(form: UserForm) {
+        if (form.photo) {
+            await this.storage.delete(`public/${this.user.photo}`)
+            form.photo = await this.storage.save(form.photo, 'public')
+        }
+        if (form.cover) {
+            await this.storage.delete(`public/${this.user.cover}`)
+            form.cover = await this.storage.save(form.cover, 'public')
+        }
+        await this.user.save(form)
+
+        return UserModel.from(this.user)
+    }
 
     @Get(':username/followers')
     async followers(username: string) {
@@ -170,7 +213,10 @@ export class UserController {
 }
 ```
 
+Making a request to _/followings/joe_ should return one user we follow.
+
 #### Showing tweets from followed users
+
 Now that we have the followers feature added, we can modify the endpoint that returns the latest tweets, to return the
 latest tweets from the users I am following. Let's also add pagination:
 
@@ -181,7 +227,7 @@ latest tweets from the users I am following. Let's also add pagination:
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'
@@ -209,12 +255,11 @@ export class HomeController {
             .orderBy('createdAt', 'DESC')
             .limit((page - 1) * limit, limit)
             .get()
-        
+
         return TweetModel.from(tweets)
     }
 }
 ```
-
 
 <div class="tutorial-next-page">
     In the next part we will send notifications to users

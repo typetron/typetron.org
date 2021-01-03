@@ -94,7 +94,7 @@ This is a really easy one because it doesn't involve any new entities. All we ne
 created a new tweet to send mention notifications:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
@@ -104,16 +104,17 @@ import { TweetForm } from 'App/Forms/TweetForm'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
-import { Tweet as TweetModel } from '@Data/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { Inject } from '@Typetron/Container'
 import { Storage } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
 import { Hashtag } from 'App/Entities/Hashtag'
 import { Media } from 'App/Entities/Media'
+import { Like } from 'App/Entities/Like'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -126,6 +127,10 @@ export class TweetController {
         const tweet = new Tweet(form)
         await this.user.tweets.save(tweet)
 
+        if (form.media instanceof File) {
+            form.media = [form.media]
+        }
+        
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
@@ -188,6 +193,34 @@ export class TweetController {
         for (const user of users) {
             await this.addNotification(tweet, user.id, 'mention')
         }
+    }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        let notification: Notification | undefined
+        /**
+         * Check to see if the tweet's user is not its author because
+         * we don't want to send a notification to its author
+         */
+        if (tweet.user.get()?.id !== this.user.id) {
+            notification = await Notification.firstOrCreate({
+                type: 'like',
+                user: tweet.user.get(),
+                readAt: undefined,
+                tweet
+            })
+        }
+
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+            await notification?.notifiers.detach(this.user.id)
+        } else {
+            await like.save()
+            await notification?.notifiers.attach(this.user.id)
+        }
+
+        return TweetModel.from(tweet)
     }
 }
 ```

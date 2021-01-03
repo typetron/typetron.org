@@ -48,15 +48,13 @@ import { Required, MinLength } from '@Typetron/Validation/Rules'
 export class LoginForm extends Form {
 
     @Field()
-    @Rules(
-        Required,
-    )
+    @Rules(Required)
     email: string
 
     @Field()
     @Rules(
         Required,
-        MinLength(6),
+        MinLength(6)
     )
     password: string
 }

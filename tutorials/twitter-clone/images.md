@@ -86,7 +86,7 @@ export class Tweet extends Entity {
 
 #### Uploading images/videos into storage
 
-Before adding any upload functionality in the _TweetController_, we need to change the _TweetForm_ to accept media
+Before adding any upload functionality in the _TweetsController_, we need to change the _TweetForm_ to accept media
 files:
 
 ```file-path
@@ -101,13 +101,11 @@ import { File } from '@Typetron/Storage'
 export class TweetForm extends Form {
 
     @Field()
-    @Rules(
-        Required,
-    )
+    @Rules(Required)
     content: string
 
     @Field()
-    media: File[] = []
+    media: File | File[] = []
 
     @Field()
     replyParent?: number
@@ -117,26 +115,28 @@ export class TweetForm extends Form {
 }
 ```
 
-Now that the form accepts media files, we can update the _TweetController.create_ method to upload them:
+Now that the form accepts media files, we can update the _TweetsController.create_ method to upload them:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
+import { Like } from 'App/Entities/Like'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
 import { Storage } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -152,13 +152,29 @@ export class TweetController {
             retweetParent: form.retweetParent,
             user: this.user
         })
-
+        
+        if (form.media instanceof File) {
+            form.media = [form.media]
+        }
+        
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
-        return tweet
+        return TweetModel.from(tweet)
+    }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+        } else {
+            await like.save()
+        }
+
+        return TweetModel.from(tweet)
     }
 }
 ```
@@ -173,7 +189,7 @@ Let's make a request with the _media_ property to add images to a tweet. Since w
 type should be _form-data_:
 
 ```file-path
-🌐 [POST] /tweet
+🌐 [POST] /tweets
 ```
 
 ```json

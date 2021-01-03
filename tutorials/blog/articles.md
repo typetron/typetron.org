@@ -112,13 +112,27 @@ export class HomeController {
     index() {
         return Article.get()
     }
+    
+    @Get(':id')
+    read(id: number) {
+        return {
+            id: 'This is article with ID #' + id,
+            title: 'Making a healthy breakfast',
+            content: 'Content of this article here...'
+        }
+    }
+
+    @Post()
+    add(form: ArticleForm) {
+        return form
+    }
 }
 ```
 
 The _@Get()_ decorator will register a route inside Typetron that will respond to HTTP GET requests.
 
 The _Article.get()_ will go inside the database and select everything from the _articles_ table and return the result to
-the user. This is similar with running an SQL select like:`SELECT * from articles`. Now, if we go inside the browser we
+the user. This is similar with running an SQL select like: _"SELECT * from articles"_. Now, if we go inside the browser we
 should see an empty array.
 
 

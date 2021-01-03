@@ -1,5 +1,6 @@
 ---
 layout: blog
+
 title: Frontend setup
 ---
 

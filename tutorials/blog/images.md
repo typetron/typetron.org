@@ -16,7 +16,7 @@ of our recipes will have one. Like this:
 ```ts
 import { MinLength, Required } from '@Typetron/Validation'
 import { Field, Form, Rules } from '@Typetron/Forms'
-import { Image } from '@Typetron/Storage'
+import { File } from '@Typetron/Storage'
 
 export class ArticleForm extends Form {
 
@@ -26,7 +26,7 @@ export class ArticleForm extends Form {
 
     @Field()
     @Rules(Required)
-    image: string | Image
+    image?: File
 
     @Field()
     @Rules(
@@ -37,7 +37,7 @@ export class ArticleForm extends Form {
 ```
 
 > _**Question**_: Why does the type of the image field contains the string type also?
-> 
+>
 > _**Answer**_: We also type-hinted the image field to string because we will use this form to update articles as well.
 > This means we can also send the image path back to the backend instead of an Image. If an image path is sent back, it
 > means the user didn't change the old image, so we can skip the upload image part of our code. We will take a look at
@@ -51,18 +51,41 @@ Now, change the _add_ method from _HomeController_ to save the image on the disk
 ```
 
 ```ts
-import { Controller, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Storage } from '@Typetron/Storage'
 
 @Controller()
 export class HomeController {
-    // ...
+
+    @Get()
+    index() {
+        return Article.get()
+    }
+
     @Post()
     async add(form: ArticleForm, storage: Storage) {
-        await storage.save(form.image, 'public/articles')
+        if (form.image) {
+            form.image = await storage.save(form.image, 'public/articles')
+        }
         return Article.create(form)
     }
+
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
+
+    @Patch(':Article')
+    update(article: Article, form: ArticleForm) {
+        return article.save(form)
+    }
+
+    @Delete(':Article')
+    async delete(article: Article) {
+        await article.delete()
+    }
+
 }
 ```
 
@@ -72,10 +95,10 @@ In order to test this we need to send a special kind of data to the server calle
 _form-data_. You can easily make this type of request from Postman by changing the
 _body_ type from _raw_ to _form-data_ and fill it with the data we want like in the image below:
 
-
 ```file-path
 🌐 [POST] /
 ```
+
 ```json
 {
     "title": "Cool article",
@@ -136,7 +159,7 @@ command.
 
 Let's make a new article by making again an HTTP Post request, so the field image will get populated in the database.
 The value for the image column will be the image's name including the extension. Now, if we make an HTTP GET request
-to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird name we've seen in the 
+to [localhost:8000](http://localhost:8000) we can see our _image_ key with the weird name we've seen in the
 _public/articles_ directory.
 
 There is a small issue though. All the other articles don't have an image yet. You can use the _edit_ route to update
@@ -155,7 +178,7 @@ handle them both:
 ```
 
 ```ts
-import { Controller, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { File, Storage } from '@Typetron/Storage'
@@ -163,23 +186,36 @@ import { File, Storage } from '@Typetron/Storage'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
 
     @Post()
     async add(form: ArticleForm, storage: Storage) {
-        if (form.image instanceof File) {
+        if (form.image) {
             await storage.save(form.image, 'public/articles')
         }
         return Article.create(form)
     }
 
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
+
     @Patch(':Article')
     async update(article: Article, form: ArticleForm, storage: Storage) {
-        if (form.image instanceof File) {
+        if (form.image) {
             await storage.delete(`public/articles/${article.image}`)
             await storage.save(form.image, 'public/articles')
         }
         return article.save(form)
+    }
+
+    @Delete(':Article')
+    async delete(article: Article) {
+        await article.delete()
     }
 }
 
@@ -216,12 +252,16 @@ export default new AppConfig({
 ```
 
 This will allow us to see everything from our _public_ directory. Let's open one of our images in the browser by making
-an HTTP GET request to _localhost:8000/articles/the-weird-image-name_, 
-eg: _localhost:8000/articles/upload_73830303b8e2.jpg_. 
+an HTTP GET request to _localhost:8000/articles/the-weird-image-name_, eg: 
 
-> _**Question**_: Where does the _/articles/_ prefix comes from?
+```file-path
+🌐 [GET] /articles/upload_73830303b8e2.jpg
+```
+<br/>
+
+> _**Question**_: Where does the _"articles/"_ prefix comes from?
 >
-> _**Answer**_: It comes from this line  _await storage.save(form.image, 'public/articles')_. Here we save our images 
+> _**Answer**_: It comes from this line  _await storage.save(form.image, 'public/articles')_. Here we save our images
 > inside the _public/articles_ directory
 
 > _**Question**_: Why doesn't the route look like this: _localhost:8000/public/articles/image-name_?

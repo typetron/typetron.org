@@ -6,8 +6,8 @@ title: Retweeting tweets
 
 ## {{page.title}}
 
-The retweet functionality is almost 100% similar to the reply one. This is because a retweet is almost the same thing as a
-reply, with a few key differences.
+The retweet functionality is almost 100% similar to the reply one. This is because a retweet is almost the same thing as
+a reply, with a key difference: retweets act also like a share on a user's profile.
 
 #### Updating the Tweet entity
 
@@ -61,7 +61,7 @@ retweets of a tweet.
 
 #### Adding the retweet functionality
 
-As like in the last step, we just need to update the _TweetForm_ and the _TweetController_:
+As like in the last step, we just need to update the _TweetForm_ and the _TweetsController_:
 
 ```file-path
 📁 Forms/TweetForm.ts
@@ -85,32 +85,48 @@ export class TweetForm extends Form {
 ```
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { Like } from 'App/Entities/Like'
 import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
 
     @Post()
     create(form: TweetForm) {
-        return Tweet.create({
-            content: form.content,
-            replyParent: form.replyParent,
-            retweetParent: form.retweetParent,
-            user: this.user
-        })
+        return TweetModel.from(
+            Tweet.create({
+                content: form.content,
+                replyParent: form.replyParent,
+                retweetParent: form.retweetParent,
+                user: this.user
+            })
+        )
+    }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+        } else {
+            await like.save()
+        }
+
+        return TweetModel.from(tweet)
     }
 }
 ```
@@ -118,7 +134,7 @@ export class TweetController {
 Let's make a request with the _retweetParent_ property to add a retweet to a tweet:
 
 ```file-path
-🌐 [POST] /tweet
+🌐 [POST] /tweets
 ```
 
 ```json
@@ -138,7 +154,7 @@ tweet. We also need to return the parent of a retweet and its user:
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
-import {Tweet as TweetModel } from 'App/Models/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
 import { AuthUser } from '@Typetron/Framework/Auth'

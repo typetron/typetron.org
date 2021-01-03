@@ -35,6 +35,11 @@ export class HomeController {
     read(id: number) {
         return Article.find(id)
     }
+
+    @Post()
+    add(form: ArticleForm) {
+        return form
+    }
 }
 ```
 
@@ -58,7 +63,15 @@ import { Article } from 'App/Entities/Article'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
+
+    @Post()
+    add(form: ArticleForm) {
+        return form
+    }
 
     @Get(':Article')
     read(article: Article) {
@@ -85,7 +98,15 @@ import { Article } from 'App/Entities/Article'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
+
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
 
     @Post()
     async add() {
@@ -111,7 +132,15 @@ import { Article } from 'App/Entities/Article'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
+
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
 
     @Post()
     add() {
@@ -127,15 +156,15 @@ The _@Post()_ decorator will register a route that will handle all the HTTP POST
 frontend with a form that we can fill, we can't make such requests from our browser, but we can
 use [Postman](https://www.getpostman.com/) for that. There, we can change the HTTP Method to POST and write the url we
 want to post to, which is _localhost:8000_. If we run this request and check our database we will see we will have a new
-article with the title _My awesome article_. Actually, every time we run that request we will create such article.
+article with the title _My awesome article_. Actually, every time we run that request we will create such an article.
 
 Let's make it even more interesting and add the user the ability to add his own title and content. To do so, change the
 body of the request into this JSON:
 
-
 ```file-path
 🌐 [POST] /
 ```
+
 ```json
 {
     "title": "Cool article",
@@ -155,7 +184,15 @@ import { Controller, Get, Post } from '@Typetron/Router'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
+
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
 
     @Post()
     add(request: Request) {
@@ -168,7 +205,7 @@ export class HomeController {
 }
 ```
 
-We created a form earlier called _ArticleForm_ that can also validate user data, so we can use that instead of the 
+We created a form earlier called _ArticleForm_ that can also validate user data, so we can use that instead of the
 request object:
 
 ```file-path
@@ -182,7 +219,15 @@ import { ArticleForm } from 'App/Forms/ArticleForm'
 @Controller()
 export class HomeController {
 
-    // ...
+    @Get()
+    index() {
+        return Article.get()
+    }
+
+    @Get(':Article')
+    read(article: Article) {
+        return article
+    }
 
     @Post()
     add(form: ArticleForm) {
@@ -190,6 +235,7 @@ export class HomeController {
     }
 }
 ```
+
 Typetron will validate the user input for us behind the scenes, and it will throw an error in case of invalid data. If
 an error is thrown, the method in the controller will never be called, so we know for sure that our data is valid once
 it goes in the controller.

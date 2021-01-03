@@ -32,7 +32,7 @@ export class User extends Authenticable {
     username: string
 
     @Column()
-    bio: string
+    bio?: string
 
     @Column()
     photo: string
@@ -64,7 +64,7 @@ the data before we make use of it. Let's create the _UserForm_ for this:
 
 ```ts
 import { Field, Form, Rules } from '@Typetron/Forms'
-import { Image } from '@Typetron/Storage'
+import { File } from '@Typetron/Storage'
 import { Required } from '@Typetron/Validation'
 
 export class UserForm extends Form {
@@ -80,23 +80,23 @@ export class UserForm extends Form {
     bio?: string
 
     @Field()
-    photo?: Image | string
+    photo?: File
 
     @Field()
-    cover?: Image | string
+    cover?: File
 }
 ```
 
-As you probably saw, for the _photo_ and _cover_ properties we accept an _Image_ or a _string_. This is because we will
+As you probably saw, for the _photo_ and _cover_ properties we accept an _File,_ or a _string_. This is because we will
 handle the case when you can make a request with _photo_ and _cover_ properties being the old images paths.
 
 #### Creating the user profile update endpoint
 
 Now we can create the endpoint that will update the user's profile information. Let's add this in a new controller
-called _UserController_ and also update the _User_ model:
+called _UsersController_ and also update the _User_ model:
 
 ```file-path
-📁 Controllers/Http/UserController.ts
+📁 Controllers/Http/UsersController.ts
 ```
 
 ```ts
@@ -107,11 +107,11 @@ import { User } from 'App/Entities/User'
 import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { UserForm } from 'App/Forms/UserForm'
-import { File, Storage } from '@Typetron/Storage'
+import { Storage } from '@Typetron/Storage'
 
-@Controller('user')
+@Controller('users')
 @Middleware(AuthMiddleware)
-export class UserController {
+export class UsersController {
 
     @AuthUser()
     user: User
@@ -121,11 +121,11 @@ export class UserController {
 
     @Patch()
     async update(form: UserForm) {
-        if (form.photo instanceof File) {
+        if (form.photo) {
             await this.storage.delete(`public/${this.user.photo}`)
             form.photo = await this.storage.save(form.photo, 'public')
         }
-        if (form.cover instanceof File) {
+        if (form.cover) {
             await this.storage.delete(`public/${this.user.cover}`)
             form.cover = await this.storage.save(form.cover, 'public')
         }
@@ -171,7 +171,7 @@ _photo_ or _cover_ images, it means he sent the old paths of those images.
 Let's make a _form-data_ request to update the user's profile:
 
 ```file-path
-🌐 [Patch] /user
+🌐 [Patch] /users
 ```
 
 ```json
@@ -183,6 +183,63 @@ Let's make a _form-data_ request to update the user's profile:
     "cover": imageFile
 }
 ```
+
+#### Adding a custom validator for username
+One last thing we need to fix is to restrict the username have only letters, numbers and/or the '_' character. We cannot
+allow for spaces since it won't be possible to mention users in tweets using the '@' character. Let's add a custom
+validator to validate the username for these characters and them update the _UserForm_ to use it:
+
+```file-path
+📁 Validators/IsUsername.ts
+```
+
+```ts
+import { Rule } from '@Typetron/Validation'
+
+export class IsUsername extends Rule {
+    identifier = 'isUsername'
+
+    passes(attribute: string, value: string): boolean {
+        return Boolean(value.match(/^[0-9a-zA-Z_]+$/))
+    }
+
+    message(attribute: string): string {
+        return `The username can only contain numbers, letters and '_'`
+    }
+}
+```
+
+```file-path
+📁 Forms/UserForm.ts
+```
+
+```ts
+import { Field, Form, Rules } from '@Typetron/Forms'
+import { File } from '@Typetron/Storage'
+import { Required } from '@Typetron/Validation'
+import { IsUsername } from 'App/Validators/IsUsername'
+
+export class UserForm extends Form {
+    @Field()
+    @Rules(Required)
+    name: string
+
+    @Field()
+    @Rules(Required, IsUsername)
+    username: string
+
+    @Field()
+    bio?: string
+
+    @Field()
+    photo?: File
+
+    @Field()
+    cover?: File
+}
+```
+
+Now, if we make a request that contains an invalid username, we should get an error back.
 
 <div class="tutorial-next-page">
     In the next part we will follow and unfollow users

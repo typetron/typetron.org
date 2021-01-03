@@ -164,7 +164,8 @@ export class Article extends Entity {
 }
 ``` 
 
-This will make the _find_ method use the _article_id_ column instead of the default _id_ one.
+This will make the _find_ method use the _article_id_ column instead of the default _id_ one. By default, The _
+getPrimaryKey_ method returns the _id_ property as the name of the primary key of an entity.
 
 #### Creating records
 
@@ -287,6 +288,7 @@ class Laptop extends Entity {
 ```
 
 We can get the value of this relationship by accessing the _laptop_ property of a user:
+
 ```ts
 const user = await User.find(1)
 const laptop = await user.laptop.get()
@@ -318,13 +320,14 @@ export class Model extends Entity {
 ```
 
 We can get the value of this relationship by accessing the _models_ property of a car make:
+
 ```ts
 const make = await Make.find(1)
 const models = await make.models.get()
 ```
 
-
 ##### Many to Many
+
 This is the most complex relationship of them all because it also requires an additional database table. For example, a
 user can have many roles attached to it, but also, a role can be attached to many users. We can define the relationship
 like this:
@@ -350,7 +353,6 @@ export class Role extends Entity {
 ```
 
 We can get the roles of a user in the same manner as before:
-
 
 ```ts
 const user = await User.find(1)

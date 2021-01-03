@@ -7,8 +7,9 @@ title: Topics and hashtags
 ## {{page.title}}
 
 Topics are used to identify the most relevant tweets to show to the logged-in user. Each topic will contain a list of
-hashtags. A user can use these hashtags in his tweets. For example, we might have the "Web development" topics that will
-contain the following hashtags: "web", "html", "CSS", "javascript", "typescript" etc.
+hashtags. A user can use these hashtags in his tweets. For example, we might have the "Web development" topic that will
+contain the following hashtags: "web", "html", "CSS", "javascript", "typescript" etc. These hashtags will be identified
+with the 'pound' symbol in front of them. For example, this might be the content of a tweet: "Hello #webdevelopers"
 
 #### Creating the Topic and Hashtag entities
 
@@ -91,7 +92,7 @@ export class User extends Authenticable {
     username: string
 
     @Column()
-    bio: string
+    bio?: string
 
     @Column()
     photo: string
@@ -195,6 +196,7 @@ export class Tweet extends Entity {
     createdAt: Date
 }
 ```
+
 #### Adding/removing topics for the user
 
 Let's add an endpoint that a user can use to add or remove topics based on their personal preferences:
@@ -214,7 +216,7 @@ export class UserTopicsForm extends Form {
 }
 ```
 
-Now, we can update _UserController_ to return all the topics of a user and also save them if necessary after we create
+Now, we can update _UsersController_ to return all the topics of a user and also save them if necessary after we create
 the _Topics_ model:
 
 ```file-path
@@ -234,23 +236,89 @@ export class Topic extends Model {
 ```
 
 ```file-path
-📁 Controllers/Http/UserController.ts
+📁 Controllers/Http/UsersController.ts
 ```
 
 ```ts
 import { Controller, Get, Middleware, Post } from '@Typetron/Router'
+import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
-import { Topic as TopicModel } from 'App/Models/Topics'
+import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { Storage } from '@Typetron/Storage'
+import { Notification } from 'App/Entities/Notification'
+import { Topic as TopicModel } from 'App/Models/Topics'
 import { UserTopicsForm } from 'App/Forms/UserTopicsForm'
 
-@Controller('user')
+@Controller('users')
 @Middleware(AuthMiddleware)
-export class UserController {
+export class UsersController {
 
     @AuthUser()
     user: User
+
+    @Inject()
+    storage: Storage
+
+    @Patch()
+    async update(form: UserForm) {
+        if (form.photo) {
+            await this.storage.delete(`public/${this.user.photo}`)
+            form.photo = await this.storage.save(form.photo, 'public')
+        }
+        if (form.cover) {
+            await this.storage.delete(`public/${this.user.cover}`)
+            form.cover = await this.storage.save(form.cover, 'public')
+        }
+        await this.user.save(form)
+
+        return UserModel.from(this.user)
+    }
+
+    @Get(':username/followers')
+    async followers(username: string) {
+        const user = await User.where('username', username).first()
+
+        if (!user) {
+            throw new Error('User not found')
+        }
+
+        return UserModel.from(user.followers.get())
+    }
+
+    @Get(':username/following')
+    async following(username: string) {
+        const user = await User.where('username', username).first()
+
+        if (!user) {
+            throw new Error('User not found')
+        }
+
+        return UserModel.from(user.following.get())
+    }
+
+    @Post('follow/:User')
+    async follow(userToFollow: User) {
+        await this.user.following.attach(userToFollow.id)
+
+        const notification = await Notification.firstOrCreate({
+            type: 'follow',
+            user: userToFollow,
+            readAt: undefined
+        })
+
+        if (!await notification.notifiers.has(this.user.id)) {
+            await notification.notifiers.attach(this.user.id)
+        }
+
+        return UserModel.from(this.user)
+    }
+
+    @Post('unfollow/:User')
+    async unfollow(userToUnfollow: User) {
+        await this.user.following.detach(userToUnfollow.id)
+    }
 
     @Get('topics')
     async getTopics() {
@@ -264,10 +332,52 @@ export class UserController {
 }
 ```
 
+Before making a request to set a user's topics, we need a few topics added in our database. Since we don't have an admin
+dashboard we can use to add these topics (which will be the 3rd tutorial), we have to do it manually through the SQL
+client we are using. So, go ahead and add a few topics like "Music", "Health", "Programming" etc. Let's create a
+_TopicsController_ together with a _Topic_ model, so we can get a list of all the available topics on our social
+platform:
+
+```file-path
+📁 Controllers/Http/TopicsController.ts
+```
+
+```ts
+import { Controller, Get } from '@Typetron/Router'
+import { Topic as TopicModel } from 'App/Models/Topic'
+import { Topic } from 'App/Entities/Topic'
+
+@Controller('topics')
+export class TopicsController {
+
+    @Get()
+    async get() {
+        return TopicModel.from(Topic.get())
+    }
+
+}
+```
+
+```file-path
+📁 Models/Topic.ts
+```
+
+```ts
+import { Field, Model } from '@Typetron/Models'
+
+export class Topic extends Model {
+    @Field()
+    id: number
+
+    @Field()
+    name: string
+}
+```
+
 Let's make a request to update a user's topics where the value for the _topics_ property is an array of topics ids:
 
 ```file-path
-🌐 [POST] /user/topics
+🌐 [POST] /users/topics
 ```
 
 ```json
@@ -284,10 +394,10 @@ Let's make a request to update a user's topics where the value for the _topics_ 
 
 In order to link a tweet with hashtags, we need to identify the hashtags in the tweet's content using Regular
 expressions
-(Regexp for short). Let's modify the _TweetController_ and add this feature:
+(Regexp for short). Let's modify the _TweetsController_ and add this feature:
 
 ```file-path
-📁 Controllers/Http/TweetController.ts
+📁 Controllers/Http/TweetsController.ts
 ```
 
 ```ts
@@ -303,10 +413,11 @@ import { Storage } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
 import { Hashtag } from 'App/Entities/Hashtag'
 import { Media } from 'App/Entities/Media'
+import { Like } from 'App/Entities/Like'
 
-@Controller('tweet')
+@Controller('tweets')
 @Middleware(AuthMiddleware)
-export class TweetController {
+export class TweetsController {
 
     @AuthUser()
     user: User
@@ -318,6 +429,10 @@ export class TweetController {
     async create(form: TweetForm) {
         const tweet = new Tweet(form)
         await this.user.tweets.save(tweet)
+
+        if (form.media instanceof File) {
+            form.media = [form.media]
+        }
 
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
@@ -369,6 +484,34 @@ export class TweetController {
 
         await tweet.hashtags.sync(...hashtags.pluck('id'))
     }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        let notification: Notification | undefined
+        /**
+         * Check to see if the tweet's user is not its author because
+         * we don't want to send a notification to its author
+         */
+        if (tweet.user.get()?.id !== this.user.id) {
+            notification = await Notification.firstOrCreate({
+                type: 'like',
+                user: tweet.user.get(),
+                readAt: undefined,
+                tweet
+            })
+        }
+
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+            await notification?.notifiers.detach(this.user.id)
+        } else {
+            await like.save()
+            await notification?.notifiers.attach(this.user.id)
+        }
+
+        return TweetModel.from(tweet)
+    }
 }
 ```
 
@@ -399,6 +542,7 @@ export class HomeController {
 
     @Get('explore')
     async explore(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+        await this.user.load('topics')
         const userHashtags = await Hashtag.whereIn('topic', this.user.topics.items.pluck('id')).get()
         const tweets = await Tweet
             .with(
@@ -418,7 +562,6 @@ export class HomeController {
             .get()
 
         return TweetModel.from(tweets)
-
     }
 }
 ```
@@ -506,13 +649,43 @@ use this to show all the tweets of a user when going to its profile:
 
 ```ts
 import { Controller, Get, Middleware, Query } from '@Typetron/Router'
+import { Tweet } from 'App/Entities/Tweet'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { User } from 'App/Entities/User'
-import { Tweet as TweetModel } from 'App/Models/Tweet'
+import { AuthUser } from '@Typetron/Framework/Auth'
+import { Hashtag } from 'App/Entities/Hashtag'
 
 @Controller()
 @Middleware(AuthMiddleware)
 export class HomeController {
+
+    @AuthUser()
+    user: User
+
+    @Get()
+    async tweets(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+        const followings = await this.user.following.get()
+        const tweets = await this.getTweetsQuery(page, limit)
+            .whereIn('userId', followings.pluck('id').concat(this.user.id))
+            .get()
+
+        return TweetModel.from(tweets)
+    }
+
+    @Get('explore')
+    async explore(@Query('page') page: number = 1, @Query('limit') limit: number = 10) {
+        await this.user.load('topics')
+        const userHashtags = await Hashtag.whereIn('topic', this.user.topics.items.pluck('id')).get()
+        const tweets = await this.getTweetsQuery(page, limit)
+            .whereIn(
+                'id',
+                query => query.table('hashtags_tweets').select('tweetId').whereIn('hashTagId', userHashtags.pluck('id'))
+            )
+            .get()
+
+        return TweetModel.from(tweets)
+    }
 
     @Get(':username/tweets')
     async userTweets(username: string, @Query('page') page: number = 1, @Query('limit') limit: number = 10) {
@@ -523,6 +696,20 @@ export class HomeController {
         }
 
         return TweetModel.from(this.getTweetsQuery(page, limit).where('userId', user.id).get())
+    }
+
+    getTweetsQuery(page: number, limit: number) {
+        return Tweet
+            .with(
+                'user',
+                'media',
+                'replyParent.user',
+                'retweetParent.user',
+                ['likes', query => query.where('userId', this.user.id)]
+            )
+            .withCount('likes', 'replies', 'retweets')
+            .orderBy('createdAt', 'DESC')
+            .limit((page - 1) * limit, limit)
     }
 }
 ```

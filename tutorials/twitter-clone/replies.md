@@ -84,6 +84,7 @@ export class TweetForm extends Form {
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { Like } from 'App/Entities/Like'
 import { TweetForm } from 'App/Forms/TweetForm'
 import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
@@ -145,6 +146,7 @@ tweet:
 ```ts
 import { Controller, Get, Middleware } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { User } from 'App/Entities/User'
 import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'

@@ -160,7 +160,7 @@ Let's make a request to this endpoint to add a like to a tweet:
 ```
 
 
-The next thing we need to do, is to update the endpoint that returns all the tweet to show the likes count of a tweet:
+The next thing we need to do, is to update the endpoint that returns all the tweets to show the likes count of a tweet:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
@@ -189,7 +189,7 @@ export class HomeController {
 }
 ```
 
-The _withCount_ method will return all the tweets with their properties but also and additional property _likesCount_
+The _withCount_ method will return all the tweets with their properties but also an additional property _likesCount_,
 which is the number of likes a tweet has.
 
 One last thing we need to add is to return some sort of information if the currently logged-in user liked a tweet or

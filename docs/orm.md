@@ -164,8 +164,8 @@ export class Article extends Entity {
 }
 ``` 
 
-This will make the _find_ method use the _article_id_ column instead of the default _id_ one. By default, The _
-getPrimaryKey_ method returns the _id_ property as the name of the primary key of an entity.
+This will make the _find_ method use the _article_id_ column instead of the default _id_ one. By default, The 
+_getPrimaryKey_ method returns the _id_ property as the name of the primary key of an entity.
 
 #### Creating records
 

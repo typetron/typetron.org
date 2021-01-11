@@ -17,7 +17,7 @@ Let's create an entity that will hold the likes of tweets:
 ```
 
 ```ts
-import { CreatedAt, Entity, Options, PrimaryColumn, Relation, BelongsTo } from '@Typetron/Database'
+import { ID, CreatedAt, Entity, Options, PrimaryColumn, Relation, BelongsTo } from '@Typetron/Database'
 import { Tweet } from 'App/Entities/Tweet'
 import { User } from 'App/Entities/User'
 
@@ -26,7 +26,7 @@ import { User } from 'App/Entities/User'
 })
 export class Like extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Relation(() => Tweet, 'likes')
     tweet: BelongsTo<Tweet>
@@ -72,7 +72,7 @@ export class User extends Authenticable {
 ```
 
 ```ts
-import { BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { User } from './User'
 import { Like } from './Like'
 
@@ -81,7 +81,7 @@ import { Like } from './Like'
 })
 export class Tweet extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     content: string
@@ -150,7 +150,7 @@ export class TweetsController {
 ```
 
 _Like.firstOrNew_ will try to find an entry in the database with the given properties. If doesn't find any, it will it
-create a new like instance with the same properties, without saving it in the database.
+create a new Like instance with the same properties, without saving it in the database.
 Find more about the [ORM here](/docs/database)
 
 Let's make a request to this endpoint to add a like to a tweet:

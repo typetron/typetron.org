@@ -25,6 +25,7 @@ Go inside the _Entities_ directory and create the _Tweet.ts_ file there:
 
 ```ts
 import {
+    ID,
     Column,
     CreatedAt,
     Entity,
@@ -40,7 +41,7 @@ import { User } from './User'
 })
 export class Tweet extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     content: string
@@ -175,7 +176,7 @@ a [JWT](https://jwt.io/) token similar to this:
 ```
 
 We can use this token in our request for endpoints that need an authenticated user, like the _TweetsController.create_
-route created earlier. All we have to do is to send the _Authorization: "Barer token_string"_ header in our request. If
+route created earlier. All we have to do is to send the _Authorization: "Bearer token_string"_ header in our request. If
 you are sending a request with a valid authentication token, you can then get the authenticated user like in the updated
 example below:
 

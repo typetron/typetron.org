@@ -18,7 +18,7 @@ We will have to add a self referencing relationship to our _Tweet_ entity:
 ```
 
 ```ts
-import { BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { User } from './User'
 import { Like } from './Like'
 
@@ -27,7 +27,7 @@ import { Like } from './Like'
 })
 export class Tweet extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     content: string

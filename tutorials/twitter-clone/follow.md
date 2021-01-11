@@ -89,6 +89,7 @@ Having these relationships in place we can now easily add the follow feature in 
 import { Controller, Middleware, Post, Patch } from '@Typetron/Router'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { User as UserModel } from 'App/Entities/UserModel'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'
 
@@ -146,10 +147,11 @@ like _@ionel_ or *@typetron\_* :
 ```
 
 ```ts
-import { Controller, Get, Middleware, Post } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post, Patch } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { UserForm } from 'App/Forms/UserForm'
 import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'

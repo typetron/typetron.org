@@ -6,8 +6,9 @@ title: Notifications
 
 ## {{page.title}}
 
-Notifications are a simple way of telling the user what happened on the platform in regard to a user's profile and tweets.
+Notifications are a simple way of telling the user what happened on the platform regarding a user's profile and tweets.
 We will have a few types of notifications:
+
 - "a user followed you" notification
 - "a user likes your tweet" notification
 - "a user replied to your tweet" notification
@@ -16,6 +17,7 @@ We will have a few types of notifications:
 This means we will have a _type_ property in our database table that will hold the information about notifications.
 
 #### Creating the Notification entity
+
 Because we need to save information in our database, we need to create an entity to help us:
 
 ```file-path
@@ -24,6 +26,7 @@ Because we need to save information in our database, we need to create an entity
 
 ```ts
 import {
+    ID,
     BelongsTo,
     BelongsToMany,
     Column,
@@ -42,7 +45,7 @@ import { Tweet } from 'App/Entities/Tweet'
 })
 export class Notification extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     type: 'follow' | 'like' | 'reply' | 'retweet'
@@ -69,21 +72,23 @@ export class Notification extends Entity {
 
 As said before, we have the _type_ property that we can use to identify what kind of notification was sent. The _user_
 property is the user that will receive the notification. The _notifiers_ property is the list of users that followed the
-_user_ or liked or retweeted a _user_'s tweet. The _tweet_ property is used to know on which tweet the user liked, replied
-or retweeted. The _readAt_ property is user to check if the _user_ read the notification or not. 
+_user_ or liked or retweeted a _user_'s tweet. The _tweet_ property is used to know on which tweet the user liked,
+replied or retweeted. The _readAt_ property is user to check if the _user_ read the notification or not.
 
 You are probably wondering why we have a list of notifiers and not only one notifier. We could do so, but remember that
 a tweet can have one or more likes, which means a tweet can interact with multiple notifiers/users before the owner sees
-the tweet. 
+the tweet.
 
 Let's have a real world use case to better understand this:
+
 - Joe creates a tweet
 - Mike likes the tweet. At this point we create a "like" notification in the database
 - Alex likes the same tweet. At this point, since we already have a like notification on this tweet from Mike, we only
-need to add a notifier to it. In this case we add Alex
+  need to add a notifier to it. In this case we add Alex
 - Joe opens the notifications page. In this case we set the _readAt_ property with the current read date.
 
-Having this system we automatically group the notifications based on the interactions of the users, just like on Twitter.
+Having this system we automatically group the notifications based on the interactions of the users, just like on
+Twitter.
 
 Let's update the _User_ and _Tweet_ entities to reflect the added entity above:
 
@@ -152,7 +157,7 @@ export class User extends Authenticable {
 ```
 
 ```ts
-import { BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { User } from './User'
 import { Like } from './Like'
 import { Media } from './Media'
@@ -163,7 +168,7 @@ import { Notification } from 'App/Entities/Notification'
 })
 export class Tweet extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     content: string
@@ -197,20 +202,21 @@ export class Tweet extends Entity {
 }
 ```
 
-
 #### Adding the "follow" notification
-We need to update the _follow_ method of the _UsersController_ to create a notification when a user follows another user:
 
+We need to update the _follow_ method of the _UsersController_ to create a notification when a user follows another
+user:
 
 ```file-path
 📁 Controllers/Http/UsersController.ts
 ```
 
 ```ts
-import { Controller, Get, Middleware, Post } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post, Patch } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { UserForm } from 'App/Forms/UserForm'
 import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'
@@ -287,8 +293,8 @@ export class UsersController {
 }
 ```
 
-
 #### Adding the "like" notification
+
 We need to update the _like_ method of the _TweetsController_ to create a notification when a user likes a tweet:
 
 ```file-path
@@ -305,7 +311,7 @@ import { Like } from 'App/Entities/Like'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
-import { Storage } from '@Typetron/Storage'
+import { Storage, File } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
 
@@ -389,7 +395,7 @@ import { Like } from 'App/Entities/Like'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
-import { Storage } from '@Typetron/Storage'
+import { Storage, File } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
 
@@ -402,7 +408,6 @@ export class TweetsController {
 
     @Inject()
     storage: Storage
-
 
     @Post()
     async create(form: TweetForm) {
@@ -491,8 +496,7 @@ export class TweetsController {
 }
 ```
 
-This looks a bit complex, but it's actually a lot of duplicated code under the if statements, that we can rewrite as: 
-
+This looks a bit complex, but it's actually a lot of duplicated code under the if statements, that we can rewrite as:
 
 ```file-path
 📁 Controllers/Http/TweetsController.ts
@@ -508,7 +512,7 @@ import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
-import { Storage } from '@Typetron/Storage'
+import { Storage, File } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
 
@@ -530,7 +534,7 @@ export class TweetsController {
         if (form.media instanceof File) {
             form.media = [form.media]
         }
-        
+
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
@@ -551,7 +555,7 @@ export class TweetsController {
         }
 
         await tweet.load('user')
-        
+
         return TweetModel.from(tweet)
     }
 
@@ -605,9 +609,10 @@ export class TweetsController {
 #### Getting the user notifications
 
 To get a user's notifications, we need a few endpoints:
+
 - one that we can use to read all the notifications of the logged-in user
-- one for getting the count of all unread notifications. This will be used to show a notifications badge in the interface
-with the number of unread notifications
+- one for getting the count of all unread notifications. This will be used to show a notifications badge in the
+  interface with the number of unread notifications
 - one for marking the unread notifications as read
 
 Let's not also forget to create a _Notification_ model:
@@ -635,7 +640,6 @@ export class Notification extends Model {
     tweet: Tweet
 }
 ```
-
 
 ```file-path
 📁 Controllers/Http/NotificationsController.ts
@@ -679,9 +683,9 @@ export class NotificationsController {
 }
 ```
 
-Now, we can get all the notifications for our user making a request to `[GET] /notifications`. We can also get the number 
-of unread notifications by making a request to `[GET] /notifications/unread` and then we can mark all the unread
-notifications as read by making a request to `[GET] /notifications/read`. I decided to leave these request separate, so 
+Now, we can get all the notifications for our user making a request to `[GET] /notifications`. We can also get the
+number of unread notifications by making a request to `[GET] /notifications/unread` and then we can mark all the unread
+notifications as read by making a request to `[POST] /notifications/read`. I decided to leave these request separate, so
 we have greater control.
 
 <div class="tutorial-next-page">

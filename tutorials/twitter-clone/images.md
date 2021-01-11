@@ -6,7 +6,7 @@ title: Adding images to tweets
 
 ## {{page.title}}
 
-A tweet can have one or more images attached to it. We will save these images on this, but we will need to save the name
+A tweet can have one or more images attached to it. We will save these images on disk, but we will need to save the name
 of the image in the database. This means we need another database table to save the images names into. This new table
 will need a new entity to be created.
 
@@ -20,7 +20,7 @@ addition of this entity:
 ```
 
 ```ts
-import { BelongsTo, Column, Entity, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsTo, Column, Entity, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { Tweet } from './Tweet'
 
 @Options({
@@ -28,7 +28,7 @@ import { Tweet } from './Tweet'
 })
 export class Media extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     path: string
@@ -43,7 +43,7 @@ export class Media extends Entity {
 ```
 
 ```ts
-import { BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsTo, Column, CreatedAt, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { User } from './User'
 import { Like } from './Like'
 import { Media } from './Media'
@@ -53,7 +53,7 @@ import { Media } from './Media'
 })
 export class Tweet extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     content: string
@@ -128,6 +128,7 @@ import { TweetForm } from 'App/Forms/TweetForm'
 import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
 import { Like } from 'App/Entities/Like'
+import { File } from '@Typetron/Storage'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
@@ -152,11 +153,11 @@ export class TweetsController {
             retweetParent: form.retweetParent,
             user: this.user
         })
-        
+
         if (form.media instanceof File) {
             form.media = [form.media]
         }
-        
+
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )

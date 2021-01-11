@@ -18,7 +18,7 @@ with the 'pound' symbol in front of them. For example, this might be the content
 ```
 
 ```ts
-import { BelongsToMany, Column, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsToMany, Column, Entity, HasMany, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { User } from 'App/Entities/User'
 import { Hashtag } from 'App/Entities/Hashtag'
 
@@ -27,7 +27,7 @@ import { Hashtag } from 'App/Entities/Hashtag'
 })
 export class Topic extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     name: string
@@ -45,7 +45,7 @@ export class Topic extends Entity {
 ```
 
 ```ts
-import { BelongsTo, BelongsToMany, Column, Entity, Options, PrimaryColumn, Relation } from '@Typetron/Database'
+import { ID, BelongsTo, BelongsToMany, Column, Entity, Options, PrimaryColumn, Relation } from '@Typetron/Database'
 import { Topic } from 'App/Entities/Topic'
 import { Tweet } from 'App/Entities/Tweet'
 
@@ -54,7 +54,7 @@ import { Tweet } from 'App/Entities/Tweet'
 })
 export class Hashtag extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     name: string
@@ -139,6 +139,7 @@ export class User extends Authenticable {
 
 ```ts
 import {
+    ID,
     BelongsTo,
     BelongsToMany,
     Column,
@@ -160,7 +161,7 @@ import { Hashtag } from 'App/Entities/Hashtag'
 })
 export class Tweet extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     content: string
@@ -240,15 +241,16 @@ export class Topic extends Model {
 ```
 
 ```ts
-import { Controller, Get, Middleware, Post } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post, Patch } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
+import { UserForm } from 'App/Forms/UserForm'
 import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
-import { Topic as TopicModel } from 'App/Models/Topics'
+import { Topic as TopicModel } from 'App/Models/Topic'
 import { UserTopicsForm } from 'App/Forms/UserTopicsForm'
 
 @Controller('users')
@@ -409,7 +411,7 @@ import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
 import { Tweet as TweetModel } from 'App/Models/Tweet'
-import { Storage } from '@Typetron/Storage'
+import { Storage, File } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
 import { Hashtag } from 'App/Entities/Hashtag'
 import { Media } from 'App/Entities/Media'
@@ -469,7 +471,7 @@ export class TweetsController {
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             const notification = await Notification.firstOrCreate({
                 type: type,
-                user: parentTweetUser.id,
+                user: parentTweetUser,
                 readAt: undefined,
                 tweet
             })

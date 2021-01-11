@@ -87,8 +87,8 @@ export class UserForm extends Form {
 }
 ```
 
-As you probably saw, for the _photo_ and _cover_ properties we accept an _File,_ or a _string_. This is because we will
-handle the case when you can make a request with _photo_ and _cover_ properties being the old images paths.
+As you probably saw, for the _photo_ and _cover_ properties we accept a _File_. This is because we will handle the case
+when you can make a request with _photo_ and _cover_ properties being the old images paths.
 
 #### Creating the user profile update endpoint
 
@@ -185,9 +185,10 @@ Let's make a _form-data_ request to update the user's profile:
 ```
 
 #### Adding a custom validator for username
-One last thing we need to fix is to restrict the username have only letters, numbers and/or the '_' character. We cannot
-allow for spaces since it won't be possible to mention users in tweets using the '@' character. Let's add a custom
-validator to validate the username for these characters and them update the _UserForm_ to use it:
+
+One last thing we need to fix is to restrict the username to have only letters, numbers and/or the '\_' character. We
+cannot allow for spaces since it won't be possible to mention users in tweets using the '@' character. Let's add a
+custom validator to validate the username for these characters and them update the _UserForm_ to use it:
 
 ```file-path
 📁 Validators/IsUsername.ts

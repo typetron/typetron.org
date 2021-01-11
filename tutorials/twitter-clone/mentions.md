@@ -20,6 +20,7 @@ model:
 
 ```ts
 import {
+    ID,
     BelongsTo,
     BelongsToMany,
     Column,
@@ -38,7 +39,7 @@ import { Tweet } from 'App/Entities/Tweet'
 })
 export class Notification extends Entity {
     @PrimaryColumn()
-    id: number
+    id: ID
 
     @Column()
     type: 'follow' | 'like' | 'reply' | 'retweet' | 'mention'
@@ -106,7 +107,7 @@ import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { Inject } from '@Typetron/Container'
-import { Storage } from '@Typetron/Storage'
+import { Storage, File } from '@Typetron/Storage'
 import { Notification } from 'App/Entities/Notification'
 import { Hashtag } from 'App/Entities/Hashtag'
 import { Media } from 'App/Entities/Media'

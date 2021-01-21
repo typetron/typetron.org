@@ -15,14 +15,14 @@ pivot tables. Let's update the _Users_ entity to add this feature:
 
 ```ts
 import { BelongsToMany, BelongsToManyOptions, Column, HasMany, Options, Relation } from '@Typetron/Database'
-import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { User as Authenticatable } from '@Typetron/Framework/Auth'
 import { Tweet } from 'App/Entities/Tweet'
 import { Like } from 'App/Entities/Like'
 
 @Options({
     table: 'users'
 })
-export class User extends Authenticable {
+export class User extends Authenticatable {
     @Column()
     name: string
 
@@ -86,7 +86,7 @@ Having these relationships in place we can now easily add the follow feature in 
 ```
 
 ```ts
-import { Controller, Middleware, Post, Patch } from '@Typetron/Router'
+import { Controller, Middleware, Post, Put } from '@Typetron/Router'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
 import { User as UserModel } from 'App/Entities/UserModel'
@@ -103,7 +103,7 @@ export class UsersController {
     @Inject()
     storage: Storage
 
-    @Patch()
+    @Put()
     async update(form: UserForm) {
         if (form.photo) {
             await this.storage.delete(`public/${this.user.photo}`)
@@ -118,14 +118,14 @@ export class UsersController {
         return UserModel.from(this.user)
     }
 
-    @Post('follow/:User')
+    @Post(':User/follow')
     async follow(userToFollow: User) {
-        await this.user.following.attach(userToFollow.id)
+        await this.user.following.add(userToFollow.id)
     }
 
-    @Post('unfollow/:User')
+    @Post(':User/unfollow')
     async unfollow(userToUnfollow: User) {
-        await this.user.following.detach(userToUnfollow.id)
+        await this.user.following.remove(userToUnfollow.id)
     }
 }
 ```
@@ -135,7 +135,7 @@ another user in the app using the register endpoint. In my case, the next added 
 in my _follow_ request:
 
 ```file-path
-🌐 [POST] /users/follow/2
+🌐 [POST] /users/2/follow
 ```
 
 Let's also add some endpoints to get the followers and following of a user but this time, searching the user based on
@@ -147,7 +147,7 @@ like _@ionel_ or *@typetron\_* :
 ```
 
 ```ts
-import { Controller, Get, Middleware, Post, Patch } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post, Put } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
@@ -166,7 +166,7 @@ export class UsersController {
     @Inject()
     storage: Storage
 
-    @Patch()
+    @Put()
     async update(form: UserForm) {
         if (form.photo) {
             await this.storage.delete(`public/${this.user.photo}`)
@@ -203,19 +203,19 @@ export class UsersController {
         return UserModel.from(user.following.get())
     }
 
-    @Post('follow/:User')
+    @Post(':User/follow')
     async follow(userToFollow: User) {
-        await this.user.following.attach(userToFollow.id)
+        await this.user.following.add(userToFollow.id)
     }
 
-    @Post('unfollow/:User')
+    @Post(':User/unfollow')
     async unfollow(userToUnfollow: User) {
-        await this.user.following.detach(userToUnfollow.id)
+        await this.user.following.remove(userToUnfollow.id)
     }
 }
 ```
 
-Making a request to _/followings/joe_ should return one user we follow.
+Making a request to _`[GET] /users/joe/followers`_ should return one user that is following _joe_.
 
 #### Showing tweets from followed users
 

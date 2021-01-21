@@ -75,7 +75,7 @@ Let's not forget to update the relationships on the _User_ and _Tweet_ entities:
 
 ```ts
 import { BelongsToMany, BelongsToManyOptions, Column, HasMany, Options, Relation } from '@Typetron/Database'
-import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { User as Authenticatable } from '@Typetron/Framework/Auth'
 import { Tweet } from 'App/Entities/Tweet'
 import { Like } from 'App/Entities/Like'
 import { Notification } from 'App/Entities/Notification'
@@ -84,7 +84,7 @@ import { Topic } from 'App/Entities/Topic'
 @Options({
     table: 'users'
 })
-export class User extends Authenticable {
+export class User extends Authenticatable {
     @Column()
     name: string
 
@@ -241,7 +241,7 @@ export class Topic extends Model {
 ```
 
 ```ts
-import { Controller, Get, Middleware, Post, Patch } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post, Put } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
@@ -263,7 +263,7 @@ export class UsersController {
     @Inject()
     storage: Storage
 
-    @Patch()
+    @Put()
     async update(form: UserForm) {
         if (form.photo) {
             await this.storage.delete(`public/${this.user.photo}`)
@@ -300,9 +300,9 @@ export class UsersController {
         return UserModel.from(user.following.get())
     }
 
-    @Post('follow/:User')
+    @Post(':User/follow')
     async follow(userToFollow: User) {
-        await this.user.following.attach(userToFollow.id)
+        await this.user.following.add(userToFollow.id)
 
         const notification = await Notification.firstOrCreate({
             type: 'follow',
@@ -311,15 +311,15 @@ export class UsersController {
         })
 
         if (!await notification.notifiers.has(this.user.id)) {
-            await notification.notifiers.attach(this.user.id)
+            await notification.notifiers.add(this.user.id)
         }
 
         return UserModel.from(this.user)
     }
 
-    @Post('unfollow/:User')
+    @Post(':User/unfollow')
     async unfollow(userToUnfollow: User) {
-        await this.user.following.detach(userToUnfollow.id)
+        await this.user.following.remove(userToUnfollow.id)
     }
 
     @Get('topics')
@@ -405,17 +405,18 @@ expressions
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { Like } from 'App/Entities/Like'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
-import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { Storage, File } from '@Typetron/Storage'
-import { Notification } from 'App/Entities/Notification'
-import { Hashtag } from 'App/Entities/Hashtag'
 import { Media } from 'App/Entities/Media'
-import { Like } from 'App/Entities/Like'
+import { Notification } from 'App/Entities/Notification'
+import { EntityObject } from '@Typetron/Database'
+import { Hashtag } from 'App/Entities/Hashtag'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -428,9 +429,34 @@ export class TweetsController {
     storage: Storage
 
     @Post()
-    async create(form: TweetForm) {
-        const tweet = new Tweet(form)
-        await this.user.tweets.save(tweet)
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    async reply(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {replyParent: parent})
+
+        await this.addNotification(tweet, parent, 'reply')
+
+        return TweetModel.from(tweet)
+    }
+
+    @Post(':Tweet/retweet')
+    async retweet(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {retweetParent: parent})
+
+        await this.addNotification(tweet, parent, 'reply')
+
+        return TweetModel.from(tweet)
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
+        const tweet = await Tweet.create({
+            content: form.content,
+            user: this.user,
+            ...additional
+        })
 
         if (form.media instanceof File) {
             form.media = [form.media]
@@ -443,39 +469,22 @@ export class TweetsController {
 
         await this.addHashTags(tweet)
 
-        /**
-         * When the replyParent property is sent, it means the user replied this tweet.
-         */
-        if (form.replyParent) {
-            await this.addNotification(tweet, form.replyParent, 'reply')
-        }
-
-        /**
-         * When the retweetParent property is sent, it means the user retweeted this tweet.
-         */
-        if (form.retweetParent) {
-            await this.addNotification(tweet, form.retweetParent, 'retweet')
-        }
-
-        await tweet.load('user')
-
-        return TweetModel.from(tweet)
+        return tweet
     }
 
-    private async addNotification(tweet: Tweet, parent: number, type: 'reply' | 'retweet') {
-        const parentTweet = await Tweet.find(parent)
-        const parentTweetUser = parentTweet?.user.get()
+    private async addNotification(tweet: Tweet, parentTweet: Tweet, type: 'reply' | 'retweet') {
+        const parentTweetUser = parentTweet.user.get()
         /**
-         * we need to create a notification if the user that replied/retweeted with this tweet is not its author.
+         * We need to create a notification if the user that replied/retweeted with this tweet is not its author.
          */
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             const notification = await Notification.firstOrCreate({
-                type: type,
                 user: parentTweetUser,
                 readAt: undefined,
+                type,
                 tweet
             })
-            await notification.notifiers.attach(this.user.id)
+            await notification.notifiers.add(this.user.id)
         }
     }
 
@@ -506,10 +515,10 @@ export class TweetsController {
         const like = await Like.firstOrNew({tweet, user: this.user})
         if (like.exists) {
             await like.delete()
-            await notification?.notifiers.detach(this.user.id)
+            await notification?.notifiers.remove(this.user.id)
         } else {
             await like.save()
-            await notification?.notifiers.attach(this.user.id)
+            await notification?.notifiers.add(this.user.id)
         }
 
         return TweetModel.from(tweet)

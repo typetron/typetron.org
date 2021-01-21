@@ -1,4 +1,4 @@
-import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Put, Post } from '@Typetron/Router'
 import { Article } from 'App/Entities/Article'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 
@@ -14,7 +14,7 @@ export class ArticleController {
         return Article.create(form)
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     update(article: Article, form: ArticleForm) {
         return article.fill(form).save()
     }

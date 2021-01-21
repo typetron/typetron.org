@@ -51,7 +51,7 @@ Now, change the _add_ method from _HomeController_ to save the image on the disk
 ```
 
 ```ts
-import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Storage } from '@Typetron/Storage'
 
@@ -76,7 +76,7 @@ export class HomeController {
         return article
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     update(article: Article, form: ArticleForm) {
         return article.save(form)
     }
@@ -178,7 +178,7 @@ handle them both:
 ```
 
 ```ts
-import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { File, Storage } from '@Typetron/Storage'
@@ -204,7 +204,7 @@ export class HomeController {
         return article
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image) {
             await storage.delete(`public/articles/${article.image}`)

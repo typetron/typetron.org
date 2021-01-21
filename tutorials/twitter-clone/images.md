@@ -134,6 +134,7 @@ import { AuthUser } from '@Typetron/Framework/Auth'
 import { Inject } from '@Typetron/Container'
 import { Storage } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
+import { EntityObject } from '@Typetron/Database'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -146,12 +147,25 @@ export class TweetsController {
     storage: Storage
 
     @Post()
-    async create(form: TweetForm) {
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    reply(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {replyParent: parent}))
+    }
+
+    @Post(':Tweet/retweet')
+    retweet(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {retweetParent: parent}))
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
         const tweet = await Tweet.create({
             content: form.content,
-            replyParent: form.replyParent,
-            retweetParent: form.retweetParent,
-            user: this.user
+            user: this.user,
+            ...additional
         })
 
         if (form.media instanceof File) {
@@ -163,7 +177,7 @@ export class TweetsController {
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
-        return TweetModel.from(tweet)
+        return tweet
     }
 
     @Post(':Tweet/like')

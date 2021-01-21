@@ -17,7 +17,7 @@ entity. Let's move everything related to the _Article_ entity from _HomeControll
 ```
 
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Middleware, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { File, Storage } from '@Typetron/Storage'
@@ -45,7 +45,7 @@ export class ArticlesController {
         return Article.create(form)
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image) {
@@ -76,7 +76,7 @@ When deleting articles, we should also delete the image of that article. We can 
 ```
 
 ```ts
-import { Controller, Delete, Middleware } from '@Typetron/Router'
+import { Controller, Middleware, Post, Put, Get, Delete } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
@@ -104,7 +104,7 @@ export class ArticlesController {
         return Article.create(form)
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image) {
@@ -168,7 +168,7 @@ Let 's use it inside our _ArticleController_:
 ```
 
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Middleware, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { File, Storage } from '@Typetron/Storage'
@@ -197,7 +197,7 @@ export class ArticlesController {
         return ArticleModel.from(Article.create(form))
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image) {
@@ -233,10 +233,8 @@ controllers. Here is and example for the _create_, _update_ and _delete_ methods
 ```
 
 ```ts
-import { Delete, Middleware, Patch, Post } from '@Typetron/Router'
-import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { ArticleForm } from 'App/Forms/ArticleForm'
-import { File, Storage } from '@Typetron/Storage'
+import { Storage } from '@Typetron/Storage'
 import { Article as ArticleModel } from 'App/Models/Article'
 import { Article } from 'App/Entities/Article'
 import { Inject } from '@Typetron/Container'
@@ -246,8 +244,6 @@ export class ArticleService {
     @Inject()
     storage: Storage
 
-    @Post()
-    @Middleware(AuthMiddleware)
     async add(form: ArticleForm) {
         if (form.image) {
             await this.storage.save(form.image, 'public/articles')
@@ -255,8 +251,6 @@ export class ArticleService {
         return ArticleModel.from(Article.create(form))
     }
 
-    @Patch(':Article')
-    @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
         if (form.image) {
             await this.storage.delete(`public/articles/${article.image}`)
@@ -265,8 +259,6 @@ export class ArticleService {
         return ArticleModel.from(article.save(form))
     }
 
-    @Delete(':Article')
-    @Middleware(AuthMiddleware)
     async delete(article: Article) {
         await this.storage.delete(`public/articles/${article.image}`)
         await article.delete()
@@ -279,7 +271,7 @@ export class ArticleService {
 ```
 
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Middleware, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
@@ -309,7 +301,7 @@ export class ArticlesController {
         return this.articleService.add(form)
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm) {
         return this.articleService.update(article, form)

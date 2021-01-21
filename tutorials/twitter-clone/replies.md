@@ -55,27 +55,7 @@ replies of a tweet.
 
 #### Adding the reply functionality
 
-The only thing we need to so is to add a new property in the _TweetForm_ called _replyParent_ that can be the id of the
-tweet we want to create a reply on. Also, we need to update the _TweetsController_ to add this id in the newly created
-tweet:
-
-```file-path
-📁 Forms/TweetForm.ts
-```
-
-```ts
-import { Field, Form, Rules } from '@Typetron/Forms'
-import { Required } from '@Typetron/Validation'
-
-export class TweetForm extends Form {
-    @Field()
-    @Rules(Required)
-    content: string
-
-    @Field()
-    replyParent?: number
-}
-```
+The only thing we need to do is to create an endpoint in the _TweetsController_ that will create a reply for a tweet:
 
 ```file-path
 📁 Controllers/Http/TweetsController.ts
@@ -99,11 +79,21 @@ export class TweetsController {
     user: User
 
     @Post()
-    create(form: TweetForm) {
+    tweet(form: TweetForm) {
         return TweetModel.from(
             Tweet.create({
                 content: form.content,
-                replyParent: form.replyParent,
+                user: this.user
+            })
+        )
+    }
+
+    @Post(':Tweet/reply')
+    reply(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(
+            Tweet.create({
+                content: form.content,
+                replyParent: parent,
                 user: this.user
             })
         )
@@ -123,18 +113,77 @@ export class TweetsController {
 }
 ```
 
-Let's make a request with the _replyParent_ property to add a reply to a tweet:
+Let's make a request to add a reply to a tweet:
 
 ```file-path
-🌐 [POST] /tweets
+🌐 [POST] /tweets/1/reply
 ```
 
 ```json
 {
-    "content": "my tweet content",
-    "replyParent": 1
+    "content": "my tweet content"
 }
 ```
+
+Let's clean this controller a bit because there is some duplicated code in the _tweet_ and _reply_ methods:
+
+```file-path
+📁 Controllers/Http/TweetsController.ts
+```
+
+```ts
+import { Controller, Middleware, Post } from '@Typetron/Router'
+import { Tweet } from 'App/Entities/Tweet'
+import { Like } from 'App/Entities/Like'
+import { TweetForm } from 'App/Forms/TweetForm'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
+import { User } from 'App/Entities/User'
+import { AuthMiddleware } from '@Typetron/Framework/Middleware'
+import { AuthUser } from '@Typetron/Framework/Auth'
+import { EntityObject } from '@Typetron/Database'
+
+@Controller('tweets')
+@Middleware(AuthMiddleware)
+export class TweetsController {
+
+    @AuthUser()
+    user: User
+
+    @Post()
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    reply(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {replyParent: parent}))
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
+        return Tweet.create({
+            content: form.content,
+            user: this.user,
+            ...additional
+        })
+    }
+
+    @Post(':Tweet/like')
+    async like(tweet: Tweet) {
+        const like = await Like.firstOrNew({tweet, user: this.user})
+        if (like.exists) {
+            await like.delete()
+        } else {
+            await like.save()
+        }
+
+        return TweetModel.from(tweet)
+    }
+}
+```
+
+The argument _additional_ is used to pass additional properties to the tweet entity like the _replyParent_. It has the
+type _EntityObject\<Tweet\>_ because it should contain only properties and values accepted by the _Tweet_ entity. Also,
+it has the _Partial_ type because those additional properties should be optional.
 
 The last thing we need to do, is to update the endpoint that returns all the tweets, to show the replies count of a
 tweet:

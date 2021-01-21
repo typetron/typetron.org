@@ -61,28 +61,7 @@ retweets of a tweet.
 
 #### Adding the retweet functionality
 
-As like in the last step, we just need to update the _TweetForm_ and the _TweetsController_:
-
-```file-path
-📁 Forms/TweetForm.ts
-```
-
-```ts
-import { Field, Form, Rules } from '@Typetron/Forms'
-import { Required } from '@Typetron/Validation'
-
-export class TweetForm extends Form {
-    @Field()
-    @Rules(Required)
-    content: string
-
-    @Field()
-    replyParent?: number
-
-    @Field()
-    retweetParent?: number
-}
-```
+As like in the last step, we just need to update the _TweetsController_:
 
 ```file-path
 📁 Controllers/Http/TweetsController.ts
@@ -97,6 +76,7 @@ import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
+import { EntityObject } from '@Typetron/Database'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -106,15 +86,26 @@ export class TweetsController {
     user: User
 
     @Post()
-    create(form: TweetForm) {
-        return TweetModel.from(
-            Tweet.create({
-                content: form.content,
-                replyParent: form.replyParent,
-                retweetParent: form.retweetParent,
-                user: this.user
-            })
-        )
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    reply(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {replyParent: parent}))
+    }
+
+    @Post(':Tweet/retweet')
+    retweet(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {retweetParent: parent}))
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
+        return Tweet.create({
+            content: form.content,
+            user: this.user,
+            ...additional
+        })
     }
 
     @Post(':Tweet/like')
@@ -134,13 +125,12 @@ export class TweetsController {
 Let's make a request with the _retweetParent_ property to add a retweet to a tweet:
 
 ```file-path
-🌐 [POST] /tweets
+🌐 [POST] /tweets/1/retweet
 ```
 
 ```json
 {
-    "content": "my tweet content",
-    "retweetParent": 1
+    "content": "my tweet content"
 }
 ```
 

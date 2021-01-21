@@ -17,14 +17,14 @@ and add a few more properties:
 
 ```ts
 import { Column, HasMany, Options, Relation } from '@Typetron/Database'
-import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { User as Authenticatable } from '@Typetron/Framework/Auth'
 import { Tweet } from 'App/Entities/Tweet'
 import { Like } from 'App/Entities/Like'
 
 @Options({
     table: 'users'
 })
-export class User extends Authenticable {
+export class User extends Authenticatable {
     @Column()
     name: string
 
@@ -100,7 +100,7 @@ called _UsersController_ and also update the _User_ model:
 ```
 
 ```ts
-import { Controller, Middleware, Patch } from '@Typetron/Router'
+import { Controller, Middleware, Put } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
@@ -119,7 +119,7 @@ export class UsersController {
     @Inject()
     storage: Storage
 
-    @Patch()
+    @Put()
     async update(form: UserForm) {
         if (form.photo) {
             await this.storage.delete(`public/${this.user.photo}`)
@@ -165,13 +165,12 @@ export class User extends Model {
 ```
 
 We upload an image in the public directory only when we receive an instance of a _File_ in the request, but not before
-deleting the old ones, so we don't end up with images on disk that are not used. If the user sends back a string for
-_photo_ or _cover_ images, it means he sent the old paths of those images.
+deleting the old ones, so we don't end up with images on disk that are not used.
 
 Let's make a _form-data_ request to update the user's profile:
 
 ```file-path
-🌐 [Patch] /users
+🌐 [Put] /users
 ```
 
 ```json

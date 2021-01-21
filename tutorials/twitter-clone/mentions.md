@@ -101,17 +101,18 @@ created a new tweet to send mention notifications:
 ```ts
 import { Controller, Middleware, Post } from '@Typetron/Router'
 import { Tweet } from 'App/Entities/Tweet'
+import { Like } from 'App/Entities/Like'
+import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { TweetForm } from 'App/Forms/TweetForm'
 import { User } from 'App/Entities/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { AuthUser } from '@Typetron/Framework/Auth'
-import { Tweet as TweetModel } from 'App/Models/Tweet'
 import { Inject } from '@Typetron/Container'
 import { Storage, File } from '@Typetron/Storage'
-import { Notification } from 'App/Entities/Notification'
-import { Hashtag } from 'App/Entities/Hashtag'
 import { Media } from 'App/Entities/Media'
-import { Like } from 'App/Entities/Like'
+import { Notification } from 'App/Entities/Notification'
+import { EntityObject } from '@Typetron/Database'
+import { Hashtag } from 'App/Entities/Hashtag'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -124,14 +125,39 @@ export class TweetsController {
     storage: Storage
 
     @Post()
-    async create(form: TweetForm) {
-        const tweet = new Tweet(form)
-        await this.user.tweets.save(tweet)
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    async reply(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {replyParent: parent})
+
+        await this.addTweetNotification(tweet, parent, 'reply')
+
+        return TweetModel.from(tweet)
+    }
+
+    @Post(':Tweet/retweet')
+    async retweet(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {retweetParent: parent})
+
+        await this.addTweetNotification(tweet, parent, 'reply')
+
+        return TweetModel.from(tweet)
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
+        const tweet = await Tweet.create({
+            content: form.content,
+            user: this.user,
+            ...additional
+        })
 
         if (form.media instanceof File) {
             form.media = [form.media]
         }
-        
+
         const mediaFiles = await Promise.all(
             form.media.map(file => this.storage.save(file, 'public/tweets-media'))
         )
@@ -140,43 +166,26 @@ export class TweetsController {
         await this.addHashTags(tweet)
         await this.sendMentionNotifications(tweet)
 
-        /**
-         * When the replyParent property is sent, it means the user replied this tweet.
-         */
-        if (form.replyParent) {
-            await this.addTweetNotification(tweet, form.replyParent, 'reply')
-        }
-
-        /**
-         * When the retweetParent property is sent, it means the user retweeted this tweet.
-         */
-        if (form.retweetParent) {
-            await this.addTweetNotification(tweet, form.retweetParent, 'retweet')
-        }
-
-        await tweet.load('user')
-
-        return TweetModel.from(tweet)
+        return tweet
     }
 
-    private async addTweetNotification(tweet: Tweet, parent: number, type: 'reply' | 'retweet') {
-        const parentTweet = await Tweet.find(parent)
-        const parentTweetUser = parentTweet?.user.get()
+    private async addTweetNotification(tweet: Tweet, parentTweet: Tweet, type: 'reply' | 'retweet') {
+        const parentTweetUser = parentTweet.user.get()
         /**
-         * we need to create a notification if the user that replied/retweeted with this tweet is not its author.
+         * We need to create a notification if the user that replied/retweeted with this tweet is not its author.
          */
-        if (parentTweetUser && parentTweetUser.id !== this.user.id) {
+        if (parentTweetUser && parentTweetUser?.id !== this.user.id) {
             await this.addNotification(tweet, parentTweetUser.id, type)
         }
     }
 
     private async addNotification(tweet: Tweet, userId: number, type: Notification['type']) {
         const notification = await Notification.create({
-            type: 'mention',
             user: userId,
+            type,
             tweet
         })
-        await notification.notifiers.attach(this.user.id)
+        await notification.notifiers.add(this.user.id)
     }
 
     private async addHashTags(tweet: Tweet) {
@@ -215,10 +224,10 @@ export class TweetsController {
         const like = await Like.firstOrNew({tweet, user: this.user})
         if (like.exists) {
             await like.delete()
-            await notification?.notifiers.detach(this.user.id)
+            await notification?.notifiers.remove(this.user.id)
         } else {
             await like.save()
-            await notification?.notifiers.attach(this.user.id)
+            await notification?.notifiers.add(this.user.id)
         }
 
         return TweetModel.from(tweet)
@@ -240,6 +249,8 @@ Let's make a request to test this feature:
     "content": "How are you doing @joe"
 }
 ```
+
+Now, a user named _joe_ should get a 'mention' notification.
 
 <div class="tutorial-next-page">
     In the next part we will start creating the frontend part of the app

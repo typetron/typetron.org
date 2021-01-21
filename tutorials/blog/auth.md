@@ -18,7 +18,7 @@ the _AuthMiddleware_:
 ```
 
 ```ts
-import { Controller, Delete, Get, Middleware, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Middleware, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
@@ -46,7 +46,7 @@ export class HomeController {
         return article
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     @Middleware(AuthMiddleware)
     async update(article: Article, form: ArticleForm, storage: Storage) {
         if (form.image) {

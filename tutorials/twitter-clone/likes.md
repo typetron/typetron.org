@@ -47,14 +47,14 @@ Let's also update the Tweet and User entities to reflect this change:
 
 ```ts
 import { Column, Options, Relation, HasMany } from '@Typetron/Database'
-import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { User as Authenticatable } from '@Typetron/Framework/Auth'
 import { Tweet } from 'App/Entities/Tweet'
 import { Like } from 'App/Entities/Like'
 
 @Options({
     table: 'users'
 })
-export class User extends Authenticable {
+export class User extends Authenticatable {
     @Column()
     name: string
 
@@ -150,8 +150,8 @@ export class TweetsController {
 ```
 
 _Like.firstOrNew_ will try to find an entry in the database with the given properties. If doesn't find any, it will it
-create a new Like instance with the same properties, without saving it in the database.
-Find more about the [ORM here](/docs/database)
+create a new Like instance with the same properties, without saving it in the database. Find more about
+the [ORM here](/docs/database)
 
 Let's make a request to this endpoint to add a like to a tweet:
 
@@ -159,8 +159,8 @@ Let's make a request to this endpoint to add a like to a tweet:
 🌐 [POST] /tweets/{tweet id}/like
 ```
 
-
-The next thing we need to do, is to update the endpoint that returns all the tweets to show the likes count of a tweet:
+The next thing we need to do, is to update the endpoint that returns all the tweets, so it shows the amount of likes for
+each tweet:
 
 ```file-path
 📁 Controllers/Http/HomeController.ts
@@ -221,7 +221,7 @@ export class HomeController {
             .withCount('likes')
             .orderBy('createdAt', 'DESC')
             .get()
-        
+
         return TweetModel.from(tweets)
     }
 }

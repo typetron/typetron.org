@@ -255,7 +255,7 @@ We can easily add, update and delete actions to our controller:
 ```
 
 ```ts
-import { Controller, Delete, Get, Patch, Post } from '@Typetron/Router'
+import { Controller, Delete, Get, Put, Post } from '@Typetron/Router'
 import { ArticleForm } from 'App/Forms/ArticleForm'
 import { Article } from 'App/Entities/Article'
 
@@ -277,7 +277,7 @@ export class HomeController {
         return Article.create(form)
     }
 
-    @Patch(':Article')
+    @Put(':Article')
     update(article: Article, form: ArticleForm) {
         return article.save(form)
     }

@@ -1,7 +1,7 @@
 ---
 layout: twitter-clone
 
-title: Showing the latest tweets
+title: Posting tweets
 ---
 
 ## {{page.title}}
@@ -65,13 +65,13 @@ One thing we also need to do, is to update the _User_ entity to reflect the adde
 
 ```ts
 import { Column, Options, Relation, HasMany } from '@Typetron/Database'
-import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { User as Authenticatable } from '@Typetron/Framework/Auth'
 import { Tweet } from 'App/Entities/Tweet'
 
 @Options({
     table: 'users'
 })
-export class User extends Authenticable {
+export class User extends Authenticatable {
     @Column()
     name: string
 

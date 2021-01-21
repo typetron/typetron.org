@@ -98,7 +98,7 @@ Let's update the _User_ and _Tweet_ entities to reflect the added entity above:
 
 ```ts
 import { BelongsToMany, BelongsToManyOptions, Column, HasMany, Options, Relation } from '@Typetron/Database'
-import { User as Authenticable } from '@Typetron/Framework/Auth'
+import { User as Authenticatable } from '@Typetron/Framework/Auth'
 import { Tweet } from 'App/Entities/Tweet'
 import { Like } from 'App/Entities/Like'
 import { Notification } from 'App/Entities/Notification'
@@ -106,7 +106,7 @@ import { Notification } from 'App/Entities/Notification'
 @Options({
     table: 'users'
 })
-export class User extends Authenticable {
+export class User extends Authenticatable {
     @Column()
     name: string
 
@@ -212,7 +212,7 @@ user:
 ```
 
 ```ts
-import { Controller, Get, Middleware, Post, Patch } from '@Typetron/Router'
+import { Controller, Get, Middleware, Post, Put } from '@Typetron/Router'
 import { Inject } from '@Typetron/Container'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
@@ -232,7 +232,7 @@ export class UsersController {
     @Inject()
     storage: Storage
 
-    @Patch()
+    @Put()
     async update(form: UserForm) {
         if (form.photo) {
             await this.storage.delete(`public/${this.user.photo}`)
@@ -269,9 +269,9 @@ export class UsersController {
         return UserModel.from(user.following.get())
     }
 
-    @Post('follow/:User')
+    @Post(':User/follow')
     async follow(userToFollow: User) {
-        await this.user.following.attach(userToFollow.id)
+        await this.user.following.add(userToFollow.id)
 
         const notification = await Notification.firstOrCreate({
             type: 'follow',
@@ -280,15 +280,15 @@ export class UsersController {
         })
 
         if (!await notification.notifiers.has(this.user.id)) {
-            await notification.notifiers.attach(this.user.id)
+            await notification.notifiers.add(this.user.id)
         }
 
         return UserModel.from(this.user)
     }
 
-    @Post('unfollow/:User')
+    @Post(':User/unfollow')
     async unfollow(userToUnfollow: User) {
-        await this.user.following.detach(userToUnfollow.id)
+        await this.user.following.remove(userToUnfollow.id)
     }
 }
 ```
@@ -314,6 +314,7 @@ import { Inject } from '@Typetron/Container'
 import { Storage, File } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
+import { EntityObject } from '@Typetron/Database'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -326,12 +327,25 @@ export class TweetsController {
     storage: Storage
 
     @Post()
-    async create(form: TweetForm) {
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    reply(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {replyParent: parent}))
+    }
+
+    @Post(':Tweet/retweet')
+    retweet(parent: Tweet, form: TweetForm) {
+        return TweetModel.from(this.createTweet(form, {retweetParent: parent}))
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
         const tweet = await Tweet.create({
             content: form.content,
-            replyParent: form.replyParent,
-            retweetParent: form.retweetParent,
-            user: this.user
+            user: this.user,
+            ...additional
         })
 
         if (form.media instanceof File) {
@@ -343,7 +357,7 @@ export class TweetsController {
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
-        return TweetModel.from(tweet)
+        return tweet
     }
 
     @Post(':Tweet/like')
@@ -365,10 +379,10 @@ export class TweetsController {
         const like = await Like.firstOrNew({tweet, user: this.user})
         if (like.exists) {
             await like.delete()
-            await notification?.notifiers.detach(this.user.id)
+            await notification?.notifiers.remove(this.user.id)
         } else {
             await like.save()
-            await notification?.notifiers.attach(this.user.id)
+            await notification?.notifiers.add(this.user.id)
         }
 
         return TweetModel.from(tweet)
@@ -398,6 +412,7 @@ import { Inject } from '@Typetron/Container'
 import { Storage, File } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
+import { EntityObject } from '@Typetron/Database'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -410,9 +425,60 @@ export class TweetsController {
     storage: Storage
 
     @Post()
-    async create(form: TweetForm) {
-        const tweet = new Tweet(form)
-        await this.user.tweets.save(tweet)
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    async reply(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {replyParent: parent})
+
+        /**
+         * In this case, we need to create a 'reply' notification
+         * if the user that replied the tweet is not its author.
+         */
+        const parentTweetUser = parent.user.get()
+        if (parentTweetUser && parentTweetUser.id !== this.user.id) {
+            const notification = await Notification.firstOrCreate({
+                type: 'reply',
+                user: parentTweetUser,
+                readAt: undefined,
+                tweet
+            })
+            await notification.notifiers.add(this.user.id)
+        }
+
+        return TweetModel.from(tweet)
+    }
+
+    @Post(':Tweet/retweet')
+    async retweet(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {retweetParent: parent})
+
+        /**
+         * In this case, we need to create a 'retweet' notification
+         * if the user that retweeted the tweet is not its author.
+         */
+        const parentTweetUser = parent.user.get()
+        if (parentTweetUser && parentTweetUser.id !== this.user.id) {
+            const notification = await Notification.firstOrCreate({
+                type: 'retweet',
+                user: parentTweetUser,
+                readAt: undefined,
+                tweet
+            })
+            await notification.notifiers.add(this.user.id)
+        }
+
+        return TweetModel.from(tweet)
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
+        const tweet = await Tweet.create({
+            content: form.content,
+            user: this.user,
+            ...additional
+        })
 
         if (form.media instanceof File) {
             form.media = [form.media]
@@ -423,47 +489,7 @@ export class TweetsController {
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
-        /**
-         * When the retweetParent property is sent, it means the user retweeted this tweet.
-         * In this case, we need to create a 'retweet' notification if the user that
-         * retweeted the tweet is not its author.
-         */
-        if (form.retweetParent) {
-            const retweetParent = await Tweet.find(form.retweetParent)
-            const retweetUser = retweetParent?.user.get()
-            if (retweetUser && retweetUser.id !== this.user.id) {
-                const notification = await Notification.firstOrCreate({
-                    type: 'retweet',
-                    user: retweetUser,
-                    readAt: undefined,
-                    tweet
-                })
-                await notification.notifiers.attach(this.user.id)
-            }
-        }
-
-        /**
-         * When the replyParent property is sent, it means the user replied to this tweet.
-         * In this case, we need to create a 'reply' notification if the user that
-         * retweeted the tweet is not its author.
-         */
-        if (form.replyParent) {
-            const replyParent = await Tweet.find(form.replyParent)
-            const replyUser = replyParent?.user.get()
-            if (replyUser && replyUser.id !== this.user.id) {
-                const notification = await Notification.firstOrCreate({
-                    type: 'reply',
-                    user: replyUser,
-                    readAt: undefined,
-                    tweet
-                })
-                await notification.notifiers.attach(this.user.id)
-            }
-        }
-
-        await tweet.load('user')
-
-        return TweetModel.from(tweet)
+        return tweet
     }
 
     @Post(':Tweet/like')
@@ -485,10 +511,10 @@ export class TweetsController {
         const like = await Like.firstOrNew({tweet, user: this.user})
         if (like.exists) {
             await like.delete()
-            await notification?.notifiers.detach(this.user.id)
+            await notification?.notifiers.remove(this.user.id)
         } else {
             await like.save()
-            await notification?.notifiers.attach(this.user.id)
+            await notification?.notifiers.add(this.user.id)
         }
 
         return TweetModel.from(tweet)
@@ -496,7 +522,7 @@ export class TweetsController {
 }
 ```
 
-This looks a bit complex, but it's actually a lot of duplicated code under the if statements, that we can rewrite as:
+This looks a bit complex, but it's actually a lot of duplicated code that we can rewrite as:
 
 ```file-path
 📁 Controllers/Http/TweetsController.ts
@@ -515,6 +541,7 @@ import { Inject } from '@Typetron/Container'
 import { Storage, File } from '@Typetron/Storage'
 import { Media } from 'App/Entities/Media'
 import { Notification } from 'App/Entities/Notification'
+import { EntityObject } from '@Typetron/Database'
 
 @Controller('tweets')
 @Middleware(AuthMiddleware)
@@ -527,9 +554,34 @@ export class TweetsController {
     storage: Storage
 
     @Post()
-    async create(form: TweetForm) {
-        const tweet = new Tweet(form)
-        await this.user.tweets.save(tweet)
+    tweet(form: TweetForm) {
+        return TweetModel.from(this.createTweet(form))
+    }
+
+    @Post(':Tweet/reply')
+    async reply(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {replyParent: parent})
+
+        await this.addNotification(tweet, parent, 'reply')
+
+        return TweetModel.from(tweet)
+    }
+
+    @Post(':Tweet/retweet')
+    async retweet(parent: Tweet, form: TweetForm) {
+        const tweet = await this.createTweet(form, {retweetParent: parent})
+
+        await this.addNotification(tweet, parent, 'reply')
+
+        return TweetModel.from(tweet)
+    }
+
+    private async createTweet(form: TweetForm, additional: Partial<EntityObject<Tweet>> = {}) {
+        const tweet = await Tweet.create({
+            content: form.content,
+            user: this.user,
+            ...additional
+        })
 
         if (form.media instanceof File) {
             form.media = [form.media]
@@ -540,39 +592,22 @@ export class TweetsController {
         )
         await tweet.media.save(...mediaFiles.map(media => new Media({path: media})))
 
-        /**
-         * When the replyParent property is sent, it means the user replied this tweet.
-         */
-        if (form.replyParent) {
-            await this.addNotification(tweet, form.replyParent, 'reply')
-        }
-
-        /**
-         * When the retweetParent property is sent, it means the user retweeted this tweet.
-         */
-        if (form.retweetParent) {
-            await this.addNotification(tweet, form.retweetParent, 'retweet')
-        }
-
-        await tweet.load('user')
-
-        return TweetModel.from(tweet)
+        return tweet
     }
 
-    private async addNotification(tweet: Tweet, parent: number, type: 'reply' | 'retweet') {
-        const parentTweet = await Tweet.find(parent)
-        const parentTweetUser = parentTweet?.user.get()
+    private async addNotification(tweet: Tweet, parentTweet: Tweet, type: 'reply' | 'retweet') {
+        const parentTweetUser = parentTweet.user.get()
         /**
-         * we need to create a notification if the user that replied/retweeted with this tweet is not its author.
+         * We need to create a notification if the user that replied/retweeted with this tweet is not its author.
          */
         if (parentTweetUser && parentTweetUser.id !== this.user.id) {
             const notification = await Notification.firstOrCreate({
-                type: type,
                 user: parentTweetUser,
                 readAt: undefined,
+                type,
                 tweet
             })
-            await notification.notifiers.attach(this.user.id)
+            await notification.notifiers.add(this.user.id)
         }
     }
 
@@ -595,10 +630,10 @@ export class TweetsController {
         const like = await Like.firstOrNew({tweet, user: this.user})
         if (like.exists) {
             await like.delete()
-            await notification?.notifiers.detach(this.user.id)
+            await notification?.notifiers.remove(this.user.id)
         } else {
             await like.save()
-            await notification?.notifiers.attach(this.user.id)
+            await notification?.notifiers.add(this.user.id)
         }
 
         return TweetModel.from(tweet)
@@ -677,7 +712,7 @@ export class NotificationsController {
     }
 
     @Post('read')
-    async markAsRead() {
+    async markAllAsRead() {
         await Notification.where('user', this.user.id).whereNull('readAt').update('readAt', new Date())
     }
 }

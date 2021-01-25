@@ -25,13 +25,10 @@ export class ArticleForm extends Form {
     title: string
 
     @Field()
-    @Rules(Required)
     image?: File
 
     @Field()
-    @Rules(
-        Required
-    )
+    @Rules(Required)
     content: string
 }
 ```

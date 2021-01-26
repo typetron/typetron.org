@@ -336,9 +336,11 @@ export class UsersController {
 
 Before making a request to set a user's topics, we need a few topics added in our database. Since we don't have an admin
 dashboard we can use to add these topics (which will be the 3rd tutorial), we have to do it manually through the SQL
-client we are using. So, go ahead and add a few topics like "Music", "Health", "Programming" etc. Let's create a
-_TopicsController_ together with a _Topic_ model, so we can get a list of all the available topics on our social
-platform:
+client we are using. So, go ahead and add a few topics like "Music", "Health", "Programming" etc. Also, add a few
+hashtags to these topics. For example, add the "jazz" hashtag to the "Music" topic. We will use this later.
+
+Let's create a _TopicsController_ together with a _Topic_ model, so we can get a list of all the available topics on our
+social platform:
 
 ```file-path
 📁 Controllers/Http/TopicsController.ts
@@ -526,6 +528,18 @@ export class TweetsController {
 }
 ```
 
+Let's create a tweet with some hashtags:
+
+```file-path
+🌐 [POST] /tweets
+```
+
+```json
+{
+    "content": "Listening to #jazz"
+}
+```
+
 #### Showing relevant tweets to users
 
 Now, that we've added the ability to set topics for users and hashtags for tweets, we can create a new endpoint that
@@ -650,6 +664,7 @@ Let's make a request to test these endpoints:
 ```file-path
 🌐 [GET] /explore?page=1&limit=10
 ```
+Making a request to _/explore_ should return us the tweet we created earlier with the _#jazz_ hashtag. 
 
 Since we are here, lets also add an endpoint that will return all the tweets of a user based on a given username. We can
 use this to show all the tweets of a user when going to its profile:

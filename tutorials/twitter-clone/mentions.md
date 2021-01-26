@@ -235,13 +235,13 @@ export class TweetsController {
 }
 ```
 
-This is the entire tweet creation functionality from our Twitter clone app. To send user mention notifications we just
+This is the entire tweet creation functionality from our Twitter clone app. To send a user mention notifications we just
 search the usernames in the tweet's content and insert a specific notification in the database.
 
 Let's make a request to test this feature:
 
 ```file-path
-🌐 [POST] /
+🌐 [POST] /tweets
 ```
 
 ```json

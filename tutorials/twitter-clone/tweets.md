@@ -148,7 +148,7 @@ Having this in mind, we can use the _/register_ route to register a user:
 
 Making this request will create a user in the database.
 
-> _**Question**_: How can I make these requests
+> _**Question**_: How can I make these requests?
 >
 > _**Answer**_: There are various tools you can use to make HTTP requests to a web app. In the first tutorial we
 > recommended you to use [Postman](https://www.postman.com/) but you can use any app that can make HTTP requests.
@@ -297,7 +297,7 @@ The last thing we need to do, is to show a list of tweets to the user. Let's add
 in _TweetsController_ because we want to see the tweets from our root endpoint like _http://localhost:8000/_. This is
 just a personal preference. You can safely add the same endpoint in the _TweetsController_, and it will work exactly the
 same. Keep in mind that _TweetsController_ has the _tweet_ prefix, so you would have to use
-the _http://localhost:8000/tweet_
+the _http://localhost:8000/tweets_
 endpoint. Don't forget to remove the old _welcome_ endpoint if you add this functionality in _HomeController_:
 
 ```file-path

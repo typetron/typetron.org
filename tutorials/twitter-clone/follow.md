@@ -89,9 +89,11 @@ Having these relationships in place we can now easily add the follow feature in 
 import { Controller, Middleware, Post, Put } from '@Typetron/Router'
 import { AuthUser } from '@Typetron/Framework/Auth'
 import { User } from 'App/Entities/User'
-import { User as UserModel } from 'App/Entities/UserModel'
+import { UserForm } from 'App/Forms/UserForm'
+import { User as UserModel } from 'App/Models/User'
 import { AuthMiddleware } from '@Typetron/Framework/Middleware'
 import { Storage } from '@Typetron/Storage'
+import { Inject } from '@Typetron/Container'
 
 @Controller('users')
 @Middleware(AuthMiddleware)

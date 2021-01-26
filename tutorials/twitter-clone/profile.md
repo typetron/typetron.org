@@ -187,7 +187,8 @@ Let's make a _form-data_ request to update the user's profile:
 
 One last thing we need to fix is to restrict the username to have only letters, numbers and/or the '\_' character. We
 cannot allow for spaces since it won't be possible to mention users in tweets using the '@' character. Let's add a
-custom validator to validate the username for these characters and them update the _UserForm_ to use it:
+custom validator in a _Validators_ directory to validate the username for these characters and them update the 
+_UserForm_ to use it:
 
 ```file-path
 📁 Validators/IsUsername.ts

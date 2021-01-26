@@ -2856,6 +2856,15 @@ a {
 		width : 50%;
 	}
 
+    .col.lg-3.md-2 {
+        width : 100%;
+    }
+
+    .col.lg-8.md-12 {
+        width : 100%;
+        overflow: auto;
+    }
+
 	.value-proposition-container {
 		display                : block;
 		margin-right           : auto;

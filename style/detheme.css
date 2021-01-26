@@ -606,7 +606,9 @@ textarea.w-select {
 .w-container:after {
 	clear : both;
 }
-
+.w-row{
+    width : 100%;
+}
 .w-container .w-row {
 	margin-left  : -10px;
 	margin-right : -10px;

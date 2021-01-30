@@ -5,6 +5,10 @@ slug: personal-blog-introduction
 ---
 
 ## Introduction
+
+<video width="100%" controls>
+    <source src="/assets/videos/Typetron%20-%20Personal%20blog%20tutorial.webm" type="video/webm">
+</video>
     
 In this tutorial we will build a small personal blog of a restaurant chef where he will be able to add, edit and delete
 articles of different recipes.

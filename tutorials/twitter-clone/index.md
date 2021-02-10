@@ -4,12 +4,6 @@ layout: twitter-clone
 slug: tutorial-twitter-clone
 ---
 
-<meta property="twitter:card" content="summary_large_image">
-<meta property="twitter:url" content="{{site.url}}/tutorials/twitter-clone/">
-<meta property="twitter:title" content="Twitter clone with Typetron">
-<meta property="twitter:description" content="Building a Twitter clone with Node.js and the Typetron framework">
-<meta property="twitter:image" content="{{site.url}}/images/tutorials/twitter-clone/preview1.png">
-
 ## Introduction
 
 <video width="100%" controls>

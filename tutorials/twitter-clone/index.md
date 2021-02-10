@@ -5,6 +5,12 @@ slug: tutorial-twitter-clone
 ---
 
 ## Introduction
+
+<video width="100%" controls>
+    <source src="/assets/videos/tweetee.webm" type="video/webm">
+</video>
+
+
 In this tutorial we will build a [Twitter](https://twitter.com/home) clone app called Tweetee, like the on shown in the images below.
 We will begin with the backend part of the app, and then we will finish by creating the frontend part with a framework of your choice.
 

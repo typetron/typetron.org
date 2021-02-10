@@ -4,72 +4,20 @@ layout: twitter-clone
 slug: tutorial-twitter-clone
 ---
 
+<meta property="twitter:card" content="summary_large_image">
+<meta property="twitter:url" content="{{site.url}}/tutorials/twitter-clone/">
+<meta property="twitter:title" content="Twitter clone with Typetron">
+<meta property="twitter:description" content="Building a Twitter clone with Node.js and the Typetron framework">
+<meta property="twitter:image" content="{{site.url}}/images/tutorials/twitter-clone/preview1.png">
+
 ## Introduction
 
 <video width="100%" controls>
     <source src="/assets/videos/tweetee.webm" type="video/webm">
 </video>
 
-
 In this tutorial we will build a [Twitter](https://twitter.com/home) clone app called Tweetee, like the on shown in the images below.
 We will begin with the backend part of the app, and then we will finish by creating the frontend part with a framework of your choice.
-
-<div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
-  <ol class="carousel-indicators">
-    <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
-    <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
-    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
-    <li data-target="#carouselExampleCaptions" data-slide-to="3"></li>
-    <li data-target="#carouselExampleCaptions" data-slide-to="4"></li>
-    <li data-target="#carouselExampleCaptions" data-slide-to="5"></li>
-    <li data-target="#carouselExampleCaptions" data-slide-to="6"></li>
-  </ol>
-  <div class="carousel-inner">
-    <div class="carousel-item active">
-        <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview1.png" class="d-block w-100">
-        </div>
-    </div>
-    <div class="carousel-item">
-      <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview2.png" class="d-block w-100">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview3.png" class="d-block w-100">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview4.png" class="d-block w-100">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview5.png" class="d-block w-100">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview6.png" class="d-block w-100">
-      </div>
-    </div>
-    <div class="carousel-item">
-      <div class="window">
-        <img src="/images/tutorials/twitter-clone/preview7.png" class="d-block w-100">
-      </div>
-    </div>
-  </div>
-  <a class="carousel-control-prev" data-target="#carouselExampleCaptions" role="button" data-slide="prev">
-    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-    <span class="sr-only">Previous</span>
-  </a>
-  <a class="carousel-control-next" data-target="#carouselExampleCaptions" role="button" data-slide="next">
-    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-    <span class="sr-only">Next</span>
-  </a>
-</div>
 
 
 Before diving into the backend part with Typetron, let's lay down the idea on paper, so we know what to follow. We will have:

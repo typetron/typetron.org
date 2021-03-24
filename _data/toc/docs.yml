@@ -39,6 +39,8 @@
             url: query-builder
         -   title: ORM
             url: orm
+        -   title: Migrations
+            url: migrations
         -   title: Seeding
             url: seeding
 

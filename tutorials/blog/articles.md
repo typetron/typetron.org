@@ -6,10 +6,12 @@ title: Articles
 
 ## {{ page.title }}
 
-The next thing we have to do is to show our visitors a list of articles, and we need to store that data somewhere. Right
-now, since Typetron is not event in version 1, it offers support only for SQLite databases (file based database).
-Typetron will support most of the popular SQL and NoSQL (MySQL, PostgreSQL, Mongodb, DynamoDB etc)
-databases before version 1 release. For now, let's just work with SQLite and get some features up and running.
+The next thing we have to do is to show our visitors a list of articles, and we need to store that data in a database.
+The easiest way to interact with your database is to use the [ORM](/docs/orm) by creating entity classes. These
+classes that are directly linked with the tables in your database.
+
+By default, Typetron has a SQLite connection setup out of the box, so I am going to stick with that for this tutorial,
+but feel free to use other supported drivers like MySQL. Check the [database docs](/docs/database) for more info.
 
 #### Creating the `Article` entity
 
@@ -79,9 +81,8 @@ development process of an app. We will leave it on for the purposes of our tutor
 
 #### Populating the database
 
-Open the _database.sqlite_ file found in the root of the project in your favorite SQL editor. You can try
-[DB Browser](https://sqlitebrowser.org/) which is free. Intellij IDEA and PHPStorm have a database module built-in that
-you can use. For other Intellij products, like Webstorm, you can install the Database Navigator plugin.
+Open the database you are using in your favorite database client. Intellij IDEA and PHPStorm have a database module
+built-in that you can use. For other Intellij products, like Webstorm, you can install the Database Navigator plugin.
 
 Fill the _articles_ table with some data:
 
@@ -112,7 +113,7 @@ export class HomeController {
     index() {
         return Article.get()
     }
-    
+
     @Get(':id')
     read(id: number) {
         return {
@@ -132,8 +133,8 @@ export class HomeController {
 The _@Get()_ decorator will register a route inside Typetron that will respond to HTTP GET requests.
 
 The _Article.get()_ will go inside the database and select everything from the _articles_ table and return the result to
-the user. This is similar with running an SQL select like: _"SELECT * from articles"_. Now, if we go inside the browser we
-should see an empty array.
+the user. This is similar with running an SQL select like: _"SELECT * from articles"_. Now, if we go inside the browser
+we should see an empty array.
 
 
 <div class="tutorial-next-page">

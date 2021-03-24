@@ -83,8 +83,7 @@ export class User extends Authenticatable {
 This information is used by Typetron to better understand you app, and it also has some other benefits that we will see
 throughout the tutorial. You can find more information about [relationships here](/docs/orm).
 
-Saving these files will automatically create the _tweets_ table for you in the sqlite database from inside the project.
-You can check this database by opening the _database.sqlite_ file with a SQLite client.
+Saving these files will automatically create the _tweets_ table for you in the database.
 
 > _**Question**_: Why is the database updated automatically?
 >
@@ -93,8 +92,8 @@ You can check this database by opening the _database.sqlite_ file with a SQLite 
 
 > _**Question**_: What if I want to use a MySQL server?
 >
-> _**Answer**_: Typetron will support MySQL drivers in the future, but because it is still in heavy development,
-> we postponed the MySQL feature before the V1 release. You can find more about the [Roadmap here](https://github.com/typetron/framework)
+> _**Answer**_: Typetron supports MySQL(and many other clients in the future). All you have to do is to change the driver
+> your app is using. Check the [database docs](/docs/database) for more info
 
 #### Adding tweets in the database
 

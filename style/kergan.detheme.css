@@ -292,11 +292,19 @@ a {
 	transition         : background-color 200ms ease;
 }
 
+.nav-link-2.red-link {
+	border-color       : #ec4242;
+}
+
 .nav-link-2.border:hover {
 	background-color : #8442ec;
 	color            : #fff;
 }
 
+.nav-link-2.red-link:hover {
+    background-color : #ef7c7c;
+    color            : #fff;
+}
 .nav-cta-button-container {
 	-webkit-align-self  : center;
 	-ms-flex-item-align : center;
@@ -4039,4 +4047,9 @@ a {
 	src         : url('../fonts/fa-regular-400.eot') format('embedded-opentype'), url('../fonts/fa-regular-400.woff') format('woff'), url('../fonts/fa-regular-400.ttf') format('truetype'), url('../fonts/fa-regular-400.svg') format('svg');
 	font-weight : 400;
 	font-style  : normal;
+}
+
+.margin-x-medium{
+    margin-left: 8px;
+    margin-right: 8px;
 }

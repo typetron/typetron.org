@@ -11,9 +11,7 @@ export class ArticleForm extends Form {
     title: string
 
     @Field()
-    @Rules(
-        Required
-    )
+    @Rules(Required)
     content: string
 
     @Field()

@@ -12,6 +12,6 @@ export default new AppConfig({
     providers: [
         AppProvider,
         RoutingProvider,
-        DatabaseProvider,
+        DatabaseProvider
     ],
 })

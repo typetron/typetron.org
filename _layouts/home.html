@@ -11,7 +11,7 @@
 	<meta content="{{site.url}}" property="og:url"/>
 	<meta content="{{site.url}}/images/icon.png" property="og:image"/>
 	<meta content="{{site.description}} {{page.title}}" name="description">
-	<meta content="{{site.description}} {{page.title}}" property="og:description">
+	<meta content="{{site.description}} {{page.title}} {{page.description}}" property="og:description">
 	<meta content="website" property="og:type"/>
 	<meta content="typetron modern framework nodejs development node typescript clean beautiful fully-featured features enterprise {{page.keywords}} {{page.title}}" name="keywords">
 	<meta content="Ionel Lupu" name="author">
@@ -58,9 +58,11 @@
 			<nav class="nav-menu-2 w-nav-menu" role="navigation">
 				<a class="nav-link-2 w-nav-link {% if page.layout == 'docs' %}active{% endif %}" href="/docs">Documentation</a>
 				<a class="nav-link-2 w-nav-link {% if page.layout == 'tutorials' %}active{% endif %}" href="/tutorials">Tutorials</a>
-				<!--				<a class="nav-link-2 w-nav-link" style="color: #ddd;">Features</a>-->
+				<a class="nav-link-2 w-nav-link {% if page.path contains 'frontend' %}active{% endif %}" href="/frontend">With Angular/React/Vue</a>
+<!--				<a class="nav-link-2 w-nav-link {% if page.layout == 'features' %}active{% endif %}" href="/features">Features</a>-->
+<!--				<a class="nav-link-2 w-nav-link border red-link margin-x-medium {% if page.layout == 'sponsors' %}active{% endif %}" href="https://github.com/sponsors/IonelLupu" target="_blank">Sponsor</a>-->
 				<div class="nav-cta-button-container">
-					<a class="nav-link-2 border w-nav-link" href="https://github.com/typetron/typetron" target="_blank">GITHUB</a>
+					<a class="nav-link-2 border w-nav-link" href="https://github.com/typetron/typetron" target="_blank">Github</a>
 				</div>
 			</nav>
 			<div class="menu-button-2 w-nav-button">

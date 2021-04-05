@@ -20,7 +20,7 @@ features it has were written from scratch and are available in the framework out
 that all the features you are using benefit from the latest language and platform features. Also, every package can be
 tuned for performance or updated in no time if needed, by the community.
 
-These are some of the features _Typetron_ aims to have:
+These are some features _Typetron_ aims to have:
 
 * [x] Routing
 * [x] Controllers
@@ -39,23 +39,26 @@ These are some of the features _Typetron_ aims to have:
 * [x] Testing
 * [x] Authentication
 * [x] Error handling
-* [ ] CLI
+* [X] CLI
+* [X] Migrations
+* [ ] Frontend helpers (using Forms and Models with Angular, React, Vue, etc)
 * [ ] Websocket
-* [ ] Migrations
 * [ ] Database seeding
 * [ ] Authorization
 * [ ] Sessions
-* [ ] Mailing
-* [ ] Worker threads
-* [ ] GraphQL
-* [ ] Cache
-* [ ] HTTP2
-* [ ] Automatic documentation generation for REST, Websocket and GraphQL
 * [ ] Modules
 * [ ] Logging
 * [ ] Internationalization (i18n)
-* [ ] Monitoring
+* [ ] GraphQL
+* [ ] Cache
+* [ ] Queues
+* [ ] Mailing
 * [ ] Notifications
+* [ ] Worker threads
+* [ ] Automatic documentation generation for REST, Websocket and GraphQL
+* [ ] Deployment(aws, azure, GCP, DO etc or custom server)
+* [ ] Monitoring
+* [ ] HTTP2
 * [ ] Error alerts (from the server directly on pc or phone, Slack or SMS)
 {: style='list-style-type: none'}
 

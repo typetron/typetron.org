@@ -8,9 +8,14 @@ keywords: getting started with angular frontend
 description: getting started with angular frontend
 ---
 
+### Using Typetron with Angular
 
 Typetron is a batteries-included framework, meaning that it provides tools to not only create backend app but also help
-you develop and link the backend with your frontend as easy as possible.
+you develop and link the backend with your frontend as easy as possible. In this section we will create a blank app that
+uses Typetron on the backend and Angular on the frontend. 
+
+These two apps will share source code between them, things like [Models](/docs/models), used to typehint the backend
+responses and [Forms](/docs/forms), used to typehint and build forms with their validation.
 
 In order to get started with Typetron and Angular make sure you have the necessary prerequisites on your machine:
 

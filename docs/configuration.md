@@ -61,6 +61,14 @@ export class HomeController {
 }
 ```
 
+#### Environment Configuration
+It is recommended to have different configuration for each environment the app is running on. This is usually because
+you may want to attach different resources to it like database or caching drivers.
+
+To make this easy, Typetron uses the [DotEnv](https://github.com/motdotla/dotenv) package. You can find an example
+file in your app's root directory called `.env.example`. After creating a new Typetron app, the Typetron CLI will copy
+this file into the `.env` file that is then consumed by the app.
+
 #### Creating custom configuration files
 
 _In progress_

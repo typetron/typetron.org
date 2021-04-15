@@ -4,11 +4,13 @@ layout: twitter-clone
 title: Frontend setup
 ---
 
-## {{ page.title }} (_In progress_)
+## {{ page.title }}
 
-> _Typetron will support utility libraries for making frontend development easier_
+Typetron supports utility libraries (just [for Angular](/frontend/angular) right now) for making
+[frontend development](/frontend) easier. Here are some example projects on Github with different frontend
+frameworks/libraries:
 
-<p align="center">Select the frontend option you would like to use:</p>   
+[comment]: <> (<p align="center">Select the frontend option you would like to see:</p>   )
 <div class="box-wrapper" style="justify-content: center">
 	<a class="box in-progress" href="/tutorials/blog" style="max-width: 22%">
 		<h5>Typescript only</h5>
@@ -19,12 +21,12 @@ title: Frontend setup
 	</a>
 </div>   
 <div class="box-wrapper">
-	<a class="box in-progress" href="/tutorials/blog">
+	<a class="box" href="https://github.com/typetron/example-twitter-clone" target="_blank">
 		<h5>Angular</h5>
 		<div class="box-content">
 			<img src="https://angular.io/assets/images/logos/angular/angular.svg" alt="angular">
 		</div>
-		<p><i>In progress</i></p>
+		<p><i>Source code</i></p>
 	</a>
 
 	<a class="box in-progress" href="">

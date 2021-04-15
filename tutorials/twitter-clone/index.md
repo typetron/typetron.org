@@ -4,11 +4,12 @@ layout: twitter-clone
 slug: tutorial-twitter-clone
 ---
 
-## Introduction
+## Twitter clone - Introduction
 
 <video width="100%" controls>
     <source src="/assets/videos/tweetee.webm" type="video/webm">
 </video>
+
 
 In this tutorial we will build a [Twitter](https://twitter.com/home) clone app called Tweetee, like the on shown in the
 images below. We will begin with the backend part of the app, and then we will finish by creating the frontend part with
@@ -59,6 +60,10 @@ voila, our blank Typetron project is ready.
 <p align="center" class="window">
   <img src="/images/tutorials/blog/new.jpg" />
 </p>
+
+Here is the
+<a href="https://github.com/typetron/example-twitter-clone" target="_blank">source code</a>
+of the app together with a UI.
 
 _Join the [newsletter](/) to be first to know when new features, tutorials and news are released_
 

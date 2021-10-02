@@ -53,12 +53,16 @@ These are some features _Typetron_ aims to have:
 * [ ] Cache
 * [ ] Queues
 * [ ] Mailing
-* [ ] Notifications
+* [ ] Notifications (email, SMS, Slack, Discord, MS Teams, Google Chat, Twitter, Telegram, etc)
+* [ ] Two-Factor Authentication (2FA)
+* [ ] OAuth
 * [ ] Worker threads
+* [ ] Views (HTML rendering)
 * [ ] Automatic documentation generation for REST, Websocket and GraphQL
 * [ ] Deployment(aws, azure, GCP, DO etc or custom server)
 * [ ] Monitoring
 * [ ] HTTP2
+* [ ] HTTP3/QUIC
 * [ ] Error alerts (from the server directly on pc or phone, Slack or SMS)
 {: style='list-style-type: none'}
 

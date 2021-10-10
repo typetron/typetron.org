@@ -41,8 +41,8 @@ These are some features _Typetron_ aims to have:
 * [x] Error handling
 * [X] CLI
 * [X] Migrations
-* [ ] Frontend helpers (using Forms and Models with Angular, React, Vue, etc)
-* [ ] Websocket
+* [X] Frontend helpers (using Forms and Models with Angular, React, Vue, etc)
+* [X] Websocket
 * [ ] Database seeding
 * [ ] Authorization
 * [ ] Sessions

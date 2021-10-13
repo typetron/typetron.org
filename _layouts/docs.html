@@ -10,12 +10,12 @@ layout: home
 			<div class="columns-2 w-row">
 				<div class="w-col w-col-3 table-of-contents">
 					<ul>
-						{% assign currentPage = page.name %}
 						{% for item in site.data.toc.docs %}
-						{% assign itemPage = item.url | append: '.md' %}
+						{% assign itemUrl = "/docs/" | append: item.url | append: "/" %}
+						{% assign itemPath = "docs/" | append: item.url | append: ".md" %}
 						<li>
 							<b>
-								<a class="{% if item.title == page.title or itemPage == currentPage or item.slug and item.slug == page.slug %}active{% endif %}" href="/docs/{{ item.url }}">
+								<a class="{% if page.url == itemUrl or page.path == itemPath %}active{% endif %}" href="/docs/{{ item.url }}">
 									{{ item.title }}
 								</a>
 							</b>
@@ -23,9 +23,10 @@ layout: home
 						{% if item.subtitles[0] %}
 						<ul>
 							{% for entry in item.subtitles %}
-							{% assign entryPage = entry.url | append: '.md' %}
+							{% assign entryUrl = "/docs/" | append: entry.url | append: "/" %}
+							{% assign entryUrl2 = "/docs/" | append: entry.url | append: ".html" %}
 							<li>
-								<a class="{% if entryPage == currentPage %}active{% endif %}" href="/docs/{{ entry.url }}">
+								<a class="{% if page.url == entryUrl or page.url == entryUrl2 %}active{% endif %}" href="/docs/{{ entry.url }}">
 									{{ entry.title }}
 								</a>
 							</li>

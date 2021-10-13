@@ -44,6 +44,16 @@
         -   title: Seeding
             url: seeding
 
+-   title: Websockets
+    url: websockets
+    subtitles:
+        -   title: Getting started
+            url: websockets
+        -   title: Controllers & Events
+            url: websockets/controllers-and-events
+        -   title: Using on frontend
+            url: websockets/using-on-frontend
+
 -   title: Security
     url: authentication
     subtitles:

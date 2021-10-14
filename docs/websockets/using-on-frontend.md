@@ -46,7 +46,7 @@ to.
 
 #### Emitting events
 
-If you want to signal the server with and event or when you want to send some data to it, you can use the _emit('event
+If you want to signal the server with an event or when you want to send some data to it, you can use the _emit('event
 name', data)_ method:
 
 ```ts

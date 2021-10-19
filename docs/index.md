@@ -54,6 +54,8 @@ These are some features _Typetron_ aims to have:
 * [ ] Queues
 * [ ] Mailing
 * [ ] Notifications (email, SMS, Slack, Discord, MS Teams, Google Chat, Twitter, Telegram, etc)
+* [ ] A/B testing
+* [ ] API versioning
 * [ ] Two-Factor Authentication (2FA)
 * [ ] OAuth
 * [ ] Feature flagging

@@ -35,5 +35,28 @@ export default new AppConfig({
 
 Now, you should see a message in the console saying that Typetron is listening to WebSocket connections on port _8001_.
 
+#### Message format of the WebSocket events
+
+The Typetron WebSocket server uses a specific message format when exchanging information between it and the clients.
+These message have the following format:
+_When sending a message:_
+```json
+{
+    "event": "event name",
+    "message": { // optional
+        "body": "content sent to the controllers",
+        "parameters": ["param1","param1"] // controller method parameters (optional)
+    }
+}
+```
+_When receiving a message:_
+```json
+{
+    "event": "event name",
+    "status": "OK" // or "Error",
+    "message": "backend response", // optional
+}
+```
+
 Let's see how we can create a few events to listen to when the client is firing
 them: [Creating events](/docs/websockets/controllers-and-events)

@@ -2656,7 +2656,7 @@ a {
 	bottom   : auto;
 }
 
-@media (max-width : 991px) {
+@media (max-width : 1250px) {
 	.section {
 		padding-top    : 50px;
 		padding-bottom : 50px;

@@ -1,7 +1,7 @@
 title: Typetron - Fully-featured typescript framework for Node.js
 email: ionel@typetron.org
 description: >- # this means to ignore newlines until "baseurl:"
-    Typetron - Modern Fully-featured Typescript Framework for Node.js for building enterprise level web apps
+    Typetron - Modern Fully-featured Typescript Framework for Node.js for building web apps
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://typetron.org" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: ionelCLupu

@@ -64,3 +64,7 @@ This will create the _users.list_ event listener. Every method under this contro
 
 Let's also send and listen to these events on a browser
 client: [Using WebSockets on frontend](/docs/websockets/using-on-frontend)
+
+
+#### Sending messages to other clients
+_In progress_

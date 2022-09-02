@@ -41,7 +41,7 @@ export default new AppConfig({
 #### Getting config
 
 If you need to get a specific configuration in one of your classes, controllers or services, you can make use of
-[dependency injection](/docs/container.md) like in the example below:
+[dependency injection](/docs/container) like in the example below:
 
 ```ts
 import { Controller, Get } from '@Typetron/Router'

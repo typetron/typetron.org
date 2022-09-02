@@ -316,7 +316,7 @@ export class ArticlesController {
 ```
 
 The _@Inject()_ will create a singleton instance of _Storage_ or _ArticleService_ automatically for you when used. You
-can learn more about _@Inject()_ in the [container section from docs](/docs/container.md).
+can learn more about _@Inject()_ in the [container section from docs](/docs/container).
 
 <div class="tutorial-next-page">
     In the next part we will deploy our app on three different platforms.

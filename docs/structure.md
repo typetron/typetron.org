@@ -29,7 +29,7 @@ Sometimes you need to intercept and/or modify the request or the response of you
 
 #### The `Models` directory
 Your app would also send back data to clients. To have control of the data your app exposes, you would create a
-[Model](/docs/models.md) class placed in this directory.
+[Model](/docs/models) class placed in this directory.
 
 #### The `node_modules` directory
 This is a Node.js specific directory that you should not change. All the app dependencies are placed here after

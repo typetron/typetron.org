@@ -13,17 +13,15 @@ Caching is a crucial aspect of optimizing web applications. By storing a copy of
 
 To configure the cache system in Typetron, you'll use the `CacheConfig` class. Here's a brief overview:
 
-```typescript
-import { BaseConfig } from './BaseConfig'
+```ts
+import { CacheConfig } from '@Typetron/Framework'
 
-type Store = keyof CacheConfig['stores']
+export default new CacheConfig({
+    default: 'file',
 
-export class CacheConfig extends BaseConfig<CacheConfig> {
-    defaultStore: Store = process.env?.CACHE_DRIVER as Store ?? 'file'
-
-    stores = {
+    drivers: {
         file: {
-            path: 'cache/data',
+            path: 'storage/cache',
         },
 
         memory: {},
@@ -33,7 +31,7 @@ export class CacheConfig extends BaseConfig<CacheConfig> {
             connection: null,
         },
     }
-}
+})
 ```
 
 - **defaultStore**: This is the default cache driver that your application will use. It can be set using the CACHE_DRIVER environment variable or will default to the file driver.
@@ -46,7 +44,7 @@ export class CacheConfig extends BaseConfig<CacheConfig> {
 The FileStore driver caches the data in files. This is useful for applications that don't require a distributed cache system.
 
 Configuration:
-```typescript
+```ts
 file: {
     path: 'cache/data'
 }
@@ -59,7 +57,7 @@ The DatabaseStore driver caches the data in a database table. This is useful for
 
 Configuration:
 
-```typescript
+```ts
 database: {
     table: 'cache',
     connection: null
@@ -75,7 +73,7 @@ The MemoryStore driver caches the data in memory using a JavaScript array. This 
 
 Configuration:
 
-```typescript
+```ts
 memory: {}
 ```
 
@@ -83,7 +81,7 @@ memory: {}
 
 To use the cache system in your Typetron application, you can inject the cache service into any class, like a controller:
 
-```typescript
+```ts
 import { Controller, Get } from '@Typetron/Router'
 import { cache } from '@Typetron/Cache'
 
@@ -106,21 +104,21 @@ class ArticleController {
 - **flush()**: Remove all items from the cache.
 
 For example, to set a cache value:
-```typescript
+```ts
 await this.cache.set('key', 'value', 3600); // Cache for 1 hour
 ```
 To retrieve a cache value:
-```typescript
+```ts
 const value = await this.cache.get('key');
 ```
 
 To remove a cache from the store:
-```typescript
+```ts
 await this.cache.delete('key');
 ```
 
 To clear all the cached values from the store:
-```typescript
+```ts
 await this.cache.flush();
 ```
 

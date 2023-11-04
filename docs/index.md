@@ -44,15 +44,15 @@ These are some features _Typetron_ aims to have:
 * [X] Frontend helpers (using Forms and Models with Angular, React, Vue, etc)
 * [X] Websockets
 * [X] Database seeding
+* [x] Cache
+* [x] Mailing
 * [ ] Authorization
 * [ ] Sessions
 * [ ] Modules
 * [ ] Logging
 * [ ] Internationalization (i18n)
 * [ ] GraphQL
-* [ ] Cache
 * [ ] Queues
-* [ ] Mailing
 * [ ] Notifications (email, SMS, Slack, Discord, MS Teams, Google Chat, Twitter, Telegram, etc)
 * [ ] A/B testing
 * [ ] API versioning
